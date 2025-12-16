@@ -1,6 +1,6 @@
 <template>
   <main>
-    <Header :logo="logo" />
+    <Header :logo="logo" :title="title"/>
     <div class="container">
       <RouterView />
     </div>
@@ -11,7 +11,23 @@
 <script setup>
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
-import logo from "/logo.png";
+import { ref, onMounted } from "vue";
+
+const logo = ref("");
+
+onMounted(async () => {
+  const month = new Date().getMonth();
+
+  if (month === 11) {
+    const module = await import("/perfil-navidad.png");
+    logo.value = module.default;
+  } else {
+    const module = await import("/perfil.png");
+    logo.value = module.default;
+  }
+});
+
+const title = 'EL MORO'
 </script>
 
 <style scoped>

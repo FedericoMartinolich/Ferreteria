@@ -5,29 +5,18 @@
     <input
       v-model="search"
       placeholder="Buscar producto..."
-      style="padding: 8px; margin: 10px 0; width: 300px;"
+      class="search-input"
     />
 
-    <div style="
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;">
-      
-      <div
+    <div class="container">
+        <div
         v-for="p in filteredProducts"
-        :key="p.product"
-        style="border: 1px solid #ccc; padding: 10px; border-radius: 8px;"
-      >
-        <h3>{{ p.product }}</h3>
-        <strong>${{ p.price }}</strong>
-        <p v-if="p.categoria">Categoría: {{ p.categoria }}</p>
-
-        <img
-          v-if="p.img"
-          :src="p.img"
-          style="width: 100%; border-radius: 6px; margin-top: 10px;"
-        />
-      </div>
+        :key="p.id" 
+        >
+          <router-link :to="`/ProductDetail/${p.id}`" class="product-link">
+            <ProductCard :price="p.price" :product="p.product" />
+          </router-link>
+        </div>
     </div>
   </div>
 </template>
@@ -35,6 +24,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { getProducts } from "../services/products.js";
+import  ProductCard  from "../components/ProductCard.vue";
 
 const products = ref([]);
 const search = ref("");
@@ -49,3 +39,40 @@ const filteredProducts = computed(() =>
   )
 );
 </script>
+<style scoped>
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.product-card {
+  background: var(--llave);
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.288);
+}
+
+.product-card:hover,
+.product-card:focus {
+  background: #7972609f;
+  transform: translateY(-4px);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 8px 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+</style>

@@ -1,17 +1,18 @@
 <template>
     <header class="app-header">
         <div class="container">
-            <div class="brand" @click="goHome">
+            <!-- LOGO -->
+            <router-link to="/" class="brand">
                 <img v-if="logo" :src="logo" :alt="title" class="logo" />
-                <!-- <span class="title">{{ title }}</span> -->
-            </div>
+                <span class="title">{{ title }}</span>
+            </router-link>
 
+            <!-- BURGER -->
             <button class="burger" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen">
-                <span class="bar" />
-                <span class="bar" />
-                <span class="bar" />
+                <i class="fa-solid fa-bars"></i>
             </button>
 
+            <!-- OPTIONS -->
             <nav :class="{ open: mobileOpen }" class="nav">
                 <ul>
                     <li v-for="link in links">
@@ -24,28 +25,36 @@
                 </ul>
             </nav>
 
+            <!-- BUSCADOR -->
             <div class="actions">
-                <form @submit.prevent="submitSearch" class="search">
-                    <input
-                        v-model="query"
-                        type="search"
-                        :placeholder="searchPlaceholder"
-                        aria-label="Buscar"
-                    />
-                    <button type="submit" title="Buscar"><i class="fa fa-solid fa-magnifying-glass"></i></button>
-                </form>
+                <Searcher search-placeholder="Buscar producto..." />
+            </div>
+            
+            <!-- RESULTADOS (OPCINES) -->
+            <div v-if="filteredProducts.length" class="search-results">
+                <div class="result-item" v-for="p in filteredProducts" :key="p.product">
+                    <router-link :to="`/ProductDetail/${p.id}`" class="result-link">
+                        <img v-if="p.thumbnail" :src="p.thumbnail" class="result-thumb" />
+                        <span class="result-title">{{ p.product }}</span>
+                    </router-link>
+                </div>
+            </div>
 
+            <!-- CARRITO -->
+            <router-link to="/cart">
                 <button class="cart" @click="$emit('toggle-cart')">
                     <i class="fa fa-solid fa-cart-shopping"></i>
                     <span v-if="cartCount > 0" class="badge">{{ cartCount }}</span>
                 </button>
-            </div>
+            </router-link>
         </div>
     </header>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, onMounted, watch } from "vue";
+import { getProducts } from "../services/products.js";
+import Searcher from "./Searcher.vue";
 
 const props = defineProps({
     title: { type: String, default: 'Ferretería' },
@@ -61,39 +70,82 @@ const props = defineProps({
     },
     cartCount: { type: Number, default: 0 },
     searchPlaceholder: { type: String, default: 'Buscar producto...' }
-})
+});
 
-const emit = defineEmits(['search', 'navigate', 'toggle-cart', 'home'])
+const mobileOpen = ref(false);
 
-const query = ref('')
-const mobileOpen = ref(false)
+onMounted(async () => {
+    products.value = await getProducts();
+});
 
-function submitSearch() {
-    const q = query.value.trim()
-    emit('search', q)
-}
+const products = ref([]);
+const search = ref('');
 
-function navigate(link) {
-    mobileOpen.value = false
-    emit('navigate', link)
-}
+const filteredProducts = computed(() => {
+    const q = search.value.trim().toLowerCase();
+    if (!q) return [];
+    
+    return products.value.filter((p) => {   
+        const result = p.product.toLowerCase().includes(q)
+        return result;
+    });
+});
 
-function goHome() {
-    emit('home')
-    mobileOpen.value = false
-}
-
-// optional: clear query after external reset (consumer can set a prop to clear; here we watch cartCount as an example)
-watch(() => props.cartCount, () => {
-    // no-op, placeholder for watchers if needed
-})
+/* watch(search, (newVal) => {
+    console.log('Search query:', newVal);
+}); */
 </script>
 
 <style scoped>
+/* ===========================
+   Dropdown de resultados
+=========================== */
+.search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: #1a1f27;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: .5rem 0;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .55rem 1rem;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.result-item:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.result-thumb {
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.result-title {
+  color: white;
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+/* Header */
+
 .app-header {
-    background: #f08521;
-    border-bottom: 1px solid #372613;
-    position: sticky;
+    background: var(--fondo);
+    border-bottom: 3px solid var(--moro);
+    position: relative;
     top: 0;
     z-index: 20;
 }
@@ -101,7 +153,7 @@ watch(() => props.cartCount, () => {
 .container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 1rem; */
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -115,13 +167,20 @@ watch(() => props.cartCount, () => {
 }
 
 .logo {
-    height: 100px;
+    height: 70px;
     width: auto;
 }
 
 .title {
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 2rem;
+    color: #fff;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    line-height: 1.7rem ;
+    text-shadow: 0 0 3px #000, /* Sombra para simular el borde negro */
+               0 0 3px #000,
+               0 0 3px #000;
+    font-weight: bold; /* Para que el borde se note más */
 }
 
 .burger {
@@ -175,20 +234,22 @@ watch(() => props.cartCount, () => {
 .search {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    /* gap: 0.25rem; */
 }
 
 .search input {
-    border: 1px solid #372613;
-    padding: 6px 8px;
-    border-radius: 4px;
+    border: 1px solid var(--moro);
+    padding: 6px 10px;
+    border-radius: 10rem;
+    font-size: 0.8rem;
+    background-color: var(--moro);
 }
 
 .search button {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.8rem;
 }
 
 .cart {
@@ -227,8 +288,8 @@ watch(() => props.cartCount, () => {
         left: 0;
         right: 0;
         top: 60px;
-        background: #f08521;
-        border-top: 1px solid #372613;
+        background: var(--fondo);
+        border-top: 1px solid var(--moro);
         display: none;
         padding: 0.75rem 1rem;
     }
@@ -244,6 +305,8 @@ watch(() => props.cartCount, () => {
 
     .container {
         align-items: center;
+        margin-left: 5%;
+        margin-right: 5%;
     }
 
     .actions {

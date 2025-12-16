@@ -18,9 +18,9 @@
                         >
                         </li>
                         <li class="list-item">
-                        <i class="fa fa-envelope fa-2x"></i>
+                        <i class="fa fa-regular fa-clock fa-2x"></i>
                         <span class="contact-text gmail"
-                            ><a href="mailto:martinolichfederico@gmail.com">alguncorreo@gmail.com</a></span
+                            ><a href="mailto:elmoroferreteria@gmail.com">elmoroferreteria@gmail.com</a></span
                         >
                         </li>
                     </ul>
@@ -79,6 +79,22 @@ L.marker([-33.001651, -58.518268]).addTo(map)
 </script>
 
 <style scoped>
+
+@media (max-width: 800px) {
+  #container {
+    transform: scale(0.7);
+  }
+  .product-details, .product-image {
+    float: none;
+    width: 100%;
+    height: auto;
+  }
+  .control {
+    position: static;
+    margin-top: 20px;
+    text-align: center;
+  }
+}
 
 #container {
   box-shadow: 0 15px 30px 1px #0f0b05;

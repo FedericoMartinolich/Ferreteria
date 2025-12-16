@@ -21,3 +21,7 @@ export async function getProducts() {
 
   return data;
 }
+export async function getProductById(id) {
+  const products = await getProducts();
+  return products.find(p => p.id === id);
+}

@@ -5,6 +5,8 @@ const routes = [
     { path: '/about', name: 'About', component: () => import('../views/About.vue') },
     { path: '/contact', name: 'Contact', component: () => import('../views/Contact.vue') },
     { path: '/products', name: 'Products', component: () => import('../views/Products.vue') },
+    { path: '/cart', name: 'Cart', component: () => import('../views/Cart.vue') },
+    { path: '/ProductDetail/:id', name: 'ProductDetail', props: true, component: () => import('../views/ProductDetail.vue') },
     { path: '/:pathMatch(.*)*', redirect: '/' } // fallback
 ]
 

@@ -2,29 +2,20 @@
     <footer class="app-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="brand">
-                <h1 class="brand-title">Ferretería</h1>
+                <h1 class="brand-title">Ferretería - EL MORO</h1>
                 <p class="brand-sub">Calidad, servicio y experiencia</p>
             </div>
-
-            <nav class="footer-nav" aria-label="Enlaces del pie de página">
-                <a href="#" class="footer-link">Inicio</a>
-                <a href="#" class="footer-link">Productos</a>
-                <a href="#" class="footer-link">Promociones</a>
-                <a href="#" class="footer-link">Contacto</a>
-            </nav>
-
             <div class="footer-info">
                 <div class="social" aria-hidden="false" aria-label="Redes sociales">
-                    <a href="#" class="icon" aria-label="Facebook">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22 12.07C22 6.48 17.52 2 11.93 2 6.34 2 1.86 6.48 1.86 12.07c0 4.99 3.66 9.13 8.44 9.9v-7.01H8.08v-2.9h2.22V9.09c0-2.2 1.31-3.42 3.32-3.42.96 0 1.96.17 1.96.17v2.15h-1.1c-1.08 0-1.42.67-1.42 1.36v1.64h2.42l-.39 2.9h-2.03V22c4.78-.77 8.44-4.91 8.44-9.93z"/></svg>
+                    <a href="https://wa.me/543446670475" class="icon" aria-label="Whatsapp">
+                        <i class="fa-brands fa-whatsapp"></i> <p>WhatsApp </p>
                     </a>
-                    <a href="#" class="icon" aria-label="Instagram">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6.2A4.8 4.8 0 1 0 16.8 13 4.8 4.8 0 0 0 12 8.2zm6.5-3.7a1.2 1.2 0 1 0 1.2 1.2 1.2 1.2 0 0 0-1.2-1.2z"/></svg>
+                    <a href="https://www.instagram.com/ferreteria.elmoro/" class="icon" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram"></i> <p>Instagram </p>
                     </a>
                 </div>
-
                 <div class="copyright">
-                    <small>&copy; {{ year }} Ferretería. Todos los derechos reservados.</small>
+                    <small>&copy; {{ year }} Ferretería - EL MORO. Todos los derechos reservados.</small>
                 </div>
             </div>
         </div>
@@ -133,7 +124,9 @@ footer {
     justify-content: center;
     color: #cbd5e1;
     background: rgba(255,255,255,0.03);
-    width: 36px;
+    padding: 0 12px;
+    font-size: 1rem;
+    width: auto;
     height: 36px;
     border-radius: 8px;
     text-decoration: none;
@@ -152,14 +145,15 @@ copyright small {
 }
 
 /* Responsive */
-@media (max-width: 720px) {
+@media (max-width: 1200px) {
     .footer-inner {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
         gap: 1rem;
+        justify-content: center;
     }
     .footer-info {
-        align-items: flex-start;
+        align-items: center;
     }
 }
 </style>
