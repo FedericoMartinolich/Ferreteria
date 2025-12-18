@@ -70,6 +70,12 @@ button:focus-visible {
   padding: 2em;
 }
 
+.full-width {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
 #app {
   /* max-width: 1280px; */
   margin: 0 auto;

@@ -1,316 +1,214 @@
 <template>
-  <main>
-    <div class="contact-view">
+  <main class="contact-view">
     <section id="contact">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <div id="container">	    
-            <div class="product-details">       
-                <div class="direct-contact-container">
-                    <ul class="contact-list">
-                        <li class="list-item">
-                        <i class="fa fa-map-marker fa-2x"></i>
-                        <span class="contact-text place">Gualeguaychú Entre Rios, Argentina</span>
-                        </li>
-                        <li class="list-item">
-                        <i class="fa fa-brands fa-whatsapp fa-2x"></i>
-                        <span class="contact-text phone"
-                            ><a href="https://wa.me/543446670475" target="_blank">(54) 3446 67-0475</a></span
-                        >
-                        </li>
-                        <li class="list-item">
-                        <i class="fa fa-regular fa-clock fa-2x"></i>
-                        <span class="contact-text gmail"
-                            ><a href="mailto:elmoroferreteria@gmail.com">elmoroferreteria@gmail.com</a></span
-                        >
-                        </li>
-                    </ul>
+      <h1 class="section-header">Contacto</h1>
 
-                    <hr />
+      <!-- TARJETA -->
+      <div class="contact-card">
+        <div class="contact-wrapper">
+          <!-- Formulario -->
+          <form ref="form" @submit.prevent="sendEmail" class="contact-form">
+            <input type="text" placeholder="NOMBRE" name="name" required />
+            <input type="email" placeholder="EMAIL" name="reply_to" required />
+            <input type="text" placeholder="ASUNTO" name="title" required />
+            <textarea rows="6" placeholder="MENSAJE" name="message" required></textarea>
 
-                    <ul class="social-media-list">
-                        <li>
-                        <a href="https://www.linkedin.com/in/federico-martinolich" target="_blank" class="contact-icon"
-                            ><i class="fa fa-brands fa-linkedin-in"></i
-                        ></a>
-                        </li>
-                        <li>
-                        <a href="https://github.com/FedericoMartinolich" target="_blank" class="contact-icon"
-                            ><i class="fa fa-brands fa-github"></i
-                        ></a>
-                        </li>
-                        <li>
-                        <a href="https://www.instagram.com/ferreteria.elmoro/" target="_blank" class="contact-icon"
-                            ><i class="fa fa-brands fa-instagram"></i
-                        ></a>
-                        </li>
-                    </ul>
-                    <hr />
-                    <div class="copyright">© All rights reserved</div>
-                </div>    
+            <button type="submit" class="send-button">
+              <i class="fa fa-paper-plane"></i> ENVIAR
+            </button>
+
+            <p class="form-msg">{{ msg }}</p>
+          </form>
+
+          <!-- Datos -->
+          <div class="direct-contact-container">
+            <ul class="contact-list">
+              <li class="list-item">
+                <i class="fa fa-map-marker fa-2x"></i>
+                <span>Gualeguaychú, Entre Ríos, Argentina</span>
+              </li>
+
+              <li class="list-item">
+                <i class="fa fa-brands fa-whatsapp fa-2x"></i>
+                <a href="https://wa.me/543446670475" target="_blank">
+                  (54) 3446 67-0475
+                </a>
+              </li>
+
+              <li class="list-item">
+                <i class="fa fa-calendar fa-2x"></i>
+                <a href="mailto:elmoroferreteria@gmail.com">
+                  Lunes a Sábados
+                </a>
+              </li>
+
+              <li class="list-item">
+                <i class="fa fa-clock fa-2x"></i>
+                <a href="mailto:elmoroferreteria@gmail.com">
+                  9hs - 13hs y 16:30hs - 21hs
+                </a>
+              </li>
+            </ul>
+
+            <hr />
+            <ul class="social-media-list">
+            <li>
+              <a href="mailto:elmoroferreteria@gmail.com" target="_blank" class="contact-icon"
+                ><i class="fa fa-envelope fa-2x"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/FedericoMartinolich" target="_blank" class="contact-icon"
+                ><i class="fa fa-brands fa-github fa-2x"></i
+              ></a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/fedev.jpg" target="_blank" class="contact-icon"
+                ><i class="fa fa-brands fa-instagram fa-2x"></i
+              ></a>
+            </li>
+          </ul>
+          <hr />
+
+            <div class="copyright">
+              © El Moro - Ferretería
             </div>
-            
-        <div class="product-image">        
-            <div id="map" class="map"></div>
+          </div>
         </div>
+      </div>
 
-        </div>
+      <!-- MAPA -->
+      <div class="map-wrapper">
+        <div id="map"></div>
+      </div>
     </section>
-    </div>
   </main>
 </template>
 
 <script setup>
-import L from 'leaflet';
-import { onMounted } from 'vue';
+import { ref, onMounted } from "vue";
+import emailjs from "emailjs-com";
+import L from "leaflet";
+
+const form = ref(null);
+const msg = ref("");
+
+const sendEmail = () => {
+  msg.value = "Enviando...";
+
+  emailjs.sendForm(
+    "service_0mexqa8",
+    "template_1f1ml7k",
+    form.value,
+    "epWXTcHwVSD3VGOWW"
+  )
+  .then(() => {
+    msg.value = "Mensaje enviado correctamente ✔";
+    form.value.reset();
+  })
+  .catch(() => {
+    msg.value = "Error al enviar ❌";
+  });
+};
 
 onMounted(() => {
-var map = L.map('map', {
-    attributionControl: false
-}).setView([-33.001651, -58.518268], 15);
+  const map = L.map("map", { attributionControl: false })
+    .setView([-33.001651, -58.518268], 15);
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-L.marker([-33.001651, -58.518268]).addTo(map)
-  .bindPopup('El Moro - Gualeguaychú, Entre Ríos')
-  .openPopup();
+  L.marker([-33.001651, -58.518268])
+    .addTo(map)
+    .bindPopup("El Moro - Gualeguaychú")
+    .openPopup();
 });
 </script>
 
+
 <style scoped>
-
-@media (max-width: 800px) {
-  #container {
-    transform: scale(0.7);
-  }
-  .product-details, .product-image {
-    float: none;
-    width: 100%;
-    height: auto;
-  }
-  .control {
-    position: static;
-    margin-top: 20px;
-    text-align: center;
-  }
-}
-
-#container {
-  box-shadow: 0 15px 30px 1px #0f0b05;
-  background: #372613;
-  text-align: center;
-  border-radius: 5px;
-  overflow: hidden;
-  margin: 5em auto;
-  height: 350px;
-  width: 700px;
-}
-
-.product-details {
-  position: relative;
-  text-align: left;
-  overflow: hidden;
-  padding: 30px;
-  height: 100%;
-  float: left;
-  width: 40%;
-}
-
-#container .product-details h1 {
-  font-family: "Bebas Neue", cursive;
-  display: inline-block;
-  position: relative;
-  font-size: 30px;
-  color: #344055;
-  margin: 0;
-}
-
-#container .product-details h1:before {
-  position: absolute;
-  content: "";
-  right: 0%;
-  top: 0%;
-  transform: translate(25px, -15px);
-  font-family: "Bree Serif", serif;
-  display: inline-block;
-  background: #ffe6e6;
-  border-radius: 5px;
-  font-size: 14px;
-  padding: 5px;
-  color: white;
-  margin: 0;
-  animation: chan-sh 6s ease infinite;
-}
-
-.hint-star {
-  display: inline-block;
-  margin-left: 0.5em;
-  color: gold;
-  width: 50%;
-}
-
-#container .product-details > p {
-  font-family: "EB Garamond", serif;
-  text-align: center;
-  font-size: 18px;
-  color: #7d7d7d;
-}
-.control {
-  position: absolute;
-  bottom: 20%;
-  left: 22.8%;
-}
-.btn {
-  transform: translateY(0px);
-  transition: 0.3s linear;
-  background: #809fff;
-  border-radius: 5px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  outline: none;
-  border: none;
-  color: #eee;
-  padding: 0;
-  margin: 0;
-}
-
-.btn:hover {
-  transform: translateY(-6px);
-  background: #1a66ff;
-}
-
-.btn span {
-  font-family: "Farsan", cursive;
-  transition: transform 0.3s;
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 1.2em;
-  margin: 0;
-}
-.btn .price,
-.shopping-cart {
-  background: #333;
-  border: 0;
-  margin: 0;
-}
-
-.btn .price {
-  transform: translateX(-10%);
-  padding-right: 15px;
-}
-
-.btn .shopping-cart {
-  transform: translateX(-100%);
-  position: absolute;
-  background: #333;
-  z-index: 1;
-  left: 0;
-  top: 0;
-}
-
-.btn .buy {
-  z-index: 3;
-  font-weight: bolder;
-}
-
-.btn:hover .price {
-  transform: translateX(-110%);
-}
-
-.btn:hover .shopping-cart {
-  transform: translateX(0%);
-}
-
-.product-image {
-  transition: all 0.3s ease-out;
-  display: inline-block;
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-  float: right;
-  width: 45%;
-  display: inline-block;
-}
-
-.map {
-  width: 100%;
-  height: 100%;
-  z-index: 19;
-}
-
-.info {
-  background: rgba(27, 26, 26, 0.9);
-  font-family: "Bree Serif", serif;
-  transition: all 0.3s ease-out;
-  transform: translateX(-100%);
-  position: absolute;
-  line-height: 1.8;
-  text-align: left;
-  font-size: 105%;
-  cursor: no-drop;
+.contact-view {
+  background: #0e131b;
   color: #fff;
-  height: 100%;
-  width: 100%;
-  left: 0;
-  top: 0;
+  padding: 60px 20px;
 }
 
-.info h2 {
+.section-header {
   text-align: center;
-}
-.product-image:hover .info {
-  transform: translateX(0);
-}
-
-.info ul li {
-  transition: 0.3s ease;
-}
-.info ul li:hover {
-  transform: translateX(50px) scale(1.3);
+  font-size: 42px;
+  letter-spacing: 5px;
+  margin-bottom: 40px;
 }
 
-/* .map .product-image:hover {
-  transition: all 0.3s ease-out;
+/* TARJETA */
+.contact-card {
+  background: #141a24;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
-.map .product-image:hover {
-  transform: scale(1.2, 1.2);
-} */
 
-/* Contacto derecho */
+.contact-wrapper {
+  display: flex;
+  gap: 60px;
+}
+
+.contact-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  background: #1a1f2a;
+  border: 1px solid #2b3242;
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.send-button {
+  background: #007bff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background: #0056b3;
+}
+
+.form-msg {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* CONTACTO */
 .direct-contact-container {
-  max-width: 400px;
-  text-align: left;
+  max-width: 360px;
 }
 
 .contact-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 20px 0;
 }
 
 .list-item {
   display: flex;
-  align-items: center;
+  gap: 12px;
   margin-bottom: 18px;
   color: #aaa;
 }
 
-.list-item i {
-  width: 30px;
-  text-align: center;
-  margin-right: 10px;
-}
-
-.contact-text a {
+.list-item a {
   color: #fff;
   text-decoration: none;
-  transition: color 0.2s;
-}
-
-.contact-text a:hover {
-  color: #6b6729;
 }
 
 /* Redes sociales */
@@ -331,14 +229,14 @@ L.marker([-33.001651, -58.518268]).addTo(map)
   justify-content: center;
   height: 48px;
   width: 48px;
-  background: #634522;
+  background: #1f2633;
   border-radius: 50%;
   color: #fff;
   transition: all 0.3s;
 }
 
 .contact-icon:hover {
-  background: #6b6729;
+  background: #007bff;
   transform: scale(1.1);
 }
 
@@ -347,5 +245,26 @@ L.marker([-33.001651, -58.518268]).addTo(map)
   color: #777;
   margin-top: 20px;
   font-size: 14px;
+}
+
+/* MAPA */
+.map-wrapper {
+  margin-top: 50px;
+  max-width: 1100px;
+  margin-inline: auto;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+#map {
+  width: 100%;
+  height: 350px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .contact-wrapper {
+    flex-direction: column;
+  }
 }
 </style>
