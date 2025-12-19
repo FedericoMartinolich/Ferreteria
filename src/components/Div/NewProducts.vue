@@ -217,4 +217,92 @@ const prevSlide = () => {
     margin-right: 120px;
 }
 
+@media (max-width: 1024px) {
+  .products-grid {
+    padding: 1rem 2rem;
+    gap: 1.25rem;
+  }
+
+  .product-card img {
+    height: 160px;
+  }
+
+  .prev {
+    margin-left: 40px;
+  }
+
+  .next {
+    margin-right: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner-new-products h2 {
+    font-size: 26px;
+    margin-bottom: 1.5rem;
+  }
+
+  .carousel-container {
+    gap: 8px;
+  }
+
+  .products-grid {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .product-card img {
+    height: 200px;
+  }
+
+  .product-card h3 {
+    font-size: 18px;
+    padding: 0.75rem;
+  }
+
+  .price {
+    font-size: 16px;
+    padding: 0 0.75rem;
+  }
+
+  .btn-add {
+    padding: 1rem;
+    font-size: 15px;
+  }
+
+  /* Flechas */
+  .carousel-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+  }
+
+  .prev,
+  .next {
+    margin: 0;
+  }
+
+  .carousel-dots {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .banner-new-products h2 {
+    font-size: 22px;
+  }
+
+  .product-card img {
+    height: 170px;
+  }
+
+  .product-card h3 {
+    font-size: 16px;
+  }
+
+  .price {
+    font-size: 15px;
+  }
+}
+
 </style>

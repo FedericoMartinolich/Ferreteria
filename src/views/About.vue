@@ -3,7 +3,7 @@
         <img src="../assets/imgs/local.jpg">
         <h1>¿Quienes Somos?</h1>
         <p>
-            Ferretería San Justo es una empresa familiar dedicada a la venta de herramientas manuales, herramientas eléctricas, artículos para mantenimiento de piletas y jardines, pinturas, sanitarios, hornos, asadores, planchetas, discos paelleros y anexos.
+            Ferretería El Moro es una empresa familiar dedicada a la venta de herramientas manuales, herramientas eléctricas, artículos para mantenimiento de piletas y jardines, pinturas, sanitarios, hornos, asadores, planchetas, discos paelleros y anexos.
         </p>
         <p>
             Nos distinguimos en el buen trato a nuestros clientes y  el ambiente familiar que se genera en el grupo de trabajo.

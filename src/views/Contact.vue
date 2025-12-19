@@ -24,29 +24,28 @@
           <div class="direct-contact-container">
             <ul class="contact-list">
               <li class="list-item">
-                <i class="fa fa-map-marker fa-2x"></i>
-                <span>Gualeguaychú, Entre Ríos, Argentina</span>
+                <span><i class="fa fa-map-marker fa-2x"></i> Gualeguaychú, Entre Ríos, Argentina</span>
               </li>
 
               <li class="list-item">
-                <i class="fa fa-brands fa-whatsapp fa-2x"></i>
                 <a href="https://wa.me/543446670475" target="_blank">
+                  <i class="fa fa-brands fa-whatsapp fa-2x"></i>
                   (54) 3446 67-0475
                 </a>
               </li>
 
               <li class="list-item">
-                <i class="fa fa-calendar fa-2x"></i>
-                <a href="mailto:elmoroferreteria@gmail.com">
+                <span>
+                  <i class="fa fa-calendar fa-2x"></i>
                   Lunes a Sábados
-                </a>
+                </span>
               </li>
 
               <li class="list-item">
-                <i class="fa fa-clock fa-2x"></i>
-                <a href="mailto:elmoroferreteria@gmail.com">
+                <span>
+                  <i class="fa fa-clock fa-2x"></i>
                   9hs - 13hs y 16:30hs - 21hs
-                </a>
+                </span>
               </li>
             </ul>
 
@@ -58,12 +57,7 @@
               </a>
             </li>
             <li>
-              <a href="https://github.com/FedericoMartinolich" target="_blank" class="contact-icon"
-                ><i class="fa fa-brands fa-github fa-2x"></i
-              ></a>
-            </li>
-            <li>
-              <a href="https://www.instagram.com/fedev.jpg" target="_blank" class="contact-icon"
+              <a href="https://www.instagram.com/ferreteria.elmoro/" target="_blank" class="contact-icon"
                 ><i class="fa fa-brands fa-instagram fa-2x"></i
               ></a>
             </li>
@@ -127,8 +121,8 @@ onMounted(() => {
 
 <style scoped>
 .contact-view {
-  background: #0e131b;
-  color: #fff;
+  background: linear-gradient(135deg, #2b1e16, #3a2a20);
+  color: #f5f5f5;
   padding: 60px 20px;
 }
 
@@ -137,15 +131,17 @@ onMounted(() => {
   font-size: 42px;
   letter-spacing: 5px;
   margin-bottom: 40px;
+  color: #ffd966;
 }
 
 /* TARJETA */
 .contact-card {
-  background: #141a24;
+  background: #4a3427;
   border-radius: 16px;
   padding: 40px;
   max-width: 1000px;
   margin: 0 auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .contact-wrapper {
@@ -162,31 +158,41 @@ onMounted(() => {
 
 .contact-form input,
 .contact-form textarea {
-  background: #1a1f2a;
-  border: 1px solid #2b3242;
-  color: #fff;
+  background: #2f2f2f;
+  border: 1px solid #6b4b3a;
+  color: #f5f5f5;
   padding: 10px;
   border-radius: 8px;
 }
 
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #cfcfcf;
+}
+
+/* BOTÓN */
 .send-button {
-  background: #007bff;
+  background: linear-gradient(135deg, #f2c94c, #d4a82a);
   border: none;
   border-radius: 8px;
   padding: 12px;
-  color: #fff;
-  font-weight: 600;
+  color: #2b1e16;
+  font-weight: 700;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .send-button:hover {
-  background: #0056b3;
+  background: linear-gradient(135deg, #ffd966, #f2c94c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(242, 201, 76, 0.4);
 }
 
 .form-msg {
   text-align: center;
   font-size: 14px;
   margin-top: 10px;
+  color: #cfcfcf;
 }
 
 /* CONTACTO */
@@ -203,12 +209,16 @@ onMounted(() => {
   display: flex;
   gap: 12px;
   margin-bottom: 18px;
-  color: #aaa;
+  color: #cfcfcf;
 }
 
-.list-item a {
-  color: #fff;
+.list-item a, span, i {
+  color: #ffd966;
   text-decoration: none;
+}
+
+.list-item a:hover {
+  color: #f2c94c;
 }
 
 /* Redes sociales */
@@ -229,20 +239,22 @@ onMounted(() => {
   justify-content: center;
   height: 48px;
   width: 48px;
-  background: #1f2633;
+  background: #2f2f2f;
   border-radius: 50%;
-  color: #fff;
-  transition: all 0.3s;
+  color: #ffd966;
+  transition: all 0.3s ease;
 }
 
 .contact-icon:hover {
-  background: #007bff;
-  transform: scale(1.1);
+  background: #f2c94c;
+  color: #2b1e16;
+  transform: scale(1.15);
 }
 
+/* FOOTER */
 .copyright {
   text-align: center;
-  color: #777;
+  color: #9e9e9e;
   margin-top: 20px;
   font-size: 14px;
 }
@@ -254,6 +266,7 @@ onMounted(() => {
   margin-inline: auto;
   border-radius: 16px;
   overflow: hidden;
+  border: 4px solid #6b4b3a;
 }
 
 #map {
@@ -263,8 +276,88 @@ onMounted(() => {
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
+  .section-header {
+    font-size: 32px;
+    letter-spacing: 3px;
+  }
+
+  .contact-card {
+    padding: 25px;
+  }
+
   .contact-wrapper {
     flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .contact-form {
+    width: 100%;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 14px;
+  }
+
+  .send-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  .direct-contact-container {
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
+  }
+
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .list-item {
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .list-item i {
+    font-size: 20px;
+  }
+
+  .social-media-list {
+    margin-top: 20px;
+  }
+
+  .map-wrapper {
+    margin-top: 30px;
+  }
+
+  #map {
+    height: 250px;
   }
 }
+
+@media (max-width: 420px) {
+  .section-header {
+    font-size: 26px;
+  }
+
+  .contact-card {
+    padding: 20px;
+  }
+
+  .list-item {
+    flex-direction: column;
+  }
+
+  .list-item span,
+  .list-item a {
+    font-size: 14px;
+  }
+}
+
 </style>

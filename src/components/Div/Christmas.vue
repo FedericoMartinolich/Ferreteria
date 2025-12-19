@@ -260,4 +260,128 @@ const prevSlide = () => {
     opacity: 1;
   }
 }
+
+@media (max-width: 1024px) {
+  .offer-card {
+    padding: 30px;
+    gap: 20px;
+  }
+
+  .offer-image {
+    width: 220px;
+    height: 220px;
+  }
+
+  .offer-content h2 {
+    font-size: 22px;
+  }
+
+  .discount-price {
+    font-size: 22px;
+  }
+
+  .prev {
+    margin-left: 40px;
+  }
+
+  .next {
+    margin-right: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .christmas-carousel h1 {
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .carousel-container {
+    gap: 10px;
+  }
+
+  .carousel-wrapper {
+    min-height: auto;
+    padding: 10px 0;
+  }
+
+  .offer-card {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .product-item {
+    min-width: 100%;
+  }
+
+  .offer-image {
+    width: 200px;
+    height: 200px;
+  }
+
+  .offer-content {
+    text-align: center;
+  }
+
+  .offer-content h2 {
+    font-size: 20px;
+  }
+
+  .offer-content p {
+    font-size: 14px;
+  }
+
+  .price-section {
+    margin-bottom: 15px;
+  }
+
+  .discount-price {
+    font-size: 20px;
+  }
+
+  .discount-badge {
+    top: -8px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  .btn-buy {
+    width: 100%;
+    padding: 12px;
+  }
+
+  /* Flechas */
+  .carousel-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+  }
+
+  .prev,
+  .next {
+    margin: 0;
+  }
+
+  /* Dots */
+  .carousel-dots {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  .offer-image {
+    width: 170px;
+    height: 170px;
+  }
+
+  .offer-content h2 {
+    font-size: 18px;
+  }
+
+  .discount-price {
+    font-size: 18px;
+  }
+}
+
 </style>

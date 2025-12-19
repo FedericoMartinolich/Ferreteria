@@ -1,11 +1,19 @@
 <template>
-    <h1>Mi carrito</h1>
+    <h1 class="cart-title">
+        <i class="fa-solid fa-cart-shopping"></i> Mi carrito
+    </h1>
+
     <section class="cart-view">
 
         <div v-if="cart.length === 0" class="empty">
-            <p>Tu carrito esta vacío.</p>
+            <img
+                :src="emptyCart"
+                alt="Carrito vacío"
+            />
+            <p>Tu carrito está vacío</p>
             <router-link to="/" class="btn">Continuar comprando</router-link>
         </div>
+
 
         <div v-else>
             <table class="cart-table" aria-label="Shopping cart">
@@ -110,14 +118,6 @@
                     </button>
                 </div>
 
-                <!-- <div class="confirm">
-                    <button type="button" class="btn3 cancel" @click="closeDialog">
-                        <i class="fa-solid fa-xmark"></i> Cancelar
-                    </button>
-                    <button type="button" class="btn3 confirm" @click="completeCheckout">
-                        <i class="fa-solid fa-check"></i>
-                    </button>
-                </div> -->
             </div>
         </dialog>
 
@@ -127,6 +127,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import emptyCart from '../assets/imgs/emptyCart.png'
 
 const CART_KEY = 'cart'
 const router = useRouter()
@@ -277,6 +278,41 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 </script>
 
 <style scoped>
+.cart-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 2rem;
+    margin-top: 6rem;
+    margin-bottom: 1.5rem;
+    color: #f5f5f5;
+}
+
+.cart-title i {
+    color: var(--llave);
+    font-size: 1.8rem;
+}
+
+/* Empty */
+.empty {
+  text-align: center;
+  padding: 60px 0;
+  opacity: 0.95;
+}
+
+.empty img {
+  width: 140px;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.empty p {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+
+
 .cart-view {
     max-width: 980px;
     margin: 32px auto;
@@ -292,6 +328,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 }
 
 h1 {
+    margin-top: 10rem;
     margin-bottom: 20px;
     font-size: 1.5rem;
     text-align: start;
@@ -306,7 +343,23 @@ h1 {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 18px;
+    background: rgba(255,255,255,0.03);
+    /* border-radius: 12px; */
+    overflow: hidden;
 }
+
+.cart-table thead {
+  background: rgba(0,0,0,0.25);
+}
+
+.cart-table tr {
+  transition: background 0.2s ease;
+}
+
+.cart-table tbody tr:hover {
+  background: rgba(255,255,255,0.04);
+}
+
 
 .cart-table th,
 .cart-table td {
@@ -537,28 +590,69 @@ h1 {
     font-size: 14px;
 }
 
-/* Para móviles, 1 columna */
-@media (max-width: 600px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-}
+@media (max-width: 900px) {
+  .cart-view {
+    padding: 1.5rem;
+  }
 
-.header {
-    display: flex;               /* Activa Flexbox */
-    justify-content: space-between; /* Distribuye el contenido al máximo: uno a la izquierda, otro a la derecha */
-    align-items: center;         /* Centra verticalmente los elementos */
-    padding: 10px 20px;          /* Opcional: espacio interno */
-}
+  .cart-table th,
+  .cart-table td {
+    padding: 10px 6px;
+    font-size: 14px;
+  }
 
-.header h1 {
-    margin: 0;
+  .thumb {
+    width: 52px;
+    height: 52px;
+  }
+
+  .summary {
+    gap: 12px;
+  }
+}
+@media (max-width: 700px) {
+  .summary {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .summary .left,
+  .summary .right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .totals {
     text-align: left;
-    flex-shrink: 0; /* evita que se reduzca */
-}
+  }
 
-.header .btn3 {
-    flex: 0 0 auto; /* ocupa solo el ancho necesario */
+  .actions-vertical .btn {
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .dialog {
+    width: 95%;
+    max-width: none;
+  }
+
+  .dialog-form {
+    padding: 16px;
+  }
+
+  .options {
+    flex-direction: column;
+  }
+
+  .btn2 {
+    width: 100%;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
 }
 
 </style>

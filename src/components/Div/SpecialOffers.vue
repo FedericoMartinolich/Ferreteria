@@ -1,67 +1,117 @@
 <template>
-    <div class="full-width">
-        <div class="special-offers">
-            <div class="carousel-container">
-                <button class="carousel-btn prev" @click="prevSlide">❮</button>
-                
-                <div class="carousel-wrapper">
-                    <div class="carousel-slide" v-for="(offer, index) in offers" :key="index" 
-                            v-show="currentSlide === index">
-                        <div class="offer-content">
-                            <h2>{{ offer.title }}</h2>
-                            <p>{{ offer.description }}</p>
-                            <span class="discount">{{ offer.discount }}</span>
-                        </div>
-                    </div>
+  <div class="full-width">
+    <div class="special-offers">
+      <h1>{{ data.title }}</h1>
+
+      <div class="carousel-container">
+        <button class="carousel-btn prev" @click="prevSlide">❮</button>
+
+        <div class="carousel-wrapper">
+          <div
+            class="carousel-slide"
+            v-for="(slide, index) in slides"
+            :key="index"
+            v-show="currentIndex === index"
+          >
+            <div class="offer-card">
+              <div
+                v-for="product in slide"
+                :key="product.id"
+                class="product-item"
+              >
+                <img
+                  :src="product.image"
+                  :alt="product.product"
+                  class="offer-image"
+                />
+
+                <div class="offer-content">
+                  <h2>{{ product.product }}</h2>
+                  <p v-if="product.description">{{ product.description }}</p>
+
+                  <div class="price-section">
+                    <span v-if="product.originalPrice" class="original-price">
+                      ${{ product.originalPrice }}
+                    </span>
+                    <span class="discount-price">
+                      ${{ product.price }}
+                    </span>
+                  </div>
+
+                  <span class="discount-badge">
+                    -{{ Number(product.discount).toFixed(0) }}%
+                  </span>
                 </div>
-                
-                <button class="carousel-btn next" @click="nextSlide">❯</button>
+              </div>
             </div>
-            
-            <div class="carousel-dots">
-                <span v-for="(_, index) in offers" :key="index" 
-                            @click="currentSlide = index"
-                            :class="{ active: currentSlide === index }"></span>
-            </div>
+          </div>
         </div>
+
+        <button class="carousel-btn next" @click="nextSlide">❯</button>
+      </div>
+
+      <div class="carousel-dots">
+        <span
+          v-for="(_, index) in slides"
+          :key="index"
+          :class="{ active: currentIndex === index }"
+          @click="currentIndex = index"
+        ></span>
+      </div>
     </div>
+  </div>
 </template>
 
-<script>
-export default {
-    name: 'SpecialOffers',
-    data() {
-        return {
-            currentSlide: 0,
-            offers: [
-                {
-                    title: 'Special Offer 1',
-                    description: 'Get up to 50% off',
-                    discount: '-50%'
-                },
-                {
-                    title: 'Special Offer 2',
-                    description: 'Limited time deal',
-                    discount: '-30%'
-                },
-                {
-                    title: 'Special Offer 3',
-                    description: 'Exclusive for members',
-                    discount: '-40%'
-                }
-            ]
-        }
-    },
-    methods: {
-        nextSlide() {
-            this.currentSlide = (this.currentSlide + 1) % this.offers.length;
-        },
-        prevSlide() {
-            this.currentSlide = (this.currentSlide - 1 + this.offers.length) % this.offers.length;
-        }
-    }
-}
+<script setup>
+import { ref, onMounted, computed } from "vue";
+import { getProductById } from "../../services/products";
+
+const props = defineProps({
+  data: Object,
+});
+
+const productData = ref([]);
+const currentIndex = ref(0);
+const itemsPerSlide = ref(4);
+
+/* responsive */
+const updateItemsPerSlide = () => {
+  if (window.innerWidth < 640) itemsPerSlide.value = 1;
+  else if (window.innerWidth < 1024) itemsPerSlide.value = 2;
+  else itemsPerSlide.value = 4;
+};
+
+onMounted(async () => {
+  updateItemsPerSlide();
+  window.addEventListener("resize", updateItemsPerSlide);
+
+  for (const id of props.data.product_ids) {
+    const product = await getProductById(id);
+    if (product) productData.value.push(product);
+  }
+});
+
+/* agrupar productos en slides */
+const slides = computed(() => {
+  const chunks = [];
+  for (let i = 0; i < productData.value.length; i += itemsPerSlide.value) {
+    chunks.push(productData.value.slice(i, i + itemsPerSlide.value));
+  }
+  return chunks;
+});
+
+const nextSlide = () => {
+  currentIndex.value =
+    (currentIndex.value + 1) % slides.value.length;
+};
+
+const prevSlide = () => {
+  currentIndex.value =
+    (currentIndex.value - 1 + slides.value.length) %
+    slides.value.length;
+};
 </script>
+
 
 <style scoped>
 
@@ -173,4 +223,148 @@ export default {
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
+.offer-card {
+  display: flex;
+  gap: 30px;
+  padding: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.product-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 280px;
+}
+
+.offer-image {
+  width: 260px;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.discount-badge {
+  background: #ff6b6b;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+  .offer-card {
+    padding: 30px;
+    gap: 20px;
+  }
+
+  .product-item {
+    max-width: 220px;
+  }
+
+  .offer-image {
+    width: 220px;
+    height: 220px;
+  }
+
+  .offer-content h2 {
+    font-size: 22px;
+  }
+
+  .prev {
+    margin-left: 40px;
+  }
+
+  .next {
+    margin-right: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .special-offers h1 {
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .carousel-container {
+    gap: 10px;
+  }
+
+  .carousel-wrapper {
+    min-height: auto;
+    padding: 10px 0;
+  }
+
+  .offer-card {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .product-item {
+    max-width: 100%;
+  }
+
+  .offer-image {
+    width: 200px;
+    height: 200px;
+  }
+
+  .offer-content {
+    text-align: center;
+    padding: 0;
+    position: relative;
+  }
+
+  .offer-content h2 {
+    font-size: 20px;
+  }
+
+  .offer-content p {
+    font-size: 14px;
+  }
+
+  .price-section {
+    margin-bottom: 15px;
+  }
+
+  .discount-badge {
+    position: absolute;
+    top: -10px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  /* Flechas */
+  .carousel-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+  }
+
+  .prev,
+  .next {
+    margin: 0;
+  }
+
+  /* Dots */
+  .carousel-dots {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  .offer-image {
+    width: 170px;
+    height: 170px;
+  }
+
+  .offer-content h2 {
+    font-size: 18px;
+  }
+}
+
 </style>

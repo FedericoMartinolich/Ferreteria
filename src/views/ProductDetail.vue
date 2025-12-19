@@ -233,4 +233,75 @@ button {
 .error {
     color: #c53030;
 }
+
+@media (max-width: 768px) {
+
+  .product-detail {
+    padding: 14px;
+    margin: 16px 12px;
+  }
+
+  .content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .media {
+    max-width: 100%;
+  }
+
+  .media img {
+    border-radius: 12px;
+  }
+
+  .info {
+    width: 100%;
+  }
+
+  .back-btn {
+    float: none !important;
+    width: 100%;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 1.35rem;
+    text-align: center;
+  }
+
+  .price {
+    text-align: center;
+    font-size: 1.3rem;
+  }
+
+  .description {
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 16px 0;
+    gap: 14px;
+  }
+
+  .qty {
+    justify-content: center;
+  }
+
+  .qty input {
+    width: 70px;
+  }
+
+  .add,
+  .whatsApp {
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
+
 </style>
