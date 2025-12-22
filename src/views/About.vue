@@ -30,7 +30,7 @@
 
 /* Card */
 .about {
-  background: rgb(197, 191, 180); /* tono cálido */
+  background: rgba(243, 237, 228, 0.95); /* tono cálido */
   max-width: 800px;
   padding: 2.5rem;
   border-radius: 12px;
