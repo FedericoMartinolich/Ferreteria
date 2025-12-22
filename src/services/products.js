@@ -1,27 +1,31 @@
-export async function getProducts() {
-  const url = `
-    https://docs.google.com/spreadsheets/d/e/2PACX-1vTj8ske2PVx3Xrzxpw0rgQBlDxY_MTtAOjh4KU5waKgcizdypRMiyYRFt12p8AM6g2RG_xcxKpQ9M2o/pub?output=csv
-  `;
+const url = `
+  https://docs.google.com/spreadsheets/d/e/2PACX-1vTj8ske2PVx3Xrzxpw0rgQBlDxY_MTtAOjh4KU5waKgcizdypRMiyYRFt12p8AM6g2RG_xcxKpQ9M2o/pub?output=csv
+`;
+import Papa from "papaparse";
 
+export async function getProducts() {
   const res = await fetch(url);
   const csv = await res.text();
 
-  // convertir CSV a array de objetos
-  const rows = csv.trim().split("\n").map(r => r.split(","));
-
-  const headers = rows.shift(); // primera fila
-
-  const data = rows.map(row => {
-    const obj = {};
-    headers.forEach((h, i) => {
-      obj[h.trim()] = row[i] ? row[i].trim() : "";
-    });
-    return obj;
+  const { data } = Papa.parse(csv, {
+    header: true,
+    skipEmptyLines: true,
   });
 
   return data;
 }
+
 export async function getProductById(id) {
   const products = await getProducts();
   return products.find(p => p.id === id);
+}
+
+export function getProductImage(product) {
+  const key = product.image_key?.trim();
+
+  if (!key) {
+    return '/img/placeholder.png';
+  }
+
+  return `https://res.cloudinary.com/dehd0hw2a/image/upload/w_400,q_auto/${key}`;
 }

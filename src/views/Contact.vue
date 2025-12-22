@@ -120,64 +120,98 @@ onMounted(() => {
 
 
 <style scoped>
+/* =========================
+   VISTA GENERAL
+   ========================= */
+
 .contact-view {
   background: linear-gradient(135deg, #2b1e16, #3a2a20);
   color: #f5f5f5;
-  padding: 60px 20px;
+  padding: 70px 20px;
 }
+
+/* =========================
+   TÍTULO
+   ========================= */
 
 .section-header {
   text-align: center;
   font-size: 42px;
-  letter-spacing: 5px;
-  margin-bottom: 40px;
-  color: #ffd966;
+  letter-spacing: 6px;
+  margin-bottom: 45px;
+  color: #e6c87a;
+  font-weight: 600;
 }
 
-/* TARJETA */
+/* =========================
+   TARJETA PRINCIPAL
+   ========================= */
+
 .contact-card {
-  background: #4a3427;
-  border-radius: 16px;
-  padding: 40px;
+  background: linear-gradient(180deg, #4a3427, #3d2b20);
+  border-radius: 18px;
+  padding: 42px;
   max-width: 1000px;
   margin: 0 auto;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .contact-wrapper {
   display: flex;
   gap: 60px;
+  align-items: flex-start;
 }
+
+/* =========================
+   FORMULARIO
+   ========================= */
 
 .contact-form {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .contact-form input,
 .contact-form textarea {
-  background: #2f2f2f;
-  border: 1px solid #6b4b3a;
+  background: #2a1f18;
+  border: 1px solid #7a5a45;
   color: #f5f5f5;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #e6c87a;
+  box-shadow: 0 0 0 2px rgba(230, 200, 122, 0.25);
 }
 
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
-  color: #cfcfcf;
+  color: #c9b8aa;
+  letter-spacing: 1px;
 }
 
-/* BOTÓN */
+/* =========================
+   BOTÓN ENVIAR
+   ========================= */
+
 .send-button {
+  margin-top: 8px;
   background: linear-gradient(135deg, #f2c94c, #d4a82a);
   border: none;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 10px;
+  padding: 14px;
   color: #2b1e16;
   font-weight: 700;
+  letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -185,17 +219,20 @@ onMounted(() => {
 .send-button:hover {
   background: linear-gradient(135deg, #ffd966, #f2c94c);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(242, 201, 76, 0.4);
+  box-shadow: 0 8px 25px rgba(242, 201, 76, 0.45);
 }
 
 .form-msg {
   text-align: center;
   font-size: 14px;
-  margin-top: 10px;
-  color: #cfcfcf;
+  margin-top: 12px;
+  color: #d6c6b8;
 }
 
-/* CONTACTO */
+/* =========================
+   CONTACTO DIRECTO
+   ========================= */
+
 .direct-contact-container {
   max-width: 360px;
 }
@@ -203,30 +240,43 @@ onMounted(() => {
 .contact-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .list-item {
   display: flex;
-  gap: 12px;
-  margin-bottom: 18px;
-  color: #cfcfcf;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  color: #e0d2c4;
+  font-size: 15px;
 }
 
-.list-item a, span, i {
-  color: #ffd966;
+.list-item i {
+  color: #e6c87a;
+}
+
+.list-item a,
+.list-item span {
+  color: #e6c87a;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .list-item a:hover {
-  color: #f2c94c;
+  color: #ffd966;
 }
 
-/* Redes sociales */
+/* =========================
+   REDES SOCIALES
+   ========================= */
+
 .social-media-list {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 18px;
   padding: 0;
+  margin: 20px 0;
 }
 
 .social-media-list li {
@@ -237,11 +287,12 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
-  width: 48px;
-  background: #2f2f2f;
+  height: 50px;
+  width: 50px;
+  background: #2a1f18;
   border-radius: 50%;
-  color: #ffd966;
+  color: #e6c87a;
+  box-shadow: inset 0 0 0 1px #7a5a45;
   transition: all 0.3s ease;
 }
 
@@ -249,24 +300,32 @@ onMounted(() => {
   background: #f2c94c;
   color: #2b1e16;
   transform: scale(1.15);
+  box-shadow: 0 6px 20px rgba(242, 201, 76, 0.5);
 }
 
-/* FOOTER */
+/* =========================
+   FOOTER
+   ========================= */
+
 .copyright {
   text-align: center;
-  color: #9e9e9e;
+  color: #b7a89a;
   margin-top: 20px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-/* MAPA */
+/* =========================
+   MAPA
+   ========================= */
+
 .map-wrapper {
-  margin-top: 50px;
+  margin-top: 55px;
   max-width: 1100px;
   margin-inline: auto;
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
-  border: 4px solid #6b4b3a;
+  border: 4px solid #7a5a45;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 #map {
@@ -274,7 +333,10 @@ onMounted(() => {
   height: 350px;
 }
 
-/* RESPONSIVE */
+/* =========================
+   RESPONSIVE
+   ========================= */
+
 @media (max-width: 768px) {
   .section-header {
     font-size: 32px;
@@ -282,7 +344,7 @@ onMounted(() => {
   }
 
   .contact-card {
-    padding: 25px;
+    padding: 28px;
   }
 
   .contact-wrapper {
@@ -295,49 +357,27 @@ onMounted(() => {
     width: 100%;
   }
 
-  .contact-form input,
-  .contact-form textarea {
-    font-size: 14px;
-  }
-
   .send-button {
     width: 100%;
-    padding: 14px;
-    font-size: 15px;
+    padding: 15px;
   }
 
   .direct-contact-container {
     max-width: 100%;
-    width: 100%;
     text-align: center;
   }
 
   .contact-list {
-    display: flex;
-    flex-direction: column;
     align-items: center;
   }
 
   .list-item {
     justify-content: center;
     text-align: center;
-    gap: 10px;
-  }
-
-  .list-item i {
-    font-size: 20px;
-  }
-
-  .social-media-list {
-    margin-top: 20px;
-  }
-
-  .map-wrapper {
-    margin-top: 30px;
   }
 
   #map {
-    height: 250px;
+    height: 260px;
   }
 }
 
@@ -347,11 +387,12 @@ onMounted(() => {
   }
 
   .contact-card {
-    padding: 20px;
+    padding: 22px;
   }
 
   .list-item {
     flex-direction: column;
+    gap: 6px;
   }
 
   .list-item span,

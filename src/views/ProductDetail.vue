@@ -4,7 +4,15 @@
         <div v-else-if="error" class="center error">{{ error }}</div>
         <div v-else-if="product" class="content">
             <div class="media">
-                <img :src="product.image || placeholderImage" :alt="product.name" />
+                <img
+                    v-if="product.image_key"
+                    :src="getProductImage(product)"
+                    :alt="product.product"
+                    loading="lazy"
+                    class="product-image"
+                    />
+
+                <img v-else :src=emptyImg alt="">
             </div>
 
             <div class="info">
@@ -45,9 +53,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getProductById } from '../services/products.js'
+import { getProductImage } from '../services/products.js'
+import emptyImg from "../assets/imgs/emptys/emptyImg.png"
 
 const route = useRoute()
 const router = useRouter()
@@ -127,131 +137,237 @@ function whatsApp() {
 onMounted(() => {
     if (productId) fetchProduct(productId)
 })
+watch(product, () => {
+  console.log('PRODUCTO:', product.value)
+  console.log('IMAGE_KEY:', product.value?.image_key)
+})
 </script>
 
 <style scoped>
+/* =========================
+   ESTILO GENERAL
+   ========================= */
+
 .product-detail {
-    max-width: 960px;
-    margin: 24px auto;
-    padding: 16px;
-    box-sizing: border-box;
-    background-color: var(--moro);
-    border-radius: 8px;
+  max-width: 960px;
+  margin: 32px auto;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #f6f1ea; /* crema cálido */
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(62, 39, 20, 0.25);
 }
-.back-btn {
-    background: var(--llave);
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 8px 14px;
-    margin-bottom: 12px;
-    border-radius: 6px;
-}
+
+/* =========================
+   CONTENIDO
+   ========================= */
+
 .content {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
+  display: flex;
+  gap: 28px;
+  align-items: center;
 }
+
+/* =========================
+   IMAGEN
+   ========================= */
+
 .media {
-    flex: 1 1 320px;
-    max-width: 360px;
+  flex: 1 1 320px;
+  max-width: 360px;
 }
+
 .media img {
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-    object-fit: cover;
-    background: #f3f4f6;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  object-fit: cover;
+  background: #efe6dc;
+  box-shadow: 0 8px 20px rgba(60, 40, 25, 0.25);
 }
+
+/* =========================
+   INFO
+   ========================= */
+
 .info {
-    flex: 1 1 420px;
+  flex: 1 1 420px;
 }
+
+/* =========================
+   BOTÓN VOLVER
+   ========================= */
+
+.back-btn {
+  background: transparent;
+  border: 1px solid #6b5b4b;
+  color: #3b2a1a;
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  float: right;
+}
+
+.back-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* =========================
+   TEXTO
+   ========================= */
+
 .title {
-    margin: 0 0 8px;
-    margin-top: 18px;
-    font-size: 1.5rem;
+  margin: 16px 0 6px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #3b2a1a;
 }
+
 .price {
-    font-size: 1.25rem;
-    /* color: #1a202c; */
-    margin: 8px 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #6b8e23; /* verde oliva */
+  margin: 8px 0 14px;
 }
+
 .description {
-    color: #4a5568;
-    margin: 12px 0;
+  color: #6b5b4b;
+  line-height: 1.55;
+  font-size: 0.95rem;
 }
+
+/* =========================
+   CONTROLES
+   ========================= */
+
 .controls {
-    margin-top: 18px;
-    margin-left: 18px;
-    margin-right: 18px;
-    margin-bottom: 18px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
+  margin-top: 20px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
 }
+
+/* =========================
+   CANTIDAD
+   ========================= */
+
 .qty {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
+
 .qty button {
-    width: 36px;
-    height: 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #8b8b8b;
+  background: #7c7c7c;
+  cursor: pointer;
 }
+
 .qty input {
-    width: 64px;
-    text-align: center;
-    padding: 6px;
+  width: 64px;
+  text-align: center;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid #c8b8a8;
 }
+
+.stock {
+  font-size: 0.85rem;
+  color: #6b5b4b;
+}
+
+/* =========================
+   BOTÓN CARRITO
+   ========================= */
+
 .add {
-    background: var(--llave);
-    color: white;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 6px;
-    cursor: pointer;
+  background: #6b8e23; /* verde oliva */
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
+
+.add:hover {
+  background: #556b2f;
+  transform: translateY(-1px);
+}
+
 .add:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
+
+/* =========================
+   BOTÓN WHATSAPP
+   ========================= */
+
 .whatsApp {
-    background: #1b9b4a;
-    color: white;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 6px;
-    cursor: pointer;
+  background: #1b9b4a;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
+
+.whatsApp:hover {
+  background: #14833e;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   UTILIDADES
+   ========================= */
+
 button {
-    white-space: nowrap;
+  white-space: nowrap;
 }
+
 .center {
-    text-align: center;
-    padding: 24px 0;
+  text-align: center;
+  padding: 24px 0;
 }
+
 .error {
-    color: #c53030;
+  color: #a33232;
 }
+
+/* =========================
+   RESPONSIVE
+   ========================= */
 
 @media (max-width: 768px) {
-
   .product-detail {
-    padding: 14px;
+    padding: 18px;
     margin: 16px 12px;
   }
 
   .content {
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
   }
 
   .media {
     max-width: 100%;
-  }
-
-  .media img {
-    border-radius: 12px;
   }
 
   .info {
@@ -259,31 +375,21 @@ button {
   }
 
   .back-btn {
-    float: none !important;
+    float: none;
     width: 100%;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     text-align: center;
   }
 
-  .title {
-    font-size: 1.35rem;
-    text-align: center;
-  }
-
-  .price {
-    text-align: center;
-    font-size: 1.3rem;
-  }
-
+  .title,
+  .price,
   .description {
     text-align: center;
-    font-size: 0.95rem;
   }
 
   .controls {
     flex-direction: column;
     align-items: stretch;
-    margin: 16px 0;
     gap: 14px;
   }
 
@@ -291,16 +397,10 @@ button {
     justify-content: center;
   }
 
-  .qty input {
-    width: 70px;
-  }
-
   .add,
   .whatsApp {
     width: 100%;
     justify-content: center;
-    font-size: 1rem;
-    padding: 12px;
   }
 }
 

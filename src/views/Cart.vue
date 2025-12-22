@@ -127,7 +127,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import emptyCart from '../assets/imgs/emptyCart.png'
+import emptyCart from '../assets/imgs/emptys/emptyCart.png'
 
 const CART_KEY = 'cart'
 const router = useRouter()

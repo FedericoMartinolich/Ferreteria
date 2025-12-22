@@ -20,10 +20,14 @@
                 class="product-item"
               >
                 <img
-                  :src="product.image"
-                  :alt="product.product"
-                  class="offer-image"
-                />
+                    v-if="product.image_key"
+                    :src="getProductImage(product)"
+                    :alt="product.product"
+                    loading="lazy"
+                    class="product-image"
+                    />
+
+                <img v-else :src=emptyImg alt="">
 
                 <div class="offer-content">
                   <h2>{{ product.product }}</h2>
@@ -64,7 +68,8 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { getProductById } from "../../services/products";
+import { getProductById, getProductImage } from "../../services/products";
+import emptyImg from "../../assets/imgs/emptys/emptyImg.png"
 
 const props = defineProps({
   data: Object,
@@ -114,6 +119,9 @@ const prevSlide = () => {
 
 
 <style scoped>
+img {
+  max-width: 14rem;
+}
 
 .special-offers {
     width: 100%;
@@ -332,10 +340,21 @@ const prevSlide = () => {
   }
 
   .discount-badge {
-    position: absolute;
     top: -10px;
     right: 50%;
     transform: translateX(50%);
+  }
+
+  .original-price {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 10px;
+  }
+
+  .discount-price {
+    font-size: 26px;
+    font-weight: bold;
+    color: #c41e3a;
   }
 
   /* Flechas */

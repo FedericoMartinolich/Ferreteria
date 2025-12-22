@@ -1,39 +1,33 @@
 <template>
   <div>
-    <NewProducts v-if="notNull(newProductsEvent)" :data="newProductsEvent[0]"/>
-    <Christmas v-if="notNull(christmasEvent)" :data="christmasEvent[0]"/>
-    <SpecialOffers v-if="notNull(specialOffersEvent)" :data="specialOffersEvent[0]"/>
+    <Christmas v-if="christmasEvent" :data="christmasEvent" />
+    <SpecialOffers v-if="specialOffersEvent" :data="specialOffersEvent" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import { getEvents } from "../services/events.js"
-/* Divs */
+import { ref, onMounted } from "vue";
+
+/* Components */
 import Christmas from "../components/Div/Christmas.vue";
-import NewProducts from "../components/Div/NewProducts.vue";
 import SpecialOffers from "../components/Div/SpecialOffers.vue";
 
-const events = ref([]);
-const christmasEvent = ref([]);
-const newProductsEvent = ref([]);
-const specialOffersEvent = ref([]);
+/* Services */
+import {
+  getChristmasEvent,
+  getSpecialOffersEvent
+} from "../services/events.js";
 
-const notNull = (value) => value && value.length > 0;
+const christmasEvent = ref(null);
+const specialOffersEvent = ref(null);
 
 onMounted(async () => {
-  const data = await getEvents();
-  const activeEvents = data
-    .filter(event => event.active === "1")
-    .map(event => ({
-    ...event,
-    product_ids: event.product_ids.split("|"),
-    }));
-  events.value = activeEvents;
+  const [christmas, offers] = await Promise.all([
+    getChristmasEvent(),
+    getSpecialOffersEvent()
+  ]);
 
-  christmasEvent.value = activeEvents.filter(event => event.event_key === "christmas");
-  newProductsEvent.value = activeEvents.filter(event => event.event_key === "new");  
-  specialOffersEvent.value = activeEvents.filter(event => event.event_key === "offers");
+  christmasEvent.value = christmas[0] || null;
+  specialOffersEvent.value = offers[0] || null;
 });
-
 </script>

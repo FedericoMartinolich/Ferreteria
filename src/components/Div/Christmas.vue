@@ -14,7 +14,15 @@
           >
             <div class="offer-card">
               <div v-for="product in slide" :key="product.id" class="product-item">
-                <img :src="product.image" :alt="product.title" class="offer-image" />
+                <img
+                    v-if="product.image_key"
+                    :src="getProductImage(product)"
+                    :alt="product.product"
+                    loading="lazy"
+                    class="product-image"
+                    />
+
+                <img v-else :src=emptyImg alt="">
 
                 <div class="offer-content">
                   <h2>{{ product.title }}</h2>
@@ -52,7 +60,8 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { getProductById } from "../../services/products";
+import { getProductById, getProductImage } from "../../services/products";
+import emptyImg from "../../assets/imgs/emptys/emptyImg.png"
 
 const props = defineProps({
   data: Object,
@@ -101,6 +110,10 @@ const prevSlide = () => {
 </script>
 
 <style scoped>
+img {
+  max-width: 20rem;
+}
+
 .christmas-carousel {
   width: 100%;
   padding: 2rem 0;
@@ -162,7 +175,7 @@ const prevSlide = () => {
 }
 
 .offer-content h2 {
-  margin-bottom: 10px;
+  margin: 35px;
   font-size: 28px;
   color: #1a472a;
 }

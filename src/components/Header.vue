@@ -313,4 +313,10 @@ const filteredProducts = computed(() => {
         margin-left: 0;
     }
 }
+
+@media (max-width: 640px) {
+    span.title {
+        display: none;
+    }
+}
 </style>
