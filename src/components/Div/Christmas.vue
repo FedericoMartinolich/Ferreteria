@@ -25,7 +25,7 @@
                 <img v-else :src=emptyImg alt="">
 
                 <div class="offer-content">
-                  <h2>{{ product.title }}</h2>
+                  <h2>{{ product.product }}</h2>
                   <p>{{ product.description }}</p>
 
                   <div class="price-section">
@@ -175,7 +175,7 @@ img {
 }
 
 .offer-content h2 {
-  margin: 35px;
+  margin-top: 35px;
   font-size: 28px;
   color: #1a472a;
 }
