@@ -21,11 +21,11 @@ export async function getProductById(id) {
 }
 
 export function getProductImage(product) {
-  const key = product.image_key?.trim();
-
-  if (!key) {
-    return '/img/placeholder.png';
+  if (!product.image_key) {
+    return '/img/placeholder.png'
   }
 
-  return `https://res.cloudinary.com/dehd0hw2a/image/upload/w_400,q_auto/${key}`;
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+
+  return `https://res.cloudinary.com/${cloudName}/image/upload/w_400,q_auto/${product.image_key}`
 }

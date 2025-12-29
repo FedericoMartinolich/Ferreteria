@@ -1,128 +1,85 @@
 <template>
     <h1 class="cart-title">
-        <i class="fa-solid fa-cart-shopping"></i> Mi carrito
+      <i class="fa-solid fa-cart-shopping"></i> Mi carrito
     </h1>
+  <div class="container">
 
     <section class="cart-view">
 
-        <div v-if="cart.length === 0" class="empty">
-            <img
-                :src="emptyCart"
-                alt="Carrito vacío"
-            />
-            <p>Tu carrito está vacío</p>
-            <router-link to="/" class="btn">Continuar comprando</router-link>
-        </div>
+      <!-- Carrito vacío -->
+      <div v-if="cart.length === 0" class="empty">
+        <img :src="emptyCart" alt="Carrito vacío" />
+        <p>Tu carrito está vacío</p>
+        <router-link to="/" class="btn">Continuar comprando</router-link>
+      </div>
 
+      <!-- Carrito con productos -->
+      <div v-else>
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th class="center">Precio</th>
+              <th class="center">Cantidad</th>
+              <th class="center">Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
 
-        <div v-else>
-            <table class="cart-table" aria-label="Shopping cart">
-                <thead>
-                    <tr>
-                        <th class="center">Producto</th>
-                        <th class="center">Precio</th>
-                        <th class="center">Cantidad</th>
-                        <th class="center">Subtotal</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in cart" :key="item.id">
-                        <td>
-                            <img v-if="item.image" :src="item.image" alt="" class="thumb" />
-                            <div class="meta">
-                                <div class="name">{{ item.name }}</div>
-                                <!-- <div class="sku" v-if="item.sku">SKU: {{ item.sku }}</div> -->
-                            </div>
-                        </td>
-                        <td class="center">{{ formatCurrency(item.price) }}</td>
-                        <td class="center">
-                            <div class="qty">
-                                <button @click="decrease(item)" :aria-label="'Decrease ' + item.name">−</button>
-                                <input type="number" v-model.number="item.qty" min="1" />
-                                <button @click="increase(item)" :aria-label="'Increase ' + item.name">+</button>
-                            </div>
-                        </td>
-                        <td class="center">{{ formatCurrency(item.price * item.qty) }}</td>
-                        <td class="actions">
-                            <button class="link" @click="removeItem(item.id)">Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+          <tbody>
+            <tr v-for="item in cart" :key="item.id">
+              <td data-label="Producto" class="product-cell">
+                <img v-if="item.image" :src="item.image" class="thumb" />
+                <span class="name">{{ item.name }}</span>
+              </td>
 
-            <div class="summary">
-                <div class="left">
-                    <button class="btn danger" @click="clearCart">Borrar todo</button>
-                    <router-link to="/" class="btn">Continuar comprando</router-link>
+              <td class="center" data-label="Precio">
+                {{ formatCurrency(item.price) }}
+              </td>
+
+              <td class="center" data-label="Cantidad">
+                <div class="qty">
+                  <button @click="decrease(item)">−</button>
+                  <input type="number" v-model.number="item.qty" min="1" />
+                  <button @click="increase(item)">+</button>
                 </div>
+              </td>
 
-                <div class="right">
-                    <div class="totals">
-                        <div>Items: <strong>{{ totalItems }}</strong></div>
-                        <div>Total: <strong>{{ formatCurrency(totalPrice) }}</strong></div>
-                    </div>
-                    <div class="actions-vertical">
-                        <button class="btn primary" @click="checkout">Realizar pedido</button>
-                    </div>
-                </div>
+              <td class="center" data-label="Subtotal">
+                {{ formatCurrency(item.price * item.qty) }}
+              </td>
+
+              <td class="actions" data-label="Acciones">
+                <button class="remove" @click="removeItem(item.id)">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Resumen -->
+        <div class="summary">
+          <div class="summary-left">
+            <button class="btn danger" @click="clearCart">Borrar todo</button>
+            <router-link to="/" class="btn">Seguir comprando</router-link>
+          </div>
+
+          <div class="summary-right">
+            <div class="totals">
+              <span>Items: <strong>{{ totalItems }}</strong></span>
+              <span>Total: <strong>{{ formatCurrency(totalPrice) }}</strong></span>
             </div>
+            <button class="btn primary" @click="checkout">
+              Realizar pedido
+            </button>
+          </div>
         </div>
-
-        <!-- Modal -->
-        <dialog ref="checkoutDialog" class="dialog">
-            <div class="dialog-form">
-                <div class="header">
-                    <h1>Pedido</h1>
-                    <button type="button" class="btn3 cancel" @click="closeDialog">
-                        <i class="fa-solid fa-xmark"></i> Cancelar
-                    </button>
-                </div>
-                <p>El pedido será procesado una vez confirmado el pago y se entregará en el destino indicado mediante un cadete.</p>
-
-                <div class="form-grid">
-                    <div class="field">
-                        <label for="firstName">Nombre</label>
-                        <input id="firstName" v-model="form.firstName" type="text" required>
-                    </div>
-
-                    <div class="field">
-                        <label for="lastName">Apellido</label>
-                        <input id="lastName" v-model="form.lastName" type="text" required>
-                    </div>
-
-                    <div class="field">
-                        <label for="email">Email</label>
-                        <input id="email" v-model="form.email" type="email" required>
-                    </div>
-
-                    <div class="field">
-                        <label for="phone">Teléfono</label>
-                        <input id="phone" v-model="form.phone" type="tel" required>
-                    </div>
-
-                    <div class="field full">
-                        <label for="address">Dirección</label>
-                        <input id="address" v-model="form.address" type="text" required>
-                    </div>
-                </div>
-
-                <p>Realizar el pedido por...</p>
-
-                <div class="options">
-                    <button type="button" @click="cargarWhatsApp" class="btn2 btn-whatsapp" :disabled="!isFormValid">
-                        <i class="fa-brands fa-whatsapp"></i> WhatsApp
-                    </button>
-                    <button type="button" @click="cargarMail" class="btn2 btn-gmail" :disabled="!isFormValid">
-                        <i class="fa-regular fa-envelope"></i> Gmail
-                    </button>
-                </div>
-
-            </div>
-        </dialog>
-
+      </div>
     </section>
+  </div>
 </template>
+
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
@@ -278,171 +235,140 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 </script>
 
 <style scoped>
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .cart-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 2rem;
-    margin-top: 6rem;
-    margin-bottom: 1.5rem;
-    color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 2rem;
+  color: rgb(226, 226, 226);
+  margin-bottom: 1.5rem;
+  margin: 2rem;
 }
 
-.cart-title i {
-    color: var(--llave);
-    font-size: 1.8rem;
+.cart-view {
+  background: var(--moro);
+  color: #fff;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 15px 35px rgba(0,0,0,.35);
 }
 
-/* Empty */
+/* EMPTY */
 .empty {
   text-align: center;
-  padding: 60px 0;
-  opacity: 0.95;
+  padding: 3rem 0;
 }
 
 .empty img {
   width: 140px;
-  margin-bottom: 20px;
-  opacity: 0.9;
+  margin-bottom: 1rem;
 }
 
-.empty p {
-  font-size: 1.1rem;
-  margin-bottom: 16px;
-}
-
-
-
-.cart-view {
-    max-width: 980px;
-    margin: 32px auto;
-    padding: 0 16px;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    color: white;
-    background-color: var(--moro);
-    border-radius: 15px;
-    padding: 2rem;
-    box-shadow: 5px 10px 20px 5px #0f0b05;
-    border: 1px solid transparent;
-    border-color: #3f382d4b;
-}
-
-h1 {
-    margin-top: 10rem;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-    text-align: start;
-}
-
-.empty {
-    text-align: center;
-    padding: 40px 0;
-}
-
+/* TABLE DESKTOP */
 .cart-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 18px;
-    background: rgba(255,255,255,0.03);
-    /* border-radius: 12px; */
-    overflow: hidden;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.cart-table thead {
-  background: rgba(0,0,0,0.25);
+.cart-table th {
+  background: rgba(0,0,0,.25);
+  padding: 12px;
+  font-weight: 600;
 }
 
-.cart-table tr {
-  transition: background 0.2s ease;
-}
-
-.cart-table tbody tr:hover {
-  background: rgba(255,255,255,0.04);
-}
-
-
-.cart-table th,
 .cart-table td {
-    padding: 12px 8px;
-    border-bottom: 1px solid #e6e6e6;
-    vertical-align: middle;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.15);
 }
 
-.cart-table th.center,
-.cart-table td.center {
-    text-align: center;
+.center {
+  text-align: center;
 }
 
-.product {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+/* PRODUCT */
+.product-cell {
+  align-items: center;
+  gap: 10px;
 }
 
 .thumb {
-    width: 64px;
-    height: 64px;
-    object-fit: cover;
-    border-radius: 6px;
-    background: #f5f5f5;
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
 }
 
-.meta .name {
-    font-weight: 600;
+.name {
+  font-weight: 600;
 }
 
-.sku {
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 6px;
-}
-
+/* QTY */
 .qty {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.qty input {
-    width: 56px;
-    text-align: center;
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .qty button {
-    padding: 6px 10px;
-    border-radius: 6px;
-    background: #252525;
-    border: 1px solid #ddd;
-    cursor: pointer;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
-.actions .link {
-    background: none;
-    border: none;
-    color: #d9534f;
-    cursor: pointer;
-    font-size: 0.95rem;
+.qty input {
+  width: 50px;
+  text-align: center;
 }
 
+/* ACTIONS */
+.remove {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+}
+
+/* SUMMARY */
 .summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-top: 16px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 1.5rem;
 }
 
-.summary .left { display:flex; gap:8px; align-items:center; }
-.summary .right { display:flex; gap:12px; align-items:center; }
+.summary-left,
+.summary-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
-.totals { text-align: right; min-width: 160px; }
+.summary-right {
+  flex-direction: column;
+  align-items: flex-end;
+}
 
-.actions-vertical { display:flex; flex-direction:column; gap:8px; }
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
+/* BUTTONS */
 .btn {
     display: inline-block;
     padding: 8px 14px;
@@ -456,203 +382,153 @@ h1 {
 }
 
 .btn.primary {
-    background: #0078d4;
-    color: #fff;
-    border-color: #0063b1;
+  background: #0078d4;
+  color: #fff;
 }
 
 .btn.danger {
-    background: #fff0f0;
-    color: #b03030;
-    border-color: #f0c0c0;
+  background: #ffecec;
+  color: #b03030;
 }
 
-/* ===== DIALOG ===== */
-.dialog {
-    border: none;
-    border-radius: 14px;
-    width: 90%;
-    max-width: 620px;
-    padding: 0;
-    background: rgb(95, 95, 95);
-    color: #fcfcfc;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+/* ================= MOBILE IMPROVEMENTS ================= */
+@media (max-width: 800px) {
+    .container {
+        max-width: 100%;
+        padding: 1rem;
+        flex-direction: column;
+    }
+
+    .cart-title {
+        font-size: 1.8rem;
+        margin: 1rem 0;
+    }
+
+    .cart-view {
+        padding: 1rem;
+    }
 }
 
-.dialog::backdrop {
-    background: rgba(0, 0, 0, 0.65);
+@media (max-width: 800px) {
+    .container {
+        transform: scale(0.8);
+    } 
+    
 }
 
-.dialog-form {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+@media (max-width: 600px) {
 
-.dialog-form h3 {
-    margin: 0;
-    text-align: center;
-    font-size: 1.3rem;
-}
+    .container {
+        transform: scale(1);
+        display: grid;
+        justify-content: center;
+        align-items: center;
+    } 
 
-.dialog-form p {
-    text-align: center;
-    color: #c4c4c4;
-    margin: 0;
-}
-
-/* ===== OPTIONS ===== */
-.options {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-}
-
-/* ===== BOTONES WHATSAPP / GMAIL ===== */
-.btn2 {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    font-size: 15px;
-    cursor: pointer;
-    color: #fff;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.btn-whatsapp {
-    background: #25D366;
-}
-
-.btn-gmail {
-    background: #EA4335;
-}
-
-.btn2:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-}
-
-/* ===== CONFIRM / CANCEL ===== */
-.confirm {
-    display: flex;
-    gap: 12px;
-}
-
-.btn3 {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    color: #fff;
-}
-
-.btn3.cancel {
-    background: #9e9e9e;
-}
-
-.btn3.confirm {
-    background: #4CAF50;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* exactamente 2 columnas */
-    gap: 16px;
-}
-
-.field {
-    display: flex;
-    flex-direction: column;
-}
-
-.field.full {
-    grid-column: 1 / -1; /* ocupa toda la fila */
-}
-
-.field label {
-    font-weight: 500;
-    margin-bottom: 6px;
-    color: #ffffff;
-}
-
-.field input {
-    padding: 8px 10px;
-    border-radius: 0px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-}
-
-@media (max-width: 900px) {
-  .cart-view {
-    padding: 1.5rem;
-  }
-
+  /* Table as cards */
+  .cart-table,
+  .cart-table thead,
+  .cart-table tbody,
   .cart-table th,
+  .cart-table tr,
   .cart-table td {
-    padding: 10px 6px;
-    font-size: 14px;
+    display: block;
+    width: 100%;
   }
 
-  .thumb {
-    width: 52px;
-    height: 52px;
+  .cart-table thead {
+    display: none;
   }
 
-  .summary {
-    gap: 12px;
+  .cart-table tr {
+    background: rgba(255,255,255,.06);
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   }
-}
-@media (max-width: 700px) {
+
+  .cart-view {
+        padding: 5rem;
+    }
+
+  .cart-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    padding: 6px 0;
+    gap: 8px;
+  }
+
+  .cart-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #ddd;
+    flex: 1 1 40%;
+  }
+
+  .product-cell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .product-cell .thumb {
+    width: 80px;
+    height: 80px;
+  }
+
+  .qty {
+    gap: 4px;
+  }
+
+  .qty input {
+    width: 60px;
+  }
+
+  /* Summary adjustments */
   .summary {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+    margin-top: 1rem;
   }
 
-  .summary .left,
-  .summary .right {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .totals {
-    text-align: left;
-  }
-
-  .actions-vertical .btn {
-    width: 100%;
-  }
-}
-@media (max-width: 600px) {
-  .dialog {
-    width: 95%;
-    max-width: none;
-  }
-
-  .dialog-form {
-    padding: 16px;
-  }
-
-  .options {
+  .summary-left,
+  .summary-right {
     flex-direction: column;
+    gap: 8px;
   }
 
-  .btn2 {
+  .summary-right {
+    align-items: stretch;
+  }
+
+  .btn {
     width: 100%;
-  }
-
-  .header {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
+    padding: 10px 0;
   }
 }
 
+/* Extra small screens */
+@media (max-width: 400px) {
+  .thumb {
+    width: 60px;
+    height: 60px;
+  }
+
+  .cart-title {
+    font-size: 1.5rem;
+  }
+
+  .qty button {
+    width: 28px;
+    height: 28px;
+  }
+
+  .qty input {
+    width: 50px;
+  }
+}
 </style>

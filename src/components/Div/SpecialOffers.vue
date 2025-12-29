@@ -46,6 +46,10 @@
                     -{{ Number(product.discount).toFixed(0) }}%
                   </span>
                 </div>
+
+                <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-link">
+                  <button class="btn-buy">Agregar al carrito</button>
+                </router-link>
               </div>
             </div>
           </div>
@@ -119,6 +123,16 @@ const prevSlide = () => {
 
 
 <style scoped>
+.btn-buy {
+  background: #c41e3a;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
 img {
   max-width: 14rem;
 }
@@ -288,6 +302,22 @@ img {
   .next {
     margin-right: 40px;
   }
+
+  .price-section {
+    margin-bottom: 15px;
+  }
+
+  .original-price {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 10px;
+  }
+
+  .discount-price {
+    font-size: 26px;
+    font-weight: bold;
+    color: #c41e3a;
+  }
 }
 
 @media (max-width: 768px) {
@@ -295,6 +325,12 @@ img {
     font-size: 26px;
     text-align: center;
     margin-bottom: 20px;
+  }
+
+  .btn-buy {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
   }
 
   .carousel-container {

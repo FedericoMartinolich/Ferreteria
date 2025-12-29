@@ -1,26 +1,27 @@
 <template>
-    <div class="product-detail">
-        <div v-if="loading" class="center">Loading product…</div>
-        <div v-else-if="error" class="center error">{{ error }}</div>
-        <div v-else-if="product" class="content">
-            <div class="media">
+<div class="container">
+        <div class="product-detail">
+            <div v-if="loading" class="center">Loading product…</div>
+            <div v-else-if="error" class="center error">{{ error }}</div>
+            <div v-else-if="product" class="content">
+                <div class="media">
                 <img
-                    v-if="product.image_key"
-                    :src="getProductImage(product)"
+                v-if="product.image_key"
+                :src="getProductImage(product)"
                     :alt="product.product"
                     loading="lazy"
                     class="product-image"
                     />
 
-                <img v-else :src=emptyImg alt="">
-            </div>
-
-            <div class="info">
-                <button class="back-btn" @click="router.back()" style="float: right;">← Back</button>
-                <h1 class="title">{{ product.product }}</h1>
-                <!-- <p class="sku" v-if="product.sku">SKU: {{ product.sku }}</p> -->
-                <p class="price">${{ product.price }}</p>
-
+                    <img v-else :src=emptyImg alt="">
+                </div>
+                
+                <div class="info">
+                    <button class="back-btn" @click="router.back()" style="float: right;">← Back</button>
+                    <h1 class="title">{{ product.product }}</h1>
+                    <!-- <p class="sku" v-if="product.sku">SKU: {{ product.sku }}</p> -->
+                    <p class="price">${{ product.price }}</p>
+                    
                 <p class="description" v-if="product.description">{{ product.description }}</p>
 
                 <div class="controls">
@@ -30,18 +31,18 @@
                         <button @click="increase">+</button>
                         <span class="stock" v-if="product.stock != null">({{ product.stock }} in stock)</span>
                     </div>
-
+                    
                     <button
-                        class="add"
+                    class="add"
                         @click="addToCart"
                         :disabled="product.stock === 0"
-                    >
+                        >
                         <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
                     </button>
                     <button
-                        class="whatsApp"
-                        @click="whatsApp"
-                        :disabled="product.stock === 0"
+                    class="whatsApp"
+                    @click="whatsApp"
+                    :disabled="product.stock === 0"
                     >
                         <i class="fa-brands fa-whatsapp"></i> Pedir por WhatsApp 
                     </button>
@@ -50,6 +51,7 @@
         </div>
         <div v-else class="center">No product selected.</div>
     </div>
+</div>
 </template>
 
 <script setup>
@@ -147,6 +149,12 @@ watch(product, () => {
 /* =========================
    ESTILO GENERAL
    ========================= */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .product-detail {
   max-width: 960px;

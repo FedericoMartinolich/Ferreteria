@@ -36,7 +36,9 @@
                   </div>
 
                   <span class="discount-badge">-{{ Number(product.discount).toFixed(2) }}%</span>
-                  <button class="btn-buy">Agregar al carrito</button>
+                  <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-link">
+                    <button class="btn-buy">Agregar al carrito</button>
+                  </router-link>
                 </div>
               </div>
             </div>
