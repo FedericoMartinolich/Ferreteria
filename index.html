@@ -1,30 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/Ferreteria/perfil.png" />
+
+    <!-- Favicon por defecto -->
+    <link rel="icon" type="image/png" href="/perfil.png" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ferreteria - El Moro</title>
-  </head>
-  <body>
+    <title>Ferretería - El Moro</title>
+
     <script>
-      const base = "/Ferreteria/";
       const month = new Date().getMonth();
 
+      // Diciembre = 11
       if (month === 11) {
-        document
-          .querySelectorAll("link[rel='icon']")
-          .forEach((el) => el.remove());
+        const links = document.querySelectorAll("link[rel='icon']");
+        links.forEach((el) => el.remove());
 
         const link = document.createElement("link");
         link.rel = "icon";
         link.type = "image/png";
-        link.href = base + "perfil-navidad.png";
+        link.href = "/perfil-navidad.png";
 
         document.head.appendChild(link);
       }
     </script>
+  </head>
 
+  <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
