@@ -78,6 +78,40 @@
       </div>
     </section>
   </div>
+
+  <!-- Checkout Dialog -->
+  <dialog ref="checkoutDialog" class="checkout-dialog">
+    <div class="dialog-content">
+      <h2>Completar Pedido</h2>
+      <form @submit="completeCheckout">
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input v-model="form.firstName" type="text" required />
+        </div>
+        <div class="form-group">
+          <label>Apellido:</label>
+          <input v-model="form.lastName" type="text" required />
+        </div>
+        <div class="form-group">
+          <label>Email:</label>
+          <input v-model="form.email" type="email" required />
+        </div>
+        <div class="form-group">
+          <label>Teléfono:</label>
+          <input v-model="form.phone" type="tel" required />
+        </div>
+        <div class="form-group">
+          <label>Dirección:</label>
+          <input v-model="form.address" type="text" required />
+        </div>
+        <div class="dialog-actions">
+          <button type="button" class="btn" @click="closeDialog">Cancelar</button>
+          <button type="button" class="btn whatsapp" @click="cargarWhatsApp" :disabled="!isFormValid">Enviar por WhatsApp</button>
+          <button type="button" class="btn primary" @click="cargarMail" :disabled="!isFormValid">Enviar por Email</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
 </template>
 
 
@@ -235,6 +269,11 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 </script>
 
 <style scoped>
+.whatsapp {
+  background-color: #25D366 !important;
+  color: white;
+}
+
 .container {
   max-width: 900px;
   margin: auto;
@@ -511,6 +550,60 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   }
 }
 
+/* DIALOG */
+.checkout-dialog {
+  border: none;
+  border-radius: 12px;
+  background: var(--moro);
+  color: #fff;
+  padding: 2rem;
+  max-width: 500px;
+  box-shadow: 0 15px 35px rgba(0,0,0,.5);
+}
+
+.checkout-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.dialog-content h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  padding: 8px 12px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 6px;
+  background: rgba(0,0,0,.2);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.form-group input::placeholder {
+  color: rgba(255,255,255,.5);
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+.dialog-actions button {
+  flex: 1;
+}
+
 /* Extra small screens */
 @media (max-width: 400px) {
   .thumb {
@@ -529,6 +622,15 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 
   .qty input {
     width: 50px;
+  }
+
+  .checkout-dialog {
+    max-width: 90vw;
+    padding: 1.5rem;
+  }
+
+  .dialog-actions {
+    flex-direction: column;
   }
 }
 </style>
