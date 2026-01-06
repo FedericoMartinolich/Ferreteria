@@ -123,6 +123,10 @@ const prevSlide = () => {
 
 
 <style scoped>
+  .price-section {
+    margin-bottom: 15px;
+  }
+
 .btn-buy {
   background: #c41e3a;
   color: white;
@@ -169,7 +173,7 @@ img {
 
 .offer-content {
     text-align: center;
-    padding: 40px 20px;
+    padding: 20px 20px;
 }
 
 .offer-content h2 {
@@ -182,6 +186,18 @@ img {
     margin: 0 0 20px 0;
     color: #666;
 }
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 10px;
+  }
+
+  .discount-price {
+    font-size: 26px;
+    font-weight: bold;
+    color: #c41e3a;
+  }
 
 .discount {
     display: inline-block;
