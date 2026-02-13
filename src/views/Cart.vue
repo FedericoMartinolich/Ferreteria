@@ -81,37 +81,63 @@
 
   <!-- Checkout Dialog -->
   <dialog ref="checkoutDialog" class="checkout-dialog">
-    <div class="dialog-content">
-      <h2>Completar Pedido</h2>
-      <form @submit="completeCheckout">
+  <div class="dialog-content">
+    <h2>Completar pedido</h2>
+
+    <form @submit.prevent>
+      <div class="form-grid">
         <div class="form-group">
-          <label>Nombre:</label>
-          <input v-model="form.firstName" type="text" required />
+          <label>Nombre</label>
+          <input v-model="form.firstName" placeholder="Juan" />
         </div>
+
         <div class="form-group">
-          <label>Apellido:</label>
-          <input v-model="form.lastName" type="text" required />
+          <label>Apellido</label>
+          <input v-model="form.lastName" placeholder="Pérez" />
         </div>
+
+        <div class="form-group full">
+          <label>Email</label>
+          <input v-model="form.email" type="email" placeholder="juan@email.com" />
+        </div>
+
         <div class="form-group">
-          <label>Email:</label>
-          <input v-model="form.email" type="email" required />
+          <label>Teléfono</label>
+          <input v-model="form.phone" placeholder="+54 9…" />
         </div>
+
         <div class="form-group">
-          <label>Teléfono:</label>
-          <input v-model="form.phone" type="tel" required />
+          <label>Dirección</label>
+          <input v-model="form.address" placeholder="Calle 123, Ciudad" />
         </div>
-        <div class="form-group">
-          <label>Dirección:</label>
-          <input v-model="form.address" type="text" required />
-        </div>
-        <div class="dialog-actions">
-          <button type="button" class="btn" @click="closeDialog">Cancelar</button>
-          <button type="button" class="btn whatsapp" @click="cargarWhatsApp" :disabled="!isFormValid">Enviar por WhatsApp</button>
-          <button type="button" class="btn primary" @click="cargarMail" :disabled="!isFormValid">Enviar por Email</button>
-        </div>
-      </form>
-    </div>
-  </dialog>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn ghost" @click="closeDialog">
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn whatsapp"
+          :disabled="!isFormValid"
+          @click="cargarWhatsApp"
+        >
+          WhatsApp
+        </button>
+
+        <button
+          type="button"
+          class="btn primary"
+          :disabled="!isFormValid"
+          @click="cargarMail"
+        >
+          Email
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
 </template>
 
 
@@ -550,59 +576,93 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   }
 }
 
-/* DIALOG */
+/* CHECKOUT */
 .checkout-dialog {
-  border: none;
-  border-radius: 12px;
-  background: var(--moro);
-  color: #fff;
+  background: linear-gradient(160deg, #3b260c, #8a5020);
+  border-radius: 8px;
+  border: 1px solid rgba(97, 93, 93, 0.473);
   padding: 2rem;
-  max-width: 500px;
-  box-shadow: 0 15px 35px rgba(0,0,0,.5);
-}
-
-.checkout-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  max-width: 520px;
+  color: #fff;
 }
 
 .dialog-content h2 {
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.8rem;
+  font-size: 1.6rem;
+}
+
+/* GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
 }
 
 .form-group {
-  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
 }
 
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+/* INPUTS */
 .form-group label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 4px;
 }
 
 .form-group input {
-  padding: 8px 12px;
-  border: 1px solid rgba(255,255,255,.2);
-  border-radius: 6px;
-  background: rgba(0,0,0,.2);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(0,0,0,.25);
   color: #fff;
-  font-size: 1rem;
+  transition: all .2s ease;
 }
 
-.form-group input::placeholder {
-  color: rgba(255,255,255,.5);
+.form-group input:focus {
+  outline: none;
+  border-color: var(--collar);
+  box-shadow: 0 0 0 2px rgba(227,166,39,.25);
+  background: rgba(0,0,0,.35);
 }
 
+/* ACTIONS */
 .dialog-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
-.dialog-actions button {
-  flex: 1;
+/* BUTTON VARIANTS */
+.btn.ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff;
 }
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* MOBILE */
+@media (max-width: 500px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dialog-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 /* Extra small screens */
 @media (max-width: 400px) {

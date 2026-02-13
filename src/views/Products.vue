@@ -108,11 +108,12 @@ watch(search, () => {
 
 .catalog {
   max-width: 1200px;
-  margin: 2.5rem auto;
+  margin: 2.5rem;
   padding: 2.2rem 1.6rem;
   background: rgba(243, 237, 228, 0.95); /* Beige claro */
   border-radius: 18px;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+  align-items: center;
 }
 
 /* ===============================
