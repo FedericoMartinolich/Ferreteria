@@ -1,6 +1,7 @@
 const url = `
-  https://docs.google.com/spreadsheets/d/e/2PACX-1vTj8ske2PVx3Xrzxpw0rgQBlDxY_MTtAOjh4KU5waKgcizdypRMiyYRFt12p8AM6g2RG_xcxKpQ9M2o/pub?output=csv
+https://docs.google.com/spreadsheets/d/e/2PACX-1vTj8ske2PVx3Xrzxpw0rgQBlDxY_MTtAOjh4KU5waKgcizdypRMiyYRFt12p8AM6g2RG_xcxKpQ9M2o/pub?output=csv
 `;
+
 import Papa from "papaparse";
 
 export async function getProducts() {
@@ -12,7 +13,23 @@ export async function getProducts() {
     skipEmptyLines: true,
   });
 
-  return data;
+  const products = data.map(product => {
+    const price = Number(product.price);
+    const originalPrice = Number(product.originalPrice);
+
+    if (originalPrice && price) {
+      product.discount = (
+        (originalPrice - price) /
+        originalPrice
+      ) * 100;
+    } else {
+      product.discount = 0;
+    }
+
+    return product;
+  });
+
+  return products;
 }
 
 export async function getProductById(id) {
