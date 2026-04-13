@@ -118,12 +118,11 @@ async function fetchProduct(id) {
         }
     } catch (e) {
         error.value = 'Error loading product.'
-        console.error(e)
     } finally {
         loading.value = false
     }
 }
-console.log(product)
+/* console.log(product) */
 
 function increase() {
     if (product.value?.stock != null && qty.value >= product.value.stock) return
@@ -168,7 +167,7 @@ function addToCart() {
     router.push('/products')
 
   } catch (e) {
-    console.error('Could not update cart', e)
+    /* console.error('Error adding to cart:', e) */
   }
 }
 
@@ -183,9 +182,11 @@ function whatsApp() {
 onMounted(() => {
     if (productId) fetchProduct(productId)
 })
-watch(product, () => {
-  console.log('PRODUCTO:', product.value)
-  console.log('IMAGE_KEY:', product.value?.image_key)
+
+watch(() => route.params.id, (newId) => {
+  if (newId) {
+    fetchProduct(newId)
+  }
 })
 
 const showToast = ref(false)
@@ -208,7 +209,7 @@ function triggerToast() {
 .product-detail {
   background: #271f1a;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 4rem;
   margin-top: 10%;
   position: relative; /* 👈 CLAVE */
 }
@@ -462,6 +463,114 @@ function triggerToast() {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ===== TABLET ===== */
+@media (max-width: 900px) {
+  .product-detail {
+    padding: 2rem;
+  }
+
+  .grid {
+    gap: 1.5rem;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .price {
+    font-size: 22px;
+  }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 640px) {
+
+  .container {
+    padding: 1rem 0.5rem;
+  }
+
+  .product-detail {
+    padding: 1.5rem 1rem;
+    margin-top: 20px;
+    border-radius: 10px;
+  }
+
+  /* GRID → 1 columna */
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* BOTÓN VOLVER */
+  .back-btn {
+    position: static;
+    margin-bottom: 1rem;
+    justify-content: center;
+  }
+
+  /* IMAGEN */
+  .media {
+    aspect-ratio: auto;
+    height: 250px;
+  }
+
+  .product-image {
+    padding: 0.5rem;
+  }
+
+  /* INFO */
+  .info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .price-row {
+    justify-content: center;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  /* STOCK */
+  .stock-info {
+    justify-content: center;
+  }
+
+  /* CONTROLES */
+  .controls {
+    width: 100%;
+    align-items: center;
+  }
+
+  /* QTY CENTRADO */
+  .qty {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* BOTONES FULL WIDTH */
+  .actions {
+    width: 100%;
+  }
+
+  .btn-cart,
+  .btn-whatsapp {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  /* TOAST CENTRADO EN MOBILE */
+  .toast {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 20px;
+    width: 90%;
+    justify-content: center;
   }
 }
 </style>
