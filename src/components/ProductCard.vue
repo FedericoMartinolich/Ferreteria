@@ -1,145 +1,238 @@
 <template>
-  <div class="product-card">
-    <div class="product-header">
-      <h3 class="product-name">
-        <i class="fas fa-hammer"></i>
-        {{ product }}
-      </h3>
-      <span class="product-price">${{ price }}</span>
+  <div class="card">
+    
+    <!-- BADGE opcional -->
+    <div v-if="product.badge" class="badge">{{ product.badge }}</div>
+
+    <!-- IMAGEN -->
+    <div class="tilt">
+      <img
+        v-if="product.image_key"
+        :src="getProductImage(product)"
+        :alt="product.product"
+        loading="lazy"
+        class="product-image"
+        />
+
+      <img v-else :src=emptyImg alt="">
     </div>
 
-    <div class="product-footer">
-      <button class="btn-primary">
-        <i class="fas fa-cart-plus"></i>
-        Agregar
-      </button>
+    <!-- INFO -->
+    <div class="info">
+      
+      <!-- CATEGORIA -->
+      <div class="cat">{{ product.category || 'Producto' }}</div>
+
+      <!-- TITULO -->
+      <h2 class="title">
+        <i class="fas fa-hammer"></i>
+        {{ product.product }}
+      </h2>
+
+      <!-- DESCRIPCION -->
+      <p class="desc" v-if="product.description">
+        {{ product.description }}
+      </p>
+
+      <!-- FEATURES -->
+      <div class="feats" v-if="product.features?.length">
+        <span class="feat" v-for="(f, i) in product.features" :key="i">
+          {{ f }}
+        </span>
+      </div>
+
+      <!-- PRECIO + BOTON -->
+      <div class="bottom">
+        <div class="price">
+          <span v-if="product.old_price" class="old">${{ product.old_price }}</span>
+          <span class="new">${{ product.price }}</span>
+        </div>
+
+        <button class="btn" @click="$emit('add')">
+          <span>Agregar</span>
+          <i class="fas fa-cart-plus"></i>
+        </button>
+      </div>
+
+      <!-- META -->
+      <div class="meta">
+        <!-- <div class="rating">
+          ⭐⭐⭐⭐⭐
+          <span class="rcount">({{ reviews || 0 }})</span>
+        </div> -->
+
+        <!-- <div class="stock">
+          {{ stock ? 'En stock' : 'Sin stock' }}
+        </div> -->
+      </div>
+
     </div>
   </div>
 </template>
 
 <script setup>
+import { getProductImage } from '../services/products.js';
+import emptyImg from "../assets/imgs/emptys/emptyImg.png"
+
 const props = defineProps({
-    product: { type: String },
-    price: { type: String },
+  product: Object
 });
 </script>
 
 <style scoped>
-.product-card {
-  background: linear-gradient(145deg, #ffffff, #f4efe8);
-  border: 1px solid rgba(74, 55, 40, 0.25);
-  border-radius: 16px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  padding: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+/* TILT */
+.tilt {
+  height: 200px;
+  overflow: hidden;
+  background: #f5f5f5;
 }
 
-.product-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
-}
-
-/* ===============================
-   HEADER
-   =============================== */
-
-.product-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 1.2rem;
-}
-
-.product-name {
-  flex: 1;
-  margin: 0;
-  font-weight: 700;
-  font-size: 1rem;
-  color: #4a3728;
-  line-height: 1.25;
-}
-
-.product-name i {
-  color: #c46a2b;
-  margin-right: 6px;
-}
-
-/* ===============================
-   PRECIO
-   =============================== */
-
-.product-price {
-  font-weight: 800;
-  font-size: 1.25rem;
-  color: #2f6b3c; /* verde ferretería */
-  white-space: nowrap;
-}
-
-/* ===============================
-   FOOTER
-   =============================== */
-
-.product-footer {
-  margin-top: auto;
-}
-
-/* ===============================
-   BOTÓN
-   =============================== */
-
-.btn-primary {
+.tilt img {
   width: 100%;
-  padding: 10px 14px;
-  background: linear-gradient(145deg, #c46a2b, #a85722);
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .tilt img {
+  transform: scale(1.08);
+}
+
+.card {
+  /* width: 100%; */
+  max-width: 320px;
+  background: linear-gradient(160deg, #ffffff, #f7f3ee);
+  border-radius: 18px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  transition: 0.25s;
+  overflow: hidden;
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* BADGE */
+.badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(135deg, #c46a2b, #a85722);
   color: #fff;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* IMAGE */
+.img {
+  height: 180px;
+  overflow: hidden;
+}
+.img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+.card:hover img {
+  transform: scale(1.05);
+}
+
+/* INFO */
+.info {
+  padding: 16px;
+}
+
+.cat {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #3b2a1d;
+  margin: 6px 0;
+}
+
+.title i {
+  color: #c46a2b;
+  margin-right: 5px;
+}
+
+.desc {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* FEATURES */
+.feats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.feat {
+  font-size: 10px;
+  background: #f1f1f1;
+  padding: 3px 7px;
+  border-radius: 10px;
+}
+
+/* BOTTOM */
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price .old {
+  text-decoration: line-through;
+  font-size: 12px;
+  color: #aaa;
+}
+.price .new {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2f6b3c;
+}
+
+/* BUTTON */
+.btn {
+  background: linear-gradient(135deg, #c46a2b, #a85722);
+  color: white;
   border: none;
   border-radius: 10px;
+  padding: 7px 12px;
+  font-size: 13px;
   cursor: pointer;
-  font-weight: 700;
-  font-size: 0.95rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: filter 0.25s ease, transform 0.2s ease;
+  gap: 6px;
 }
 
-.btn-primary:hover {
-  filter: brightness(1.1);
-  transform: scale(1.03);
+.btn:hover {
+  filter: brightness(1.05);
 }
 
-.btn-primary i {
-  font-size: 0.95rem;
+/* META */
+.meta {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
 }
 
-/* ===============================
-   RESPONSIVE
-   =============================== */
-
-@media (max-width: 900px) {
-  .product-name {
-    font-size: 0.95rem;
-  }
-
-  .product-price {
-    font-size: 1.15rem;
-  }
+.stock {
+  color: #2f6b3c;
+  font-weight: 600;
 }
-
-@media (max-width: 600px) {
-  .product-card {
-    padding: 1rem;
-  }
-
-  .btn-primary {
-    padding: 8px 12px;
-  }
-}
-
 </style>

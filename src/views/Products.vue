@@ -23,7 +23,7 @@
         :to="`/ProductDetail/${p.id}`"
         class="product-link"
       >
-        <ProductCard :price="p.price" :product="p.product" />
+        <ProductCard :product="p" />
       </router-link>
     </div>
 

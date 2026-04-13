@@ -1,57 +1,84 @@
 <template>
-<div class="container">
-        <div class="product-detail">
-            <div v-if="loading" class="center">Loading product…</div>
-            <div v-else-if="error" class="center error">{{ error }}</div>
-            <div v-else-if="product" class="content">
-                <div class="media">
-                <img
-                v-if="product.image_key"
-                :src="getProductImage(product)"
-                    :alt="product.product"
-                    loading="lazy"
-                    class="product-image"
-                    />
+  <div class="container">
+    <div class="product-detail">
 
-                    <img v-else :src=emptyImg alt="">
-                </div>
-                
-                <div class="info">
-                    <button class="back-btn" @click="router.back()" style="float: right;">← Back</button>
-                    <h1 class="title">{{ product.product }}</h1>
-                    <!-- <p class="sku" v-if="product.sku">SKU: {{ product.sku }}</p> -->
-                    <p class="price">${{ product.price }}</p>
-                    
-                <p class="description" v-if="product.description">{{ product.description }}</p>
+      <div v-if="loading" class="center">Cargando producto…</div>
+      <div v-else-if="error" class="center error">{{ error }}</div>
 
-                <div class="controls">
-                    <div class="qty">
-                        <button @click="decrease" :disabled="qty <= 1">−</button>
-                        <input type="number" v-model.number="qty" min="1" />
-                        <button @click="increase">+</button>
-                        <span class="stock" v-if="product.stock != null">({{ product.stock }} in stock)</span>
-                    </div>
-                    
-                    <button
-                    class="add"
-                        @click="addToCart"
-                        :disabled="product.stock === 0"
-                        >
-                        <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
-                    </button>
-                    <button
-                    class="whatsApp"
-                    @click="whatsApp"
-                    :disabled="product.stock === 0"
-                    >
-                        <i class="fa-brands fa-whatsapp"></i> Pedir por WhatsApp 
-                    </button>
-                </div>
-            </div>
+      <div v-else-if="product" class="content">
+
+        <!-- IMAGEN -->
+        <div class="media">
+          <img
+            v-if="product.image_key"
+            :src="getProductImage(product)"
+            :alt="product.product"
+            class="product-image"
+          />
+          <img v-else :src="emptyImg" class="product-image empty" />
         </div>
-        <div v-else class="center">No product selected.</div>
+
+        <!-- INFO -->
+        <div class="info">
+
+          <div class="top-bar">
+            <button class="back-btn" @click="router.back()">← Volver</button>
+          </div>
+
+          <h1 class="title">{{ product.product }}</h1>
+
+          <div class="price-row">
+            <p class="price">${{ product.price }}</p>
+            <span v-if="product.stock === 0" class="badge out">Sin stock</span>
+            <span v-else class="badge in">Disponible</span>
+          </div>
+
+          <p v-if="product.description" class="description">
+            {{ product.description }}
+          </p>
+
+          <div class="divider"></div>
+
+          <!-- STOCK -->
+          <p class="stock" v-if="product.stock != null">
+            Stock: <strong>{{ product.stock }}</strong>
+          </p>
+
+          <!-- CONTROLES -->
+          <div class="controls">
+
+            <div class="qty">
+              <button @click="decrease" :disabled="qty <= 1">−</button>
+              <input type="number" v-model.number="qty" min="1" />
+              <button @click="increase">+</button>
+            </div>
+
+            <button
+              class="add"
+              @click="addToCart"
+              :disabled="product.stock === 0"
+            >
+              <i class="fa-solid fa-cart-plus"></i>
+              Añadir al carrito
+            </button>
+
+            <button
+              class="whatsapp"
+              @click="whatsApp"
+              :disabled="product.stock === 0"
+            >
+              <i class="fa-brands fa-whatsapp"></i>
+              Comprar por WhatsApp
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div v-else class="center">No product selected.</div>
     </div>
-</div>
+  </div>
 </template>
 
 <script setup>
@@ -145,271 +172,271 @@ watch(product, () => {
 })
 </script>
 
-<style scoped>
-/* =========================
-   ESTILO GENERAL
-   ========================= */
-
+<style scoped>/* ===== CONTENEDOR ===== */
+/* ===== CONTENEDOR ===== */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: block;
+  justify-content: center;
+  padding: 40px 20px;
 }
 
+/* ===== CARD ===== */
 .product-detail {
-  max-width: 960px;
-  margin: 32px auto;
-  padding: 24px;
-  box-sizing: border-box;
-  background: #f6f1ea; /* crema cálido */
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(62, 39, 20, 0.25);
+  width: 100%;
+  /* max-width: ; */
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  transition: 0.3s;
 }
 
-/* =========================
-   CONTENIDO
-   ========================= */
-
+/* ===== LAYOUT ===== */
 .content {
   display: flex;
-  gap: 28px;
-  align-items: center;
+  gap: 50px;
+  align-items: flex-start;
 }
 
-/* =========================
-   IMAGEN
-   ========================= */
-
+/* ===== IMAGEN ===== */
 .media {
-  flex: 1 1 320px;
-  max-width: 360px;
+  flex: 1;
+  max-width: 450px;
 }
 
-.media img {
+.product-image {
   width: 100%;
-  height: auto;
-  border-radius: 14px;
+  border-radius: 18px;
   object-fit: cover;
-  background: #efe6dc;
-  box-shadow: 0 8px 20px rgba(60, 40, 25, 0.25);
+  background: #f1f1f1;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
 }
 
-/* =========================
-   INFO
-   ========================= */
+.product-image:hover {
+  transform: scale(1.02);
+}
 
+.product-image.empty {
+  opacity: 0.5;
+}
+
+/* ===== INFO ===== */
 .info {
-  flex: 1 1 420px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-/* =========================
-   BOTÓN VOLVER
-   ========================= */
+/* ===== TOP ===== */
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
 
+/* ===== BACK ===== */
 .back-btn {
-  background: transparent;
-  border: 1px solid #6b5b4b;
-  color: #3b2a1a;
-  cursor: pointer;
-  padding: 6px 16px;
+  border: none;
+  background: #f1f3f5;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  float: right;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #374151;
 }
 
 .back-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: #e2e6ea;
+  color: #1f2937;
 }
 
-/* =========================
-   TEXTO
-   ========================= */
-
+/* ===== TEXT ===== */
 .title {
-  margin: 16px 0 6px;
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #3b2a1a;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 10px;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .price {
-  font-size: 1.35rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+/* ===== BADGES ===== */
+.badge {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
   font-weight: 600;
-  color: #6b8e23; /* verde oliva */
-  margin: 8px 0 14px;
 }
 
+.badge.in {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge.out {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* ===== DESCRIPTION ===== */
 .description {
-  color: #6b5b4b;
-  line-height: 1.55;
-  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 18px;
+  font-size: 1rem;
 }
 
-/* =========================
-   CONTROLES
-   ========================= */
+/* ===== DIVIDER ===== */
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 16px 0;
+}
 
+/* ===== STOCK ===== */
+.stock {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* ===== CONTROLES ===== */
 .controls {
-  margin-top: 20px;
   display: flex;
+  flex-direction: column;
   gap: 14px;
-  align-items: center;
-  flex-wrap: wrap;
 }
 
-/* =========================
-   CANTIDAD
-   ========================= */
-
+/* ===== QTY ===== */
 .qty {
   display: flex;
-  gap: 8px;
   align-items: center;
+  justify-content:center;
+  text-align: center;
+  gap: 10px;
 }
 
 .qty button {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 1px solid #8b8b8b;
-  background: #7c7c7c;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background: #7a7a7a;
+  font-size: 1.2rem;
   cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding: 0%;
+}
+
+.qty button:hover {
+  background: #727272;
 }
 
 .qty input {
-  width: 64px;
+  width: 70px;
+  height: 25px;
   text-align: center;
-  padding: 6px;
-  border-radius: 8px;
-  border: 1px solid #c8b8a8;
-}
-
-.stock {
-  font-size: 0.85rem;
-  color: #6b5b4b;
-}
-
-/* =========================
-   BOTÓN CARRITO
-   ========================= */
-
-.add {
-  background: #6b8e23; /* verde oliva */
-  color: white;
-  border: none;
-  padding: 12px 18px;
+  padding: 8px;
   border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* ===== BOTONES ===== */
+.add,
+.whatsapp {
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.95rem;
+  border: none;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  transition: background 0.2s ease, transform 0.1s ease;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+
+/* carrito */
+.add {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+  box-shadow: 0 10px 20px rgba(34,197,94,0.25);
 }
 
 .add:hover {
-  background: #556b2f;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px rgba(34,197,94,0.35);
 }
 
-.add:disabled {
+/* whatsapp */
+.whatsapp {
+  background: linear-gradient(135deg, #25d366, #1ebe5d);
+  color: white;
+}
+
+.whatsapp:hover {
+  transform: translateY(-2px);
+}
+
+/* disabled */
+button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
+  transform: none !important;
 }
 
-/* =========================
-   BOTÓN WHATSAPP
-   ========================= */
-
-.whatsApp {
-  background: #1b9b4a;
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-
-.whatsApp:hover {
-  background: #14833e;
-  transform: translateY(-1px);
-}
-
-/* =========================
-   UTILIDADES
-   ========================= */
-
-button {
-  white-space: nowrap;
-}
-
+/* ===== UTIL ===== */
 .center {
   text-align: center;
-  padding: 24px 0;
+  padding: 40px;
 }
 
 .error {
-  color: #a33232;
+  color: red;
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
-
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .product-detail {
-    padding: 18px;
-    margin: 16px 12px;
-  }
-
   .content {
+    display:block;
     flex-direction: column;
-    gap: 18px;
+    gap: 25px;
   }
 
   .media {
     max-width: 100%;
   }
 
-  .info {
-    width: 100%;
-  }
-
-  .back-btn {
-    float: none;
-    width: 100%;
-    margin-bottom: 14px;
-    text-align: center;
-  }
-
   .title,
   .price,
-  .description {
+  .description,
+  .stock {
     text-align: center;
   }
 
-  .controls {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
-  }
-
-  .qty {
+  .price-row {
     justify-content: center;
   }
 
-  .add,
-  .whatsApp {
-    width: 100%;
+  .top-bar {
     justify-content: center;
   }
 }
-
 </style>
