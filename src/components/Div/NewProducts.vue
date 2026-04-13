@@ -17,28 +17,37 @@
               :key="index"
             >
               <div class="products-grid">
+                
+                <!-- 🔥 NUEVA CARD -->
                 <div
                   v-for="product in slide"
                   :key="product.id"
                   class="product-card"
                 >
-                  <img
-                    v-if="product.image_key"
-                    :src="getProductImage(product)"
-                    :alt="product.product"
-                    loading="lazy"
-                    class="product-image"
+                  <div class="image-container">
+                    <img
+                      v-if="product.image_key"
+                      :src="getProductImage(product)"
+                      :alt="product.product"
+                      loading="lazy"
                     />
+                    <img v-else :src="emptyImg" alt="" />
+                  </div>
 
-                  <img v-else :src=emptyImg alt="">
-                  <h3>{{ product.product }}</h3>
-                  <p class="price">${{ product.price }}</p>
-                    <button class="btn-add">
-                        <router-link :to="`/ProductDetail/${product.id}`" class="btn-add">
-                         Agregar al carrito
-                        </router-link>
-                    </button>
+                  <div class="card-content">
+                    <h3 class="title">{{ product.product }}</h3>
+                    <p class="price">${{ product.price }}</p>
+
+                    <router-link
+                      :to="`/ProductDetail/${product.id}`"
+                      class="btn-add"
+                    >
+                      Ver producto
+                    </router-link>
+                  </div>
                 </div>
+                <!-- 🔥 FIN CARD -->
+
               </div>
             </div>
           </div>
@@ -59,11 +68,10 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { getProductById, getProductImage } from "../../services/products";
-import emptyImg from "../../assets/imgs/emptys/emptyImg.png"
+import emptyImg from "../../assets/imgs/emptys/emptyImg.png";
 
 const props = defineProps({
   data: Object,
@@ -111,30 +119,21 @@ const prevSlide = () => {
 };
 </script>
 
-
 <style scoped>
 /* =========================
-   BANNER NUEVOS PRODUCTOS
+   BANNER
 ========================= */
 .banner-new-products {
   padding: 2.5rem 0;
-  background:
-    linear-gradient(rgba(59, 34, 2, 0.712), rgba(95, 57, 14, 0.733));
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(rgba(59, 34, 2, 0.7), rgba(95, 57, 14, 0.7));
 }
 
-/* =========================
-   TITULO
-========================= */
 .banner-new-products h2 {
   color: #f5f5f5;
   text-align: center;
   margin-bottom: 2rem;
   font-weight: 700;
-  letter-spacing: 1px;
   text-transform: uppercase;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* =========================
@@ -143,7 +142,6 @@ const prevSlide = () => {
 .carousel-container {
   display: flex;
   align-items: center;
-  position: relative;
 }
 
 .carousel-wrapper {
@@ -161,108 +159,129 @@ const prevSlide = () => {
 }
 
 /* =========================
-   GRID PRODUCTOS
+   GRID (FIX IMPORTANTE)
 ========================= */
 .products-grid {
   display: grid;
   gap: 1.5rem;
   padding: 1rem 3rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+  grid-template-columns: repeat(auto-fit, minmax(260px, max-content));
+  justify-content: center; /* 🔥 centra cuando hay pocas cards */
 }
 
 /* =========================
-   TARJETA PRODUCTO
+   CARD
 ========================= */
 .product-card {
-  background: #f8f5f2;
-  border-radius: 6px;
+  background: #fff;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #d6c2ad;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid #eee;
+  transition: all 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 320px; /* 🔥 evita que se agrande sola */
 }
 
 .product-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
-}
-
-img {
-  max-width: 20rem;
-}
-
-.product-card img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-bottom: 3px solid #a47148;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 /* =========================
-   TEXTO PRODUCTO
+   IMAGEN (FIX REAL)
 ========================= */
-.product-card h3 {
-  padding: 0.75rem 1rem;
-  color: #5a3e2b;
+.image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f3f3f3;
+  padding: 10px;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto; /* 🔥 mantiene proporción */
+  max-height: 250px; /* 🔥 limita sin deformar */
+  object-fit: contain; /* 🔥 nunca recorta */
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+.card-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.title {
+  font-size: 16px;
   font-weight: 600;
-  font-size: 18px;
+  color: #333;
+  margin-bottom: 0.5rem;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .price {
-  padding: 0 1rem 0.5rem;
+  font-size: 18px;
   font-weight: bold;
-  color: #2f2f2f;
+  margin-bottom: 1rem;
+  color: #000;
 }
 
 /* =========================
-   BOTON AGREGAR
+   BOTÓN
 ========================= */
 .btn-add {
-  width: 100%;
-  padding: 0.85rem;
-  background: linear-gradient(135deg, #d18b2c, #b8741f);
-  color: white;
-  border: none;
+  margin-top: auto;
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #c46a2b, #a85722);
+  color: #fff;
+  text-decoration: none;
   font-weight: 600;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  border-radius: 0%;
 }
 
 .btn-add:hover {
-  background: linear-gradient(135deg, #e19a3a, #c07b25);
-  transform: scale(1.03);
+  background: #b16634;
 }
 
 /* =========================
    BOTONES CARRUSEL
 ========================= */
 .carousel-btn {
-  background: linear-gradient(145deg, #f0f0f0, #bdbdbd);
-  border: 1px solid #6b6b6b;
+  background: #fff;
+  border: 1px solid #ccc;
   width: 42px;
   height: 42px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 20px;
-  color: #2f2f2f;
+  color: #333;
+  text-align: center;
+  justify-content: center;
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-}
-
-.carousel-btn:hover {
-  background: linear-gradient(145deg, #ffffff, #cfcfcf);
+  font-size: 18px;
 }
 
 .prev {
-  margin-left: 120px;
+  margin-left: 80px;
 }
 
 .next {
-  margin-right: 120px;
+  margin-right: 80px;
 }
 
 /* =========================
@@ -271,20 +290,20 @@ img {
 .carousel-dots {
   display: flex;
   justify-content: center;
-  gap: 10px;
   margin-top: 1rem;
+  gap: 8px;
 }
 
 .carousel-dots span {
   width: 10px;
   height: 10px;
+  background: #ccc;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
   cursor: pointer;
 }
 
 .carousel-dots span.active {
-  background: #d18b2c;
+  background: #000;
 }
 
 /* =========================
@@ -293,32 +312,20 @@ img {
 @media (max-width: 1024px) {
   .products-grid {
     padding: 1rem 2rem;
-    gap: 1.25rem;
   }
 
   .prev {
-    margin-left: 40px;
+    margin-left: 20px;
   }
 
   .next {
-    margin-right: 40px;
+    margin-right: 20px;
   }
 }
 
 @media (max-width: 768px) {
   .products-grid {
     padding: 1rem;
-    grid-template-columns: 1fr;
-  }
-
-  .product-card img {
-    height: 200px;
-  }
-
-  .carousel-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 18px;
   }
 
   .prev,
@@ -327,21 +334,14 @@ img {
   }
 }
 
-@media (max-width: 420px) {
-  .banner-new-products h2 {
-    font-size: 22px;
-  }
+/* =========================
+   BONUS: 1 SOLA CARD
+========================= */
+.products-grid:has(.product-card:only-child) {
+  justify-content: center;
+}
 
-  .product-card img {
-    height: 170px;
-  }
-
-  .product-card h3 {
-    font-size: 16px;
-  }
-
-  .price {
-    font-size: 15px;
-  }
+.product-card:only-child {
+  max-width: 400px;
 }
 </style>

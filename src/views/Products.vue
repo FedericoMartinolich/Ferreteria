@@ -41,6 +41,10 @@
       </button>
     </div>
   </section>
+  <div v-if="showToast" class="toast">
+    <i class="fa-solid fa-check"></i>
+    {{ toast }}
+  </div>
 </template>
 
 <script setup>
@@ -57,7 +61,7 @@ const newProductsEvent = ref(null);
 
 const search = ref("");
 const currentPage = ref(1);
-const pageSize = 30;
+const pageSize = 32;
 
 onMounted(async () => {
   const [productsData, newProductsData] = await Promise.all([
@@ -99,6 +103,29 @@ const prevPage = () => {
 watch(search, () => {
   currentPage.value = 1;
 });
+
+const toast = ref(null)
+const showToast = ref(false)
+
+onMounted(() => {
+  const raw = localStorage.getItem('toast')
+
+  if (raw) {
+    const data = JSON.parse(raw)
+
+    // opcional: validar que no sea viejo (ej 3s)
+    if (Date.now() - data.time < 3000) {
+      toast.value = data.message
+      showToast.value = true
+
+      setTimeout(() => {
+        showToast.value = false
+      }, 2500)
+    }
+
+    localStorage.removeItem('toast')
+  }
+})
 </script>
 
 <style scoped>
@@ -255,5 +282,30 @@ watch(search, () => {
   .catalog {
     padding: 1.6rem 1.2rem;
   }
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+
+  background: #1a3d2a;
+  color: #4caf7d;
+
+  border: 1px solid #2d6645;
+  border-radius: 10px;
+
+  padding: 12px 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+
+  animation: fadeInUp 0.3s ease;
+  z-index: 999;
 }
 </style>
