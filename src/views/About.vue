@@ -10,7 +10,7 @@
 
       <div class="about-content">
         <p class="eyebrow">Nuestra historia</p>
-        <h1>¿Quiénes somos?</h1>
+        <h1 class="title">¿Quiénes somos?</h1>
         <div class="divider"></div>
 
         <p>
@@ -56,9 +56,11 @@
 </script>
 
 <style scoped>
+
 p {
   text-align: left;
 }
+
 .about-wrapper {
   display: flex;
   justify-content: center;
@@ -125,15 +127,15 @@ p {
 }
 
 .about-content h1 {
-  font-size: 2.1rem;
+  font-size: 2.6rem;
   color: #4b2e1f;
   margin-bottom: .5rem;
   letter-spacing: .5px;
   line-height: 1.2;
+  text-align: justify;
 }
 
 .divider {
-  margin: 0 4rem;;
   width: 48px;
   height: 4px;
   background: linear-gradient(135deg, #c47a3a, #a8642e);
