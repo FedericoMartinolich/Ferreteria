@@ -1,28 +1,51 @@
 <template>
   <section class="about-wrapper">
     <div class="about-card">
-      
+
       <div class="image-wrapper">
-        <img src="../assets/imgs/local.jpg" alt="Ferretería El Moro" />
+        <img src="../assets/imgs/local.jpg" alt="Local de Ferretería El Moro" />
         <div class="image-overlay"></div>
+        <span class="location-badge">Desde Gualeguaychú</span>
       </div>
 
       <div class="about-content">
-        <h1>¿Quiénes Somos?</h1>
+        <p class="eyebrow">Nuestra historia</p>
+        <h1>¿Quiénes somos?</h1>
         <div class="divider"></div>
 
         <p>
           <strong>Ferretería El Moro</strong> es una empresa familiar dedicada a la
-          venta de herramientas manuales y eléctricas, artículos para el
-          mantenimiento de piletas y jardines, pinturas, sanitarios, hornos,
-          asadores, planchetas, discos paelleros y anexos.
+          venta de herramientas manuales y eléctricas, artículos para el mantenimiento
+          de piletas y jardines, pinturas, sanitarios, hornos, asadores, planchetas,
+          discos paelleros y anexos.
         </p>
 
         <p>
-          Nos distinguimos por el buen trato, la atención personalizada y el
-          ambiente familiar que se genera tanto con nuestros clientes como
-          dentro del equipo de trabajo.
+          Nacimos del esfuerzo y la vocación de servicio, y crecimos gracias a la
+          confianza de cada cliente que eligió volver. Nuestro compromiso es ofrecer
+          productos de calidad, asesoramiento personalizado y un trato cercano, porque
+          creemos que cada proyecto merece la mejor atención.
         </p>
+
+        <p>
+          No solo vendemos herramientas, sino que construimos relaciones duraderas con
+          nuestros clientes.
+        </p>
+
+        <div class="pillars">
+          <div class="pillar">
+            <span class="pillar-icon">🤝</span>
+            <span>Buen trato siempre</span>
+          </div>
+          <div class="pillar">
+            <span class="pillar-icon">🏠</span>
+            <span>Ambiente familiar</span>
+          </div>
+          <div class="pillar">
+            <span class="pillar-icon">🔧</span>
+            <span>Amplio stock</span>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -33,18 +56,15 @@
 </script>
 
 <style scoped>
-/* =========================
-   WRAPPER
-========================= */
+p {
+  text-align: left;
+}
 .about-wrapper {
   display: flex;
   justify-content: center;
   padding: 4rem 1rem;
 }
 
-/* =========================
-   CARD
-========================= */
 .about-card {
   background: #f4efe8;
   max-width: 900px;
@@ -56,9 +76,7 @@
   grid-template-columns: 1fr 1fr;
 }
 
-/* =========================
-   IMAGE
-========================= */
+/* IMAGE */
 .image-wrapper {
   position: relative;
 }
@@ -67,21 +85,29 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,.55),
-    rgba(0,0,0,.1)
-  );
+  background: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.1));
 }
 
-/* =========================
-   CONTENT
-========================= */
+.location-badge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  background: rgba(196, 122, 58, 0.9);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .5px;
+  padding: 5px 14px;
+  border-radius: 20px;
+}
+
+/* CONTENT */
 .about-content {
   padding: 3rem 2.5rem;
   display: flex;
@@ -89,36 +115,71 @@
   justify-content: center;
 }
 
+.eyebrow {
+  font-size: .75rem;
+  color: #c47a3a;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: .4rem;
+}
+
 .about-content h1 {
-  font-size: 2.3rem;
+  font-size: 2.1rem;
   color: #4b2e1f;
-  margin-bottom: .6rem;
-  letter-spacing: 1px;
+  margin-bottom: .5rem;
+  letter-spacing: .5px;
+  line-height: 1.2;
 }
 
 .divider {
-  margin: 0 auto;
-  width: 90px;
+  margin: 0 4rem;;
+  width: 48px;
   height: 4px;
   background: linear-gradient(135deg, #c47a3a, #a8642e);
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.6rem;
   border-radius: 2px;
 }
 
 .about-content p {
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: #3a2a1a;
   line-height: 1.8;
-  margin-bottom: 1.3rem;
+  margin-bottom: 1rem;
 }
 
 .about-content strong {
   color: #2a1a0f;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* PILLARS */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 1.2rem;
+}
+
+.pillar {
+  background: rgba(0,0,0,.05);
+  border-radius: 10px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: .8rem;
+  color: #4b2e1f;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.pillar-icon {
+  font-size: 1.3rem;
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .about-card {
     grid-template-columns: 1fr;
@@ -130,21 +191,12 @@
 
   .about-content {
     padding: 2.2rem 1.8rem;
-    text-align: center;
-  }
-
-  .divider {
-    margin: 0 auto 1.5rem;
   }
 }
 
 @media (max-width: 420px) {
   .about-content h1 {
-    font-size: 1.9rem;
-  }
-
-  .about-content p {
-    font-size: 1rem;
+    font-size: 1.75rem;
   }
 }
 </style>
