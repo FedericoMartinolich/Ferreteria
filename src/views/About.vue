@@ -69,7 +69,7 @@ p {
 
 .about-card {
   background: #f4efe8;
-  max-width: 900px;
+  max-width: 1100px;
   width: 100%;
   border-radius: 18px;
   overflow: hidden;

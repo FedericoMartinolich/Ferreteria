@@ -80,13 +80,14 @@ const props = defineProps({
 const newProducts = props.data;
 const productData = ref([]);
 const currentSlide = ref(0);
-const itemsPerSlide = ref(3);
+const itemsPerSlide = ref(4);
 
 /* responsive */
 const updateItemsPerSlide = () => {
   if (window.innerWidth < 640) itemsPerSlide.value = 1;
-  else if (window.innerWidth < 1024) itemsPerSlide.value = 2;
-  else itemsPerSlide.value = 3;
+  else if (window.innerWidth < 1175) itemsPerSlide.value = 2;
+  else if (window.innerWidth < 1460) itemsPerSlide.value = 3;
+  else itemsPerSlide.value = 4; 
 };
 
 onMounted(async () => {
@@ -125,7 +126,7 @@ const prevSlide = () => {
 ========================= */
 .banner-new-products {
   padding: 2.5rem 0;
-  background: linear-gradient(rgba(59, 34, 2, 0.7), rgba(95, 57, 14, 0.7));
+  background: linear-gradient(rgba(87, 51, 4, 0.7), rgba(187, 106, 13, 0.7));
 }
 
 .banner-new-products h2 {
