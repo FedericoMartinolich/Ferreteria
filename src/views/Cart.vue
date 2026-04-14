@@ -15,48 +15,34 @@
 
       <!-- Carrito con productos -->
       <div v-else>
-        <table class="cart-table">
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th class="center">Precio</th>
-              <th class="center">Cantidad</th>
-              <th class="center">Subtotal</th>
-              <th></th>
-            </tr>
-          </thead>
+        <div class="item-row" v-for="item in cart" :key="item.id">
 
-          <tbody>
-            <tr v-for="item in cart" :key="item.id">
-              <td data-label="Producto" class="product-cell">
-                <img v-if="item.image" :src="item.image" class="thumb" />
-                <span class="name">{{ item.name }}</span>
-              </td>
+          <div class="thumb-box">
+            <img v-if="item.image" :src="item.image" class="thumb" :alt="item.name" />
+            <div v-else class="thumb-placeholder">
+              <i class="fa-solid fa-wrench"></i>
+            </div>
+          </div>
+          <div class="item-info">
+            <span class="item-name">{{ item.name }}</span>
+            <span class="item-sku" v-if="item.sku">{{ item.sku }}</span>
+          </div>
 
-              <td class="center" data-label="Precio">
-                {{ formatCurrency(item.price) }}
-              </td>
+          <div class="item-price">{{ formatCurrency(item.price) }}</div>
 
-              <td class="center" data-label="Cantidad">
-                <div class="qty">
-                  <button @click="decrease(item)">−</button>
-                  <input type="number" v-model.number="item.qty" min="1" />
-                  <button @click="increase(item)">+</button>
-                </div>
-              </td>
+          <div class="qty">
+            <button @click="decrease(item)">−</button>
+            <span>{{ item.qty }}</span>
+            <button @click="increase(item)">+</button>
+          </div>
 
-              <td class="center" data-label="Subtotal">
-                {{ formatCurrency(item.price * item.qty) }}
-              </td>
+          <div class="item-subtotal">{{ formatCurrency(item.price * item.qty) }}</div>
 
-              <td class="actions" data-label="Acciones">
-                <button class="remove" @click="removeItem(item.id)">
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <button class="remove-btn" @click="removeItem(item.id)" title="Eliminar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+
+        </div>
 
         <!-- Resumen -->
         <div class="summary">
@@ -145,6 +131,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import emptyCart from '../assets/imgs/emptys/emptyCart.png'
+import { getProductImage } from '../services/products'
 
 const CART_KEY = 'cart'
 const router = useRouter()
@@ -295,309 +282,210 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 </script>
 
 <style scoped>
-.whatsapp {
-  background-color: #25D366 !important;
-  color: white;
-}
+/* sin :root */
 
 .container {
-  max-width: 900px;
+  max-width: 1100px;
   margin: auto;
-  padding: 2rem 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 2rem 1rem 4rem;
 }
 
 .cart-title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 2rem;
-  color: rgb(226, 226, 226);
+  gap: .75rem;
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  color: #f4f4f4;
   margin-bottom: 1.5rem;
-  margin: 2rem;
+  font-weight: 700;
 }
 
 .cart-view {
-  background: var(--moro);
-  color: #fff;
-  border-radius: 14px;
+  background: linear-gradient(160deg, #4b2c07, #723e11);
+  border-radius: 18px;
   padding: 1.5rem;
-  box-shadow: 0 15px 35px rgba(0,0,0,.35);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.05);
 }
 
-/* EMPTY */
 .empty {
   text-align: center;
-  padding: 3rem 0;
+  padding: 3rem 1rem;
 }
 
 .empty img {
-  width: 140px;
+  width: 160px;
+  max-width: 100%;
   margin-bottom: 1rem;
 }
 
-/* TABLE DESKTOP */
-.cart-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.cart-table th {
-  background: rgba(0,0,0,.25);
-  padding: 12px;
-  font-weight: 600;
-}
-
-.cart-table td {
-  padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,.15);
-}
-
-.center {
-  text-align: center;
-}
-
-/* PRODUCT */
-.product-cell {
+.item-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 120px auto 130px 42px;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.thumb-box {
+  width: 70px;
+  height: 70px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,.04);
 }
 
 .thumb {
-  width: 60px;
-  height: 60px;
-  border-radius: 6px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.name {
-  font-weight: 600;
+.thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #e8a94a;
+  font-size: 1.4rem;
 }
 
-/* QTY */
+.item-name {
+  display: block;
+  font-weight: 700;
+}
+
+.item-sku {
+  display: block;
+  font-size: .8rem;
+  opacity: .65;
+  margin-top: .25rem;
+}
+
+.item-price,
+.item-subtotal {
+  font-weight: 700;
+}
+
+.item-subtotal {
+  color: #e8a94a;
+  text-align: right;
+}
+
 .qty {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: .5rem;
 }
 
 .qty button {
   width: 34px;
   height: 34px;
-  border-radius: 6px;
-  background: #222;
-  color: #fff;
   border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,.08);
+  color: white;
   cursor: pointer;
 }
 
-.qty input {
-  width: 50px;
-  text-align: center;
+.qty button:hover {
+  background: rgba(255,255,255,.18);
 }
 
-/* ACTIONS */
-.remove {
-  background: none;
+.remove-btn {
   border: none;
+  background: transparent;
   color: #ff6b6b;
   cursor: pointer;
+  opacity: .75;
 }
 
-/* SUMMARY */
+.remove-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
 .summary {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 1rem;
   margin-top: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .summary-left,
 .summary-right {
   display: flex;
-  gap: 10px;
+  gap: .75rem;
+  flex-wrap: wrap;
   align-items: center;
 }
 
 .summary-right {
-  flex-direction: column;
-  align-items: flex-end;
+  margin-left: auto;
 }
 
 .totals {
+  background: rgba(255,255,255,.05);
+  border-radius: 12px;
+  padding: .8rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: .35rem;
 }
 
-/* BUTTONS */
 .btn {
-    display: inline-block;
-    padding: 8px 14px;
-    background: #ededed;
-    border-radius: 6px;
-    border: 1px solid #583b036b;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-    background-color: var(--llave);
+  border: none;
+  border-radius: 10px;
+  padding: .8rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  background: #ececec;
+  color: #111;
 }
 
 .btn.primary {
   background: #0078d4;
-  color: #fff;
+  color: white;
 }
 
 .btn.danger {
-  background: #ffecec;
-  color: #b03030;
+  background: #ffe1e1;
+  color: #a61d1d;
 }
 
-/* ================= MOBILE IMPROVEMENTS ================= */
-@media (max-width: 800px) {
-    .container {
-        max-width: 100%;
-        padding: 1rem;
-        flex-direction: column;
-    }
-
-    .cart-title {
-        font-size: 1.8rem;
-        margin: 1rem 0;
-    }
-
-    .cart-view {
-        padding: 1rem;
-    }
+.btn.ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.18);
+  color: white;
 }
 
-@media (max-width: 800px) {
-    .container {
-        transform: scale(0.8);
-    } 
-    
+.btn.whatsapp {
+  background: #25D366;
+  color: white;
 }
 
-@media (max-width: 600px) {
-
-    .container {
-        transform: scale(1);
-        display: grid;
-        justify-content: center;
-        align-items: center;
-    } 
-
-  /* Table as cards */
-  .cart-table,
-  .cart-table thead,
-  .cart-table tbody,
-  .cart-table th,
-  .cart-table tr,
-  .cart-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .cart-table thead {
-    display: none;
-  }
-
-  .cart-table tr {
-    background: rgba(255,255,255,.06);
-    margin-bottom: 1rem;
-    padding: 0.8rem 1rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  }
-
-  .cart-view {
-        padding: 5rem;
-    }
-
-  .cart-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: none;
-    padding: 6px 0;
-    gap: 8px;
-  }
-
-  .cart-table td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #ddd;
-    flex: 1 1 40%;
-  }
-
-  .product-cell {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .product-cell .thumb {
-    width: 80px;
-    height: 80px;
-  }
-
-  .qty {
-    gap: 4px;
-  }
-
-  .qty input {
-    width: 60px;
-  }
-
-  /* Summary adjustments */
-  .summary {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    margin-top: 1rem;
-  }
-
-  .summary-left,
-  .summary-right {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .summary-right {
-    align-items: stretch;
-  }
-
-  .btn {
-    width: 100%;
-    padding: 10px 0;
-  }
-}
-
-/* CHECKOUT */
 .checkout-dialog {
-  background: linear-gradient(160deg, #3b260c, #8a5020);
-  border-radius: 8px;
-  border: 1px solid rgba(97, 93, 93, 0.473);
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.dialog-content {
+  background: linear-gradient(160deg, #24236e, #12186b);
+  color: white;
   padding: 2rem;
-  width: 100%;
-  max-width: 520px;
-  color: #fff;
+  width: min(92vw, 560px);
 }
 
-.dialog-content h2 {
-  text-align: center;
-  margin-bottom: 1.8rem;
-  font-size: 1.6rem;
-}
-
-/* GRID */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(2,1fr);
+  gap: 1rem;
 }
 
 .form-group {
@@ -609,88 +497,63 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   grid-column: 1 / -1;
 }
 
-/* INPUTS */
-.form-group label {
-  font-size: 0.85rem;
-  opacity: 0.8;
-  margin-bottom: 4px;
-}
-
 .form-group input {
-  padding: 12px 14px;
+  padding: .85rem 1rem;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.12);
   background: rgba(0,0,0,.25);
-  color: #fff;
-  transition: all .2s ease;
+  color: white;
 }
 
-.form-group input:focus {
-  outline: none;
-  border-color: var(--collar);
-  box-shadow: 0 0 0 2px rgba(227,166,39,.25);
-  background: rgba(0,0,0,.35);
-}
-
-/* ACTIONS */
 .dialog-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  margin-top: 2rem;
+  grid-template-columns: repeat(3,1fr);
+  gap: .75rem;
+  margin-top: 1.5rem;
 }
 
-/* BUTTON VARIANTS */
-.btn.ghost {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,.25);
-  color: #fff;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* MOBILE */
-@media (max-width: 500px) {
-  .form-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 850px) {
+  .item-row {
+    grid-template-columns: 60px 1fr;
+    padding: 1rem;
+    background: rgba(255,255,255,.04);
+    border-radius: 14px;
+    margin-bottom: .8rem;
   }
 
-  .dialog-actions {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Extra small screens */
-@media (max-width: 400px) {
-  .thumb {
-    width: 60px;
-    height: 60px;
+  .item-price,
+  .qty,
+  .item-subtotal,
+  .remove-btn {
+    grid-column: 2;
   }
 
-  .cart-title {
-    font-size: 1.5rem;
+  .item-subtotal {
+    text-align: left;
   }
 
-  .qty button {
-    width: 28px;
-    height: 28px;
-  }
-
-  .qty input {
-    width: 50px;
-  }
-
-  .checkout-dialog {
-    max-width: 90vw;
-    padding: 1.5rem;
-  }
-
-  .dialog-actions {
+  .summary,
+  .summary-left,
+  .summary-right {
     flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .form-grid,
+  .dialog-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .dialog-content {
+    padding: 1.25rem;
   }
 }
 </style>

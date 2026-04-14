@@ -140,7 +140,7 @@ function addToCart() {
     name: product.value.product,
     price: product.value.price,
     qty: qty.value,
-    image: product.value.image
+    image: product.value.image_key ? getProductImage(product.value) : null
   }
 
   try {
