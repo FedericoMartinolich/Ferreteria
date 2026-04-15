@@ -1,54 +1,68 @@
 <template>
-    <header class="app-header">
-        <div class="container">
-            <!-- LOGO -->
-            <router-link to="/" class="brand">
-                <img v-if="logo" :src="logo" :alt="title" class="logo" />
-                <span class="title">{{ title }}</span>
-            </router-link>
+  <header class="app-header">
 
-            <!-- BURGER -->
-            <button class="burger" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+    <!-- FILA SUPERIOR -->
+    <div class="top-header">
+      <div class="container top-row">
 
-            <!-- OPTIONS -->
-            <nav :class="{ open: mobileOpen }" class="nav">
-                <ul>
-                    <li v-for="link in links">
-                        <RouterLink
-                            :to="link.href"
-                        >
-                            {{ link.label }}
-                        </RouterLink>
-                    </li>
-                </ul>
-            </nav>
+        <!-- LOGO -->
+        <router-link to="/" class="brand">
+          <img v-if="logo" :src="logo" :alt="title" class="logo" />
+          <span class="title">{{ title }}</span>
+        </router-link>
 
-            <!-- BUSCADOR -->
-            <div class="actions">
-                <Searcher search-placeholder="Buscar producto..." />
-            </div>
-            
-            <!-- RESULTADOS (OPCINES) -->
-            <div v-if="filteredProducts.length" class="search-results">
-                <div class="result-item" v-for="p in filteredProducts" :key="p.product">
-                    <router-link :to="`/ProductDetail/${p.id}`" class="result-link">
-                        <img v-if="p.thumbnail" :src="p.thumbnail" class="result-thumb" />
-                        <span class="result-title">{{ p.product }}</span>
-                    </router-link>
-                </div>
-            </div>
-
-            <!-- CARRITO -->
-            <router-link to="/cart">
-                <button class="cart" @click="$emit('toggle-cart')">
-                    <i class="fa fa-solid fa-cart-shopping"></i>
-                    <span v-if="cartCount > 0" class="badge">{{ cartCount }}</span>
-                </button>
-            </router-link>
+        <!-- BUSCADOR -->
+        <div class="search-area">
+          <Searcher search-placeholder="Buscar producto..." />
         </div>
-    </header>
+
+        <!-- CARRITO -->
+        <router-link to="/cart">
+          <button class="cart" @click="$emit('toggle-cart')">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span v-if="cartCount > 0" class="badge">{{ cartCount }}</span>
+          </button>
+        </router-link>
+
+        <!-- BURGER MOBILE -->
+        <button
+          class="burger"
+          @click="mobileOpen = !mobileOpen"
+          :aria-expanded="mobileOpen"
+        >
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- FILA INFERIOR -->
+    <div class="bottom-header">
+      <div class="container">
+
+        <nav :class="{ open: mobileOpen }" class="nav">
+          <ul>
+            <li v-for="link in links" :key="link.href">
+              <RouterLink :to="link.href">
+                {{ link.label }}
+              </RouterLink>
+            </li>
+          </ul>
+        </nav>
+
+      </div>
+    </div>
+
+    <!-- RESULTADOS BUSCADOR -->
+    <div v-if="filteredProducts.length" class="search-results">
+      <div class="result-item" v-for="p in filteredProducts" :key="p.id">
+        <router-link :to="`/ProductDetail/${p.id}`" class="result-link">
+          <img v-if="p.thumbnail" :src="p.thumbnail" class="result-thumb" />
+          <span class="result-title">{{ p.product }}</span>
+        </router-link>
+      </div>
+    </div>
+
+  </header>
 </template>
 
 <script setup>
@@ -97,225 +111,165 @@ const filteredProducts = computed(() => {
 </script>
 
 <style scoped>
-/* ===========================
-   Dropdown de resultados
-=========================== */
-.search-results {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 100%;
-  background: #1a1f27;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 12px;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 1000;
-  padding: .5rem 0;
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.result-item {
+/* CONTENEDOR GENERAL */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 1rem;
+}
+
+/* ==========================
+   HEADER SUPERIOR
+========================== */
+.top-header {
+  background: var(--fondo);
+  border-bottom: 2px solid var(--moro);
+}
+
+.top-row {
+  height: 80px;
   display: flex;
   align-items: center;
-  gap: .7rem;
-  padding: .55rem 1rem;
-  cursor: pointer;
-  transition: background .15s;
-}
-
-.result-item:hover {
-  background: rgba(255,255,255,0.08);
-}
-
-.result-thumb {
-  width: 38px;
-  height: 38px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-
-.result-title {
-  color: white;
-  font-size: .9rem;
-  font-weight: 400;
-}
-
-/* Header */
-
-.app-header {
-    background: var(--fondo);
-    border-bottom: 3px solid var(--moro);
-    position: relative;
-    top: 0;
-    z-index: 20;
-}
-
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    /* padding: 0.5rem 1rem; */
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  justify-content: center;
+  gap: 2rem;
 }
 
 .brand {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-shrink: 0;
 }
 
 .logo {
-    height: 70px;
-    width: auto;
+  height: 60px;
 }
 
 .title {
-    font-weight: 600;
-    font-size: 2rem;
-    color: #fff;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    line-height: 1.7rem ;
-    text-shadow: 0 0 3px #000, /* Sombra para simular el borde negro */
-               0 0 3px #000,
-               0 0 3px #000;
-    font-weight: bold; /* Para que el borde se note más */
+    text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
 }
 
-.burger {
-    display: none;
-    background: none;
-    border: none;
-    padding: 6px;
-    cursor: pointer;
+/* BUSCADOR */
+.search-area {
+  flex: 1;
 }
 
-.burger .bar {
-    display: block;
-    width: 20px;
-    height: 2px;
-    background: #333;
-    margin: 3px 0;
+input {
+  width: 100%;
+  padding: 13px 16px 13px 44px;
+  font-size: 16px;
+  border-radius: 12px;
+  border: 2px solid #c46a2b;
+  background: #ffffff;
+  color: #4a3728;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
 }
 
-.nav {
-    margin-left: auto;
-}
-
-.nav ul {
-    display: flex;
-    gap: 1rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.nav a {
-    color: #333;
-    text-decoration: none;
-    padding: 0.4rem 0.6rem;
-    border-radius: 4px;
-}
-
-.nav a:hover {
-    background: #d17219;
-    transition: background 200ms;
-    color: #fff;
-}
-
-.actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-left: 1rem;
-}
-
-.search {
-    display: flex;
-    align-items: center;
-    /* gap: 0.25rem; */
-}
-
-.search input {
-    border: 1px solid var(--moro);
-    padding: 6px 10px;
-    border-radius: 10rem;
-    font-size: 0.8rem;
-    background-color: var(--moro);
-}
-
-.search button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.8rem;
-}
-
+/* CARRITO */
 .cart {
-    position: relative;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1rem;
+    padding: 0;
+  position: relative;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.3rem;
+  cursor: pointer;
+      text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
 }
 
 .badge {
-    position: absolute;
-    top: -6px;
-    right: -8px;
-    background: #e53e3e;
-    color: #fff;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 999px;
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: red;
+  color: white;
+  font-size: .75rem;
+  padding: 2px 6px;
+  border-radius: 999px;
 }
 
-.fa {
-    font-size: 1.1rem;
-    color: #333;
+/* ==========================
+   HEADER INFERIOR
+========================== */
+.bottom-header {
+  background: #d17219;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+.nav ul {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  list-style: none;
+  padding: .7rem 0;
+  margin: 0;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  padding: .45rem .8rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: .2s;
+}
+
+.nav a:hover {
+  background: rgba(255,255,255,.18);
+}
+
+/* ==========================
+   MOBILE
+========================== */
+.burger {
+    padding: 0;
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 500px) {
     .burger {
-        display: inline-flex;
-        margin-left: 0.25rem;
+        display: block;
+        text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
     }
-
+    
     .nav {
         position: absolute;
+        top: 100%;
         left: 0;
         right: 0;
-        top: 60px;
-        background: var(--fondo);
-        border-top: 1px solid var(--moro);
-        display: none;
-        padding: 0.75rem 1rem;
+        background: #d17219;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
     }
-
+    
     .nav.open {
-        display: block;
+        max-height: 300px; /* Ajusta según el número de enlaces */
     }
-
+    
     .nav ul {
-        flex-direction: column;
-        gap: 0.5rem;
+        list-style: none;
+        gap: 0;
+    }
+    
+    .nav a {
+        padding: .75rem;
+        border-bottom: 1px solid rgba(255,255,255,.2);
     }
 
-    .container {
-        align-items: center;
-        margin-left: 5%;
-        margin-right: 5%;
-    }
-
-    .actions {
-        margin-left: 0;
-    }
-}
-
-@media (max-width: 640px) {
-    span.title {
+    .search-area {
         display: none;
     }
 }

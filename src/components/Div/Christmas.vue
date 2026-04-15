@@ -35,7 +35,7 @@
                     <span class="discount-price">${{ product.price }}</span>
                   </div>
 
-                  <span class="discount-badge">-{{ Number(product.discount).toFixed(2) }}%</span>
+                  <span v-if="product.discount !== 0" class="discount-badge">-{{ Number(product.discount).toFixed(2) }}%</span>
                   <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-link">
                     <button class="btn-buy">Agregar al carrito</button>
                   </router-link>

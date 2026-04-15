@@ -42,7 +42,7 @@
                     </span>
                   </div>
 
-                  <span class="discount-badge">
+                  <span v-if="product.discount !== 0" class="discount-badge">
                     -{{ Number(product.discount).toFixed(0) }}%
                   </span>
                 </div>
@@ -145,7 +145,7 @@ img {
     width: 100%;
     padding-top: 2rem;
     padding-bottom: 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff9227 0%, #a24b4b 100%);
 }
 
 .carousel-container {

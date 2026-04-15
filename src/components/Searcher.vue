@@ -73,8 +73,8 @@ const clearSearch = () => {
 }
 
 .search input {
-  border: 1px solid var(--moro);
-  padding: 6px 12px;
+  border: 3px solid var(--moro);
+  padding: 10px 12px;
   border-radius: 999px;
   font-size: 0.8rem;
   background-color: var(--moro);

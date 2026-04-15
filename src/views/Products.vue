@@ -274,6 +274,8 @@ onMounted(() => {
    RESPONSIVE
    =============================== */
 
+@media (max-width: 800px) {
+}
 @media (max-width: 600px) {
   .title {
     font-size: 1.9rem;

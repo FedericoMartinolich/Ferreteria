@@ -1,5 +1,7 @@
 <template>
   <div>
+    <img src="../../public/imgs/banners/home-banner.jpg" alt="Home Banner" class="full-width" />
+    <Amplification />
     <Christmas v-if="christmasEvent" :data="christmasEvent" />
     <SpecialOffers v-if="specialOffersEvent" :data="specialOffersEvent" />
   </div>
@@ -11,6 +13,7 @@ import { ref, onMounted } from "vue";
 /* Components */
 import Christmas from "../components/Div/Christmas.vue";
 import SpecialOffers from "../components/Div/SpecialOffers.vue";
+import Amplification from "../components/Div/Amplification.vue";
 
 /* Services */
 import {
@@ -31,3 +34,10 @@ onMounted(async () => {
   specialOffersEvent.value = offers[0] || null;
 });
 </script>
+<style scoped>
+.full-width {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+</style>
