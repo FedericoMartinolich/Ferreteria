@@ -78,7 +78,12 @@ const clearSearch = () => {
   border-radius: 999px;
   font-size: 0.8rem;
   background-color: var(--moro);
+  color: white;
   width: 100%;
+}
+
+.search input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* reutilizamos tu mismo CSS */

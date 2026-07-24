@@ -25,7 +25,6 @@
 
       <!-- TITULO -->
       <h2 class="title">
-        <i class="fas fa-hammer"></i>
         {{ product.product }}
       </h2>
 
@@ -49,21 +48,8 @@
         </div>
 
         <button class="btn" @click="$emit('add')">
-          <span>Agregar</span>
           <i class="fas fa-cart-plus"></i>
         </button>
-      </div>
-
-      <!-- META -->
-      <div class="meta">
-        <!-- <div class="rating">
-          ⭐⭐⭐⭐⭐
-          <span class="rcount">({{ reviews || 0 }})</span>
-        </div> -->
-
-        <!-- <div class="stock">
-          {{ stock ? 'En stock' : 'Sin stock' }}
-        </div> -->
       </div>
 
     </div>
@@ -95,23 +81,23 @@ const props = defineProps({
 }
 
 .card:hover .tilt img {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .card {
-  /* width: 100%; */
-  max-width: 320px;
-  background: linear-gradient(160deg, #ffffff, #f7f3ee);
-  border-radius: 18px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-  transition: 0.25s;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   overflow: hidden;
   position: relative;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: #c46a2b;
 }
 
 /* BADGE */
@@ -125,64 +111,58 @@ const props = defineProps({
   font-size: 11px;
   border-radius: 999px;
   font-weight: 600;
-}
-
-/* IMAGE */
-.img {
-  height: 180px;
-  overflow: hidden;
-}
-.img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: 0.4s;
-}
-.card:hover img {
-  transform: scale(1.05);
+  z-index: 2;
 }
 
 /* INFO */
 .info {
-  padding: 16px;
+  padding: 14px;
 }
 
 .cat {
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
-  color: #888;
+  color: #999;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
 }
 
 .title {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #3b2a1d;
-  margin: 6px 0;
-}
-
-.title i {
-  color: #c46a2b;
-  margin-right: 5px;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .desc {
-  font-size: 13px;
-  color: #555;
-  margin-bottom: 10px;
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* FEATURES */
 .feats {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
   margin-bottom: 10px;
 }
 .feat {
-  font-size: 10px;
-  background: #f1f1f1;
+  font-size: 9px;
+  background: #f5f0eb;
+  color: #6b5a4d;
   padding: 3px 7px;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 /* BOTTOM */
@@ -190,15 +170,25 @@ const props = defineProps({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #f0ebe6;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .price .old {
   text-decoration: line-through;
-  font-size: 12px;
-  color: #aaa;
+  font-size: 11px;
+  color: #bbb;
 }
+
 .price .new {
-  font-size: 18px;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #2f6b3c;
 }
@@ -208,31 +198,20 @@ const props = defineProps({
   background: linear-gradient(135deg, #c46a2b, #a85722);
   color: white;
   border: none;
-  border-radius: 10px;
-  padding: 7px 12px;
-  font-size: 13px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  font-size: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(196, 106, 43, 0.25);
 }
 
 .btn:hover {
-  filter: brightness(1.05);
-}
-
-/* META */
-.meta {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  border-top: 1px solid #eee;
-  padding-top: 8px;
-}
-
-.stock {
-  color: #2f6b3c;
-  font-weight: 600;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(196, 106, 43, 0.35);
 }
 </style>

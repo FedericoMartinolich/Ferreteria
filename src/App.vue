@@ -34,7 +34,6 @@ const title = 'EL MORO'
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  /* padding: 2rem; */
-  min-height: 820px;
+  padding: 0 1rem;
 }
 </style>

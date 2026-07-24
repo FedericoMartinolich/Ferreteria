@@ -1,71 +1,67 @@
 <template>
-  <div class="full-width">
-    <section class="banner-new-products">
-      <h2>{{ newProducts.title }}</h2>
+  <section class="new-products-section">
+    <h2 class="section-title">{{ newProducts.title }}</h2>
 
-      <div class="carousel-container">
-        <button class="carousel-btn prev" @click="prevSlide">❮</button>
+    <div class="carousel-container">
+      <button class="carousel-btn prev" @click="prevSlide">❮</button>
 
-        <div class="carousel-wrapper">
+      <div class="carousel-wrapper">
+        <div
+          class="carousel-track"
+          :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
+        >
           <div
-            class="carousel-track"
-            :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
+            class="carousel-slide"
+            v-for="(slide, index) in slides"
+            :key="index"
           >
-            <div
-              class="carousel-slide"
-              v-for="(slide, index) in slides"
-              :key="index"
-            >
-              <div class="products-grid">
-                
-                <!-- 🔥 NUEVA CARD -->
-                <div
-                  v-for="product in slide"
-                  :key="product.id"
-                  class="product-card"
-                >
-                  <div class="image-container">
-                    <img
-                      v-if="product.image_key"
-                      :src="getProductImage(product)"
-                      :alt="product.product"
-                      loading="lazy"
-                    />
-                    <img v-else :src="emptyImg" alt="" />
-                  </div>
-
-                  <div class="card-content">
-                    <h3 class="title">{{ product.product }}</h3>
-                    <p class="price">${{ product.price }}</p>
-
-                    <router-link
-                      :to="`/ProductDetail/${product.id}`"
-                      class="btn-add"
-                    >
-                      Ver producto
-                    </router-link>
-                  </div>
+            <div class="products-grid">
+              
+              <div
+                v-for="product in slide"
+                :key="product.id"
+                class="product-card"
+              >
+                <div class="image-container">
+                  <img
+                    v-if="product.image_key"
+                    :src="getProductImage(product)"
+                    :alt="product.product"
+                    loading="lazy"
+                  />
+                  <img v-else :src="emptyImg" alt="" />
                 </div>
-                <!-- 🔥 FIN CARD -->
 
+                <div class="card-content">
+                  <h3 class="title">{{ product.product }}</h3>
+                  <p class="price">${{ product.price }}</p>
+
+                  <router-link
+                    :to="`/ProductDetail/${product.id}`"
+                    class="btn-add"
+                  >
+                    Ver producto
+                  </router-link>
+                </div>
               </div>
+
             </div>
           </div>
         </div>
-
-        <button class="carousel-btn next" @click="nextSlide">❯</button>
       </div>
 
-      <div class="carousel-dots">
-        <span
-          v-for="(_, index) in slides"
-          :key="index"
-          :class="{ active: currentSlide === index }"
-          @click="currentSlide = index"
-        ></span>
-      </div>
-    </section>
-  </div>
+      <button class="carousel-btn next" @click="nextSlide">❯</button>
+    </div>
+
+    <div class="carousel-dots">
+      <span
+        v-for="(_, index) in slides"
+        :key="index"
+        :class="{ active: currentSlide === index }"
+        @click="currentSlide = index"
+      ></span>
+    </div>
+  </section>
 </template>
 
 <script setup>
@@ -121,33 +117,43 @@ const prevSlide = () => {
 </script>
 
 <style scoped>
-/* =========================
-   BANNER
-========================= */
-.banner-new-products {
-  padding: 2.5rem 0;
-  background: linear-gradient(rgba(87, 51, 4, 0.7), rgba(187, 106, 13, 0.7));
+.new-products-section {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #3b2a1d 0%, #5a3d2a 60%, #7a5540 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.banner-new-products h2 {
-  color: #f5f5f5;
+.section-title {
   text-align: center;
-  margin-bottom: 2rem;
+  color: #fff;
+  font-size: 1.6rem;
   font-weight: 700;
   text-transform: uppercase;
+  margin: 0 0 1.5rem 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.03em;
 }
 
 /* =========================
    CARRUSEL
-========================= */
+   ========================= */
 .carousel-container {
   display: flex;
   align-items: center;
+  gap: 12px;
+  overflow: hidden;
 }
 
 .carousel-wrapper {
-  overflow: hidden;
   flex: 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #fff;
 }
 
 .carousel-track {
@@ -160,61 +166,59 @@ const prevSlide = () => {
 }
 
 /* =========================
-   GRID (FIX IMPORTANTE)
-========================= */
+   GRID
+   ========================= */
 .products-grid {
   display: grid;
-  gap: 1.5rem;
-  padding: 1rem 3rem;
-
-  grid-template-columns: repeat(auto-fit, minmax(260px, max-content));
-  justify-content: center; /* 🔥 centra cuando hay pocas cards */
+  gap: 1rem;
+  padding: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  justify-content: center;
 }
 
 /* =========================
    CARD
-========================= */
+   ========================= */
 .product-card {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
+  background: #fafafa;
   border: 1px solid #eee;
-  transition: all 0.25s ease;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 
   display: flex;
   flex-direction: column;
-
   width: 100%;
-  max-width: 320px; /* 🔥 evita que se agrande sola */
+  max-width: 280px;
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: #c46a2b;
 }
 
 /* =========================
-   IMAGEN (FIX REAL)
-========================= */
+   IMAGEN
+   ========================= */
 .image-container {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f3f3f3;
-  padding: 10px;
+  background: #f5f5f5;
+  padding: 12px;
 }
 
 .image-container img {
   width: 100%;
-  height: auto; /* 🔥 mantiene proporción */
-  max-height: 250px; /* 🔥 limita sin deformar */
-  object-fit: contain; /* 🔥 nunca recorta */
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
 }
 
 /* =========================
    CONTENIDO
-========================= */
+   ========================= */
 .card-content {
   padding: 1rem;
   display: flex;
@@ -223,11 +227,11 @@ const prevSlide = () => {
 }
 
 .title {
-  font-size: 16px;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-
+  color: #3b2a1d;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -235,59 +239,62 @@ const prevSlide = () => {
 }
 
 .price {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: #000;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  color: #2f6b3c;
 }
 
 /* =========================
    BOTÓN
-========================= */
+   ========================= */
 .btn-add {
   margin-top: auto;
   text-align: center;
-  padding: 0.75rem;
-  border-radius: 8px;
+  padding: 8px;
+  border-radius: 6px;
   background: linear-gradient(135deg, #c46a2b, #a85722);
   color: #fff;
   text-decoration: none;
+  font-size: 0.85rem;
   font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(196, 106, 43, 0.25);
 }
 
 .btn-add:hover {
-  background: #b16634;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(196, 106, 43, 0.35);
 }
 
 /* =========================
    BOTONES CARRUSEL
-========================= */
+   ========================= */
 .carousel-btn {
-  background: #fff;
-  border: 1px solid #ccc;
-  width: 42px;
-  height: 42px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   cursor: pointer;
-  color: #333;
-  text-align: center;
-  justify-content: center;
   display: flex;
   align-items: center;
-  font-size: 18px;
+  justify-content: center;
+  font-size: 16px;
+  color: #3b2a1d;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.prev {
-  margin-left: 80px;
-}
-
-.next {
-  margin-right: 80px;
+.carousel-btn:hover {
+  background: #fff;
+  transform: scale(1.1);
 }
 
 /* =========================
    DOTS
-========================= */
+   ========================= */
 .carousel-dots {
   display: flex;
   justify-content: center;
@@ -298,51 +305,58 @@ const prevSlide = () => {
 .carousel-dots span {
   width: 10px;
   height: 10px;
-  background: #ccc;
+  background: rgba(255, 255, 255, 0.35);
   border-radius: 50%;
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .carousel-dots span.active {
-  background: #000;
+  background: #fff;
+  transform: scale(1.2);
 }
 
 /* =========================
    RESPONSIVE
-========================= */
-@media (max-width: 1024px) {
+   ========================= */
+@media (max-width: 768px) {
+  .new-products-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
   .products-grid {
-    padding: 1rem 2rem;
+    padding: 1rem;
+    gap: 0.8rem;
   }
 
-  .prev {
-    margin-left: 20px;
-  }
-
-  .next {
-    margin-right: 20px;
+  .carousel-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .products-grid {
-    padding: 1rem;
-  }
-
-  .prev,
-  .next {
-    margin: 0;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 /* =========================
-   BONUS: 1 SOLA CARD
-========================= */
+   1 SOLA CARD
+   ========================= */
 .products-grid:has(.product-card:only-child) {
-  justify-content: center;
+  grid-template-columns: 1fr;
+  justify-items: center;
 }
 
 .product-card:only-child {
-  max-width: 400px;
+  max-width: 300px;
+  width: 300px;
 }
 </style>
