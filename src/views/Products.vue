@@ -2,44 +2,64 @@
   <NewProducts v-if="newProductsEvent" :data="newProductsEvent" />
 
   <section class="catalog">
-    <h1 class="title">
-      <i class="fas fa-tools"></i>
-      Catálogo de Ferretería
-    </h1>
+    <template v-if="loading">
+      <h1 class="title">
+        <i class="fas fa-tools"></i>
+        Catálogo de Ferretería
+      </h1>
+      <div class="search-wrapper skeleton-search">
+        <div class="skeleton-line"></div>
+      </div>
+      <div class="container">
+        <div v-for="n in 8" :key="n" class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-text skeleton-text-title"></div>
+          <div class="skeleton-text skeleton-text-sub"></div>
+          <div class="skeleton-text skeleton-text-price"></div>
+        </div>
+      </div>
+    </template>
 
-    <div class="search-wrapper">
-      <i class="fas fa-search search-icon"></i>
-      <input
-        v-model="search"
-        placeholder="Buscar producto..."
-        class="search-input"
-      />
-    </div>
+    <template v-else>
+      <h1 class="title">
+        <i class="fas fa-tools"></i>
+        Catálogo de Ferretería
+      </h1>
 
-    <div class="container">
-      <router-link
-        v-for="p in paginatedProducts"
-        :key="p.id"
-        :to="`/ProductDetail/${p.id}`"
-        class="product-link"
-      >
-        <ProductCard :product="p" />
-      </router-link>
-    </div>
+      <div class="search-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          v-model="search"
+          placeholder="Buscar producto..."
+          class="search-input"
+        />
+      </div>
 
-    <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1">
-        <i class="fas fa-chevron-left"></i>
-      </button>
+      <div class="container">
+        <router-link
+          v-for="p in paginatedProducts"
+          :key="p.id"
+          :to="`/ProductDetail/${p.id}`"
+          class="product-link"
+        >
+          <ProductCard :product="p" />
+        </router-link>
+      </div>
 
-      <span>
-        Página <strong>{{ currentPage }}</strong> de {{ totalPages }}
-      </span>
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1">
+          <i class="fas fa-chevron-left"></i>
+        </button>
 
-      <button @click="nextPage" :disabled="currentPage === totalPages">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-    </div>
+        <span>
+          Página <strong>{{ currentPage }}</strong> de {{ totalPages }}
+        </span>
+
+        <button @click="nextPage" :disabled="currentPage === totalPages">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </template>
   </section>
   <div v-if="showToast" class="toast">
     <i class="fa-solid fa-check"></i>
@@ -58,19 +78,24 @@ import NewProducts from "../components/Div/NewProducts.vue";
 
 const products = ref([]);
 const newProductsEvent = ref(null);
+const loading = ref(true);
 
 const search = ref("");
 const currentPage = ref(1);
 const pageSize = 32;
 
 onMounted(async () => {
-  const [productsData, newProductsData] = await Promise.all([
-    getProducts(),
-    getNewProductsEvent()
-  ]);
+  try {
+    const [productsData, newProductsData] = await Promise.all([
+      getProducts(),
+      getNewProductsEvent()
+    ]);
 
-  products.value = productsData;
-  newProductsEvent.value = newProductsData[0] || null;
+    products.value = productsData;
+    newProductsEvent.value = newProductsData[0] || null;
+  } finally {
+    loading.value = false;
+  }
 });
 
 /* Filtro */
@@ -295,6 +320,69 @@ onMounted(() => {
   .pagination {
     gap: 1rem;
   }
+}
+
+/* ===============================
+   SKELETON LOADING
+   =============================== */
+
+.skeleton-search {
+  pointer-events: none;
+  margin-bottom: 2rem;
+}
+
+.skeleton-line {
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e8ddd2 25%, #f0e8de 50%, #e8ddd2 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 0;
+}
+
+.skeleton-img {
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(90deg, #e8ddd2 25%, #f0e8de 50%, #e8ddd2 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-text {
+  height: 14px;
+  margin: 12px 14px 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e8ddd2 25%, #f0e8de 50%, #e8ddd2 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-text-title {
+  width: 70%;
+  height: 16px;
+}
+
+.skeleton-text-sub {
+  width: 50%;
+}
+
+.skeleton-text-price {
+  width: 35%;
+  height: 20px;
+  margin-bottom: 14px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* ===============================
