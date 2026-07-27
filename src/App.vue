@@ -1,6 +1,6 @@
 <template>
   <main>
-    <Header :logo="logo" :title="title"/>
+    <Header :logo="logo" :title="title" :cartCount="cartCount"/>
     <div class="container">
       <RouterView />
     </div>
@@ -11,15 +11,35 @@
 <script setup>
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useConfig } from "./composables/useConfig.js";
 
 const { load: loadConfig, nombre } = useConfig();
+const route = useRoute();
 
 const logo = ref("");
 const title = ref("EL MORO");
+const cart = ref([]);
+
+function readCart() {
+  try {
+    cart.value = JSON.parse(localStorage.getItem("cart") || "[]");
+  } catch {
+    cart.value = [];
+  }
+}
+
+const cartCount = computed(() =>
+  cart.value.reduce((s, i) => s + (Number(i.qty) || 0), 0)
+);
+
+watch(() => route.fullPath, readCart);
+window.addEventListener("storage", readCart);
+window.addEventListener("cart-updated", readCart);
 
 onMounted(async () => {
+  readCart();
   await loadConfig();
   if (nombre.value) title.value = nombre.value;
 

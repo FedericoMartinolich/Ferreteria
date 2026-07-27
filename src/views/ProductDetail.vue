@@ -242,6 +242,7 @@ function confirmAddToCart() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
+    window.dispatchEvent(new Event("cart-updated"));
 
     // 👇 GUARDAMOS EL TOAST
     localStorage.setItem(

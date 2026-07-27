@@ -42,7 +42,7 @@
         <nav :class="{ open: mobileOpen }" class="nav">
           <ul>
             <li v-for="link in links" :key="link.href">
-              <RouterLink :to="link.href" :class="{ active: isActive(link.href) }">
+              <RouterLink :to="link.href" :class="{ active: isActive(link.href) }" @click="mobileOpen = false">
                 {{ link.label }}
               </RouterLink>
             </li>
@@ -163,6 +163,7 @@ const filteredProducts = computed(() => {
   color: var(--white);
   font-size: 1.8rem;
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 /* BUSCADOR */

@@ -228,6 +228,7 @@ watch(
     cart,
     (newVal) => {
         localStorage.setItem(CART_KEY, JSON.stringify(newVal))
+        window.dispatchEvent(new Event('cart-updated'))
     },
     { deep: true }
 )
