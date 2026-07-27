@@ -1,5 +1,5 @@
 <template>
-  <div class="search-wrapper">
+  <div class="search-wrapper" ref="wrapperRef">
     <!-- INPUT -->
     <div class="search">
       <input
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { getProducts } from "../services/products.js";
 
 defineProps({
@@ -47,9 +47,15 @@ defineProps({
 
 const search = ref("");
 const products = ref([]);
+const wrapperRef = ref(null);
 
 onMounted(async () => {
   products.value = await getProducts();
+  document.addEventListener("click", handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
 });
 
 const filteredProducts = computed(() => {
@@ -62,7 +68,15 @@ const filteredProducts = computed(() => {
 });
 
 const clearSearch = () => {
-  search.value = "";
+  setTimeout(() => {
+    search.value = "";
+  }, 100);
+};
+
+const handleClickOutside = (e) => {
+  if (wrapperRef.value && !wrapperRef.value.contains(e.target)) {
+    search.value = "";
+  }
 };
 </script>
 
@@ -73,44 +87,52 @@ const clearSearch = () => {
 }
 
 .search input {
-  border: 3px solid var(--moro);
-  padding: 10px 12px;
+  border: none;
+  padding: 10px 14px;
   border-radius: 999px;
-  font-size: 0.8rem;
-  background-color: var(--moro);
-  color: white;
+  font-size: 0.85rem;
+  background-color: var(--gray-100);
+  color: var(--gray-800);
   width: 100%;
 }
 
 .search input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--gray-400);
 }
 
-/* reutilizamos tu mismo CSS */
 .search-results {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   width: 100%;
-  background: #1a1f27;
-  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
   border-radius: 12px;
   max-height: 300px;
   overflow-y: auto;
   z-index: 1000;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .result-item {
   display: flex;
-  align-items: center;
-  gap: .7rem;
-  padding: .55rem 1rem;
+  align-items: stretch;
+  padding: 0;
   cursor: pointer;
 }
 
 .result-item:hover {
-  background: rgba(255,255,255,0.08);
+  background: var(--gray-100);
+}
+
+.result-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  width: 100%;
+  padding: 0.55rem 1rem;
 }
 
 .result-thumb {
@@ -121,7 +143,7 @@ const clearSearch = () => {
 }
 
 .result-title {
-  color: white;
-  font-size: .9rem;
+  color: var(--gray-800);
+  font-size: 0.9rem;
 }
 </style>

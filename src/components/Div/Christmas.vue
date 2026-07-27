@@ -115,7 +115,7 @@ const prevSlide = () => {
 .christmas-section {
   width: 100%;
   max-width: 1100px;
-  margin: 0 auto;
+  margin: 2.5rem auto;
   padding: 2.5rem 1.5rem;
   background: linear-gradient(135deg, #0a3318 0%, #0e7733 60%, #1a9944 100%);
   border-radius: 16px;
@@ -125,10 +125,9 @@ const prevSlide = () => {
 
 .section-title {
   text-align: center;
-  color: #fff;
+  color: var(--white);
   font-size: 1.8rem;
   margin: 0 0 1.5rem 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   letter-spacing: 0.02em;
 }
 
@@ -142,7 +141,7 @@ const prevSlide = () => {
   flex: 1;
   overflow: hidden;
   border-radius: 12px;
-  background: #fff;
+  background: var(--white);
   min-height: 280px;
   display: flex;
   align-items: center;
@@ -173,17 +172,16 @@ const prevSlide = () => {
   flex: 1 1 auto;
   min-width: 0;
   max-width: 320px;
-  background: #fafafa;
-  border: 1px solid #eee;
-  border-radius: 16px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 14px;
   padding: 1.2rem 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border-color: #0e7733;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .product-image-wrapper {
@@ -193,8 +191,8 @@ const prevSlide = () => {
   height: 180px;
   overflow: hidden;
   border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background: var(--white);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
 .product-image {
@@ -212,13 +210,12 @@ const prevSlide = () => {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: linear-gradient(135deg, #c41e3a, #a01830);
-  color: #fff;
+  background: #dc3545;
+  color: var(--white);
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(196, 30, 58, 0.4);
 }
 
 .offer-content {
@@ -231,14 +228,14 @@ const prevSlide = () => {
   margin: 0 0 0.4rem 0;
   font-size: 1rem;
   font-weight: 700;
-  color: #1a472a;
+  color: var(--navy);
   line-height: 1.3;
 }
 
 .offer-content p {
   margin: 0 0 0.8rem 0;
   font-size: 0.8rem;
-  color: #777;
+  color: var(--gray-600);
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -260,12 +257,12 @@ const prevSlide = () => {
 .discount-price {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #c41e3a;
+  color: #b91c1c;
 }
 
 .btn-buy {
-  background: linear-gradient(135deg, #c41e3a, #a01830);
-  color: #fff;
+  background: #0a3318;
+  color: var(--white);
   border: none;
   padding: 10px 24px;
   border-radius: 8px;
@@ -273,17 +270,16 @@ const prevSlide = () => {
   font-weight: 600;
   font-size: 0.9rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 8px rgba(196, 30, 58, 0.3);
 }
 
 .btn-buy:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.4);
+  box-shadow: 0 4px 12px rgba(10, 51, 24, 0.3);
 }
 
 .carousel-btn {
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--white);
   border: none;
   width: 40px;
   height: 40px;
@@ -300,7 +296,7 @@ const prevSlide = () => {
 }
 
 .carousel-btn:hover {
-  background: #fff;
+  background: var(--gray-100);
   transform: scale(1.1);
 }
 
@@ -321,7 +317,7 @@ const prevSlide = () => {
 }
 
 .carousel-dots span.active {
-  background: #fff;
+  background: var(--white);
   transform: scale(1.2);
 }
 
@@ -387,10 +383,6 @@ const prevSlide = () => {
 
   .offer-content {
     text-align: left;
-  }
-
-  .offer-content p {
-    -webkit-line-clamp: 2;
   }
 
   .btn-buy {

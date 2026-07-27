@@ -162,6 +162,13 @@
       </form>
     </div>
   </dialog>
+
+    <ConfirmModal
+      v-model="showClearConfirm"
+      message="¿Desea vaciar el carrito?"
+      @confirm="confirmClearCart"
+      @cancel="showClearConfirm = false"
+    />
 </template>
 
 
@@ -171,6 +178,7 @@ import { useRouter } from 'vue-router'
 import emptyCart from '../assets/imgs/emptys/emptyCart.png'
 import { getProductImage } from '../services/products'
 import { useConfig } from '../composables/useConfig.js'
+import ConfirmModal from '../components/ConfirmModal.vue'
 
 const { load: loadConfig, whatsapp, email: configEmail } = useConfig()
 
@@ -244,8 +252,15 @@ function removeItem(id) {
     cart.value = cart.value.filter((i) => i.id !== id)
 }
 
+const showClearConfirm = ref(false)
+
 function clearCart() {
+    showClearConfirm.value = true
+}
+
+function confirmClearCart() {
     cart.value = []
+    showClearConfirm.value = false
 }
 
 function checkout() {
@@ -337,18 +352,18 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   align-items: center;
   gap: 0.75rem;
   font-size: clamp(1.6rem, 4vw, 2.2rem);
-  color: #f4f4f4;
+  color: var(--navy);
   margin-bottom: 1.5rem;
   font-weight: 700;
 }
 
 .cart-title i {
-  color: #e8a94a;
+  color: var(--orange);
 }
 
 .cart-badge {
-  background: linear-gradient(135deg, #c46a2b, #a85722);
-  color: #fff;
+  background: var(--orange);
+  color: var(--white);
   font-size: 0.75rem;
   font-weight: 700;
   width: 28px;
@@ -363,18 +378,18 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
    EMPTY STATE
    =========================== */
 .empty {
-  background: linear-gradient(160deg, #3b2a1d, #5a3d2a);
+  background: var(--white);
   border-radius: 18px;
   padding: 4rem 2rem;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .empty-icon {
   width: 160px;
   height: 160px;
   margin: 0 auto 1.5rem;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .empty-icon img {
@@ -384,13 +399,13 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 }
 
 .empty h2 {
-  color: #f4f4f4;
+  color: var(--navy);
   font-size: 1.5rem;
   margin: 0 0 0.5rem;
 }
 
 .empty p {
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--gray-600);
   margin: 0 0 2rem;
   font-size: 0.95rem;
 }
@@ -399,12 +414,10 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
    CART CONTENT
    =========================== */
 .cart-content {
-  background: linear-gradient(160deg, #3b2a1d, #5a3d2a);
+  background: var(--white);
   border-radius: 18px;
   padding: 1.5rem;
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 /* ===========================
@@ -415,7 +428,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   grid-template-columns: 1fr 120px 130px 130px 44px;
   gap: 1rem;
   padding: 0 0.5rem 0.75rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 2px solid var(--gray-200);
   margin-bottom: 0.25rem;
 }
 
@@ -424,7 +437,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--gray-400);
 }
 
 .th-price,
@@ -446,13 +459,13 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   gap: 1rem;
   align-items: center;
   padding: 1rem 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--gray-200);
   transition: background 0.2s ease;
   animation: fadeSlideIn 0.3s ease both;
 }
 
 .item-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--gray-50);
   border-radius: 10px;
 }
 
@@ -482,9 +495,9 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   height: 64px;
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--gray-100);
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--gray-200);
 }
 
 .thumb {
@@ -498,7 +511,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   height: 100%;
   display: grid;
   place-items: center;
-  color: #e8a94a;
+  color: var(--orange);
   font-size: 1.3rem;
 }
 
@@ -509,7 +522,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 .item-name {
   display: block;
   font-weight: 600;
-  color: #f0ebe6;
+  color: var(--navy);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -519,7 +532,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 .item-sku {
   display: block;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--gray-400);
   margin-top: 0.2rem;
 }
 
@@ -528,14 +541,14 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
    =========================== */
 .item-price {
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--gray-600);
   font-size: 0.9rem;
   text-align: center;
 }
 
 .item-subtotal {
   font-weight: 700;
-  color: #e8a94a;
+  color: var(--orange);
   text-align: center;
   font-size: 0.95rem;
 }
@@ -554,10 +567,10 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   width: 32px;
   height: 32px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--gray-200);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #f0ebe6;
+  background: var(--gray-50);
+  color: var(--navy);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -567,8 +580,8 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 }
 
 .qty-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--gray-100);
+  border-color: var(--gray-400);
 }
 
 .qty-btn:disabled {
@@ -581,7 +594,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   text-align: center;
   font-weight: 700;
   font-size: 1rem;
-  color: #f0ebe6;
+  color: var(--navy);
 }
 
 /* ===========================
@@ -590,7 +603,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 .remove-btn {
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--gray-400);
   cursor: pointer;
   font-size: 0.85rem;
   width: 36px;
@@ -605,8 +618,8 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 }
 
 .remove-btn:hover {
-  background: rgba(220, 50, 50, 0.15);
-  color: #ff6b6b;
+  background: rgba(220, 50, 50, 0.08);
+  color: #dc3545;
 }
 
 /* ===========================
@@ -619,7 +632,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   gap: 1.5rem;
   margin-top: 1.5rem;
   padding-top: 1.25rem;
-  border-top: 2px solid rgba(255, 255, 255, 0.08);
+  border-top: 2px solid var(--gray-200);
   flex-wrap: wrap;
 }
 
@@ -640,8 +653,8 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
    TOTALS
    =========================== */
 .totals {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: 14px;
   padding: 1rem 1.25rem;
   min-width: 180px;
@@ -653,26 +666,26 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   align-items: center;
   gap: 1.5rem;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--gray-600);
 }
 
 .total-line strong {
-  color: #f0ebe6;
+  color: var(--navy);
 }
 
 .total-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--gray-200);
   margin: 0.5rem 0;
 }
 
 .total-final {
   font-size: 1.1rem;
-  color: #e8a94a;
+  color: var(--orange);
 }
 
 .total-final strong {
-  color: #e8a94a;
+  color: var(--orange);
   font-size: 1.2rem;
 }
 
@@ -695,41 +708,40 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, #c46a2b, #a85722);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(196, 106, 43, 0.3);
+  background: var(--navy);
+  color: var(--white);
 }
 
 .btn.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(196, 106, 43, 0.4);
+  background: var(--orange);
 }
 
 .btn.outline {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--gray-200);
+  color: var(--gray-600);
 }
 
 .btn.outline:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: #fff;
+  background: var(--gray-50);
+  border-color: var(--gray-400);
+  color: var(--navy);
 }
 
 .btn.outline.danger {
   border-color: rgba(255, 100, 100, 0.3);
-  color: #ff8a8a;
+  color: #dc3545;
 }
 
 .btn.outline.danger:hover {
-  background: rgba(220, 50, 50, 0.1);
+  background: rgba(220, 50, 50, 0.06);
   border-color: rgba(255, 100, 100, 0.5);
 }
 
 .btn.whatsapp {
   background: #25D366;
-  color: white;
+  color: var(--white);
 }
 
 .btn.whatsapp:hover {
@@ -768,11 +780,12 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 }
 
 .dialog-content {
-  background: linear-gradient(160deg, #3b2a1d, #5a3d2a);
-  color: white;
+  background: var(--white);
+  color: var(--gray-800);
   padding: 0;
   width: min(92vw, 520px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
 }
 
 .dialog-header {
@@ -788,11 +801,11 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #f0ebe6;
+  color: var(--navy);
 }
 
 .dialog-header h2 i {
-  color: #e8a94a;
+  color: var(--orange);
 }
 
 .dialog-close {
@@ -800,9 +813,9 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   height: 36px;
   padding: 0;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--gray-200);
+  background: var(--gray-50);
+  color: var(--gray-600);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -812,8 +825,8 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 }
 
 .dialog-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--gray-100);
+  color: var(--navy);
 }
 
 .form-grid {
@@ -836,7 +849,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 .form-group label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--gray-600);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -844,21 +857,21 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 .form-group input {
   padding: 0.75rem 1rem;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.2);
-  color: #f0ebe6;
+  border: 1px solid var(--gray-200);
+  background: var(--gray-50);
+  color: var(--navy);
   font-size: 0.9rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--gray-400);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #e8a94a;
-  box-shadow: 0 0 0 3px rgba(232, 169, 74, 0.15);
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(232, 106, 16, 0.1);
 }
 
 .dialog-actions {
@@ -884,14 +897,14 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
     grid-template-columns: 1fr;
     gap: 0.75rem;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--gray-50);
     border-radius: 14px;
     margin-bottom: 0.5rem;
     border-bottom: none;
   }
 
   .item-row:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--gray-100);
   }
 
   .item-product {
@@ -906,7 +919,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   .item-price::before {
     content: 'Precio: ';
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.35);
+    color: var(--gray-400);
   }
 
   .item-subtotal {
@@ -916,7 +929,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   .item-subtotal::before {
     content: 'Subtotal: ';
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.35);
+    color: var(--gray-400);
   }
 
   .item-row > .item-price,

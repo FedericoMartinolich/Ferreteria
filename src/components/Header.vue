@@ -133,11 +133,10 @@ const filteredProducts = computed(() => {
 }
 
 /* ==========================
-   HEADER SUPERIOR
+   HEADER SUPERIOR — Navy
 ========================== */
 .top-header {
-  background: var(--fondo);
-  border-bottom: 2px solid var(--moro);
+  background: var(--navy);
 }
 
 .top-row {
@@ -153,6 +152,7 @@ const filteredProducts = computed(() => {
   align-items: center;
   gap: .6rem;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .logo {
@@ -160,8 +160,7 @@ const filteredProducts = computed(() => {
 }
 
 .title {
-    text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
-  color: white;
+  color: var(--white);
   font-size: 1.8rem;
   font-weight: bold;
 }
@@ -176,66 +175,76 @@ input {
   padding: 13px 16px 13px 44px;
   font-size: 16px;
   border-radius: 12px;
-  border: 2px solid #c46a2b;
-  background: #ffffff;
-  color: #4a3728;
+  border: 2px solid var(--navy-light);
+  background: var(--gray-100);
+  color: var(--gray-800);
   transition: box-shadow 0.3s ease, border 0.3s ease;
+}
+
+input::placeholder {
+  color: var(--gray-400);
 }
 
 /* CARRITO */
 .cart {
-    padding: 0;
+  padding: 0;
   position: relative;
   background: none;
   border: none;
-  color: white;
+  color: var(--white);
   font-size: 1.3rem;
   cursor: pointer;
-      text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
 }
 
 .badge {
   position: absolute;
   top: -6px;
   right: -8px;
-  background: red;
-  color: white;
+  background: #dc3545;
+  color: var(--white);
   font-size: .75rem;
   padding: 2px 6px;
   border-radius: 999px;
+  font-weight: 700;
 }
 
 /* ==========================
-   HEADER INFERIOR
+   HEADER INFERIOR — Orange
 ========================== */
 .bottom-header {
-  background: #d17219;
+  background: var(--orange);
 }
 
 .nav ul {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
   list-style: none;
-  padding: .7rem 0;
+  padding: 0;
   margin: 0;
 }
 
+.nav li {
+  list-style: none;
+}
+
 .nav a {
-  color: white;
+  color: var(--white);
   text-decoration: none;
-  padding: .45rem .8rem;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: .2s;
+  padding: 0.7rem 1.2rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  transition: background 0.2s;
+  display: block;
 }
 
 .nav a:hover {
-  background: rgba(255,255,255,.18);
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .nav a.active {
-  color: rgba(255,255,255,.5);
+  color: rgba(255, 255, 255, 0.45);
   pointer-events: none;
 }
 
@@ -243,46 +252,47 @@ input {
    MOBILE
 ========================== */
 .burger {
-    padding: 0;
+  padding: 0;
   display: none;
   background: none;
   border: none;
-  color: white;
+  color: var(--white);
   font-size: 1.2rem;
 }
 
 @media (max-width: 500px) {
-    .burger {
-        display: block;
-        text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
-    }
-    
-    .nav {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: #d17219;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-    }
-    
-    .nav.open {
-        max-height: 300px; /* Ajusta según el número de enlaces */
-    }
-    
-    .nav ul {
-        list-style: none;
-        gap: 0;
-    }
-    
-    .nav a {
-        padding: .75rem;
-    }
+  .burger {
+    display: block;
+  }
 
-    .search-area {
-        display: none;
-    }
+  .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--orange);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  .nav.open {
+    max-height: 300px;
+  }
+
+  .nav ul {
+    list-style: none;
+    gap: 0;
+    flex-direction: column;
+  }
+
+  .nav a {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .search-area {
+    display: none;
+  }
 }
 </style>

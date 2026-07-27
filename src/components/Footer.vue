@@ -1,25 +1,36 @@
 <template>
-    <footer class="app-footer" role="contentinfo">
-        <div class="footer-inner">
-            <div class="brand">
-                <h1 class="brand-title">Ferretería - {{ nombre || 'EL MORO' }}</h1>
-                <p class="brand-sub">{{ eslogan || 'Calidad, servicio y experiencia' }}</p>
-            </div>
-            <div class="footer-info">
-                <div class="social" aria-hidden="false" aria-label="Redes sociales">
-                    <a v-if="whatsappUrl" :href="whatsappUrl" class="icon" aria-label="Whatsapp">
-                        <i class="fa-brands fa-whatsapp"></i> <p>WhatsApp </p>
-                    </a>
-                    <a v-if="instagram" :href="instagram" class="icon" aria-label="Instagram">
-                        <i class="fa-brands fa-instagram"></i> <p>Instagram </p>
-                    </a>
-                </div>
-                <div class="copyright">
-                    <small>&copy; {{ year }} Ferretería - {{ nombre || 'EL MORO' }}. Todos los derechos reservados.</small>
-                </div>
-            </div>
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-inner">
+      <!-- SOCIAL LEFT -->
+      <div class="social" aria-label="Redes sociales">
+        <a v-if="whatsappUrl" :href="whatsappUrl" class="icon" aria-label="WhatsApp">
+          <i class="fa-brands fa-whatsapp"></i>
+        </a>
+        <a v-if="instagram" :href="instagram" class="icon" aria-label="Instagram">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+      </div>
+
+      <!-- CENTER -->
+      <div class="brand">
+        <h1 class="brand-title">Ferretería - {{ nombre || 'EL MORO' }}</h1>
+        <p class="brand-sub">{{ eslogan || 'Calidad, servicio y experiencia' }}</p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="footer-right">
+        <div class="footer-nav">
+          <router-link to="/" class="footer-link">Inicio</router-link>
+          <router-link to="/products" class="footer-link">Productos</router-link>
+          <router-link to="/contact" class="footer-link">Contacto</router-link>
         </div>
-    </footer>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <small>&copy; {{ year }} Ferretería - {{ nombre || 'EL MORO' }}. Todos los derechos reservados.</small>
+    </div>
+  </footer>
 </template>
 
 <script setup>
@@ -33,132 +44,108 @@ onMounted(() => loadConfig())
 </script>
 
 <style scoped>
-footer {
-   width: 100%;
-   bottom:0px;
-}
-
 .app-footer {
-    background: linear-gradient(180deg, #1f2937, #111827);
-    color: #e5e7eb;
-    padding: 2rem 1rem;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    bottom: 0;
-  left: 0;
-  height: 20vh;
+  background: var(--navy);
+  color: var(--white);
   width: 100%;
-  text-align: center;
-  padding: 12px 0;
-  backdrop-filter: blur(6px);
-  font-size: 14px;
-  z-index: 1000;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  margin-bottom: 0%;
 }
 
 .footer-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    height: 100%;
-}
-
-.containter {
+  max-width: 1100px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.8rem 1.5rem;
+  gap: 2rem;
 }
 
-.brand {
-    min-width: 180px;
-}
-
-.brand-title {
-    margin: 0 0 0.25rem 0;
-    font-size: 1.25rem;
-    letter-spacing: -0.02em;
-}
-
-.brand-sub {
-    margin: 0;
-    color: #9ca3af;
-    font-size: 0.9rem;
-}
-
-.footer-nav {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.footer-link {
-    color: #d1d5db;
-    text-decoration: none;
-    font-size: 0.95rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-}
-.footer-link:hover,
-.footer-link:focus {
-    background: rgba(255,255,255,0.04);
-    outline: none;
-    color: #fff;
-}
-
-.footer-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.5rem;
-    min-width: 160px;
-}
-
+/* SOCIAL */
 .social {
-    display: flex;
-    gap: 0.5rem;
+  display: flex;
+  gap: 0.6rem;
+  flex-shrink: 0;
 }
 
 .icon {
-    display: inline-flex;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.icon:hover {
+  background: var(--orange);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+/* BRAND */
+.brand {
+  text-align: center;
+  flex: 1;
+}
+
+.brand-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--white);
+}
+
+.brand-sub {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.85rem;
+}
+
+/* NAV */
+.footer-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: var(--white);
+}
+
+/* BOTTOM */
+.footer-bottom {
+  text-align: center;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.8rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    color: #cbd5e1;
-    background: rgba(255,255,255,0.03);
-    padding: 0 12px;
-    font-size: 1rem;
-    width: auto;
-    height: 36px;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background .15s, transform .12s;
-}
-.icon:hover,
-.icon:focus {
-    background: rgba(255,255,255,0.06);
-    transform: translateY(-2px);
-    color: #fff;
-}
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+  }
 
-copyright small {
-    color: #9ca3af;
-    font-size: 0.85rem;
-}
-
-/* Responsive */
-@media (max-width: 1200px) {
-    .footer-inner {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        justify-content: center;
-    }
-    .footer-info {
-        align-items: center;
-    }
+  .footer-nav {
+    gap: 0.4rem;
+  }
 }
 </style>

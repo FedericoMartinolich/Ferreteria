@@ -33,34 +33,41 @@
         <div class="content">
           <!-- BLOQUE INFO -->
           <div class="info-block">
-            <div class="category" v-if="product.category">
-              {{ product.category }}
+            <div class="top-row">
+              <div class="category" v-if="product.category">
+                {{ product.category }}
+              </div>
+              <div class="price-row">
+                <span class="price">${{ formatPrice(product.price) }}</span>
+                <span :class="['badge', product.stock === 0 ? 'out' : 'in']">
+                  <i
+                    :class="
+                      product.stock === 0
+                        ? 'fa-solid fa-xmark'
+                        : 'fa-solid fa-check'
+                    "
+                  ></i>
+                  {{ product.stock === 0 ? "Sin stock" : "Disponible" }}
+                </span>
+              </div>
             </div>
-            <h1 class="title">{{ product.product }}</h1>
 
-            <div class="price-row">
-              <span class="price">${{ formatPrice(product.price) }}</span>
-              <span :class="['badge', product.stock === 0 ? 'out' : 'in']">
-                <i
-                  :class="
-                    product.stock === 0
-                      ? 'fa-solid fa-xmark'
-                      : 'fa-solid fa-check'
-                  "
-                ></i>
-                {{ product.stock === 0 ? "Sin stock" : "Disponible" }}
-              </span>
-            </div>
+            <h1 class="title">{{ product.product }}</h1>
 
             <p v-if="product.description" class="description">
               {{ product.description }}
             </p>
 
             <!-- FEATURES -->
-            <div v-if="product.features?.length" class="features">
-              <span class="feat" v-for="(f, i) in product.features" :key="i">
-                <i class="fa-solid fa-tag"></i> {{ f }}
-              </span>
+            <div v-if="product.features?.length" class="specs-box">
+              <h3 class="specs-title">
+                <i class="fa-solid fa-list-check"></i> Características Técnicas
+              </h3>
+              <ul class="specs-list">
+                <li v-for="(f, i) in product.features" :key="i">
+                  <i class="fa-solid fa-circle-check"></i> {{ f }}
+                </li>
+              </ul>
             </div>
           </div>
 
@@ -139,6 +146,13 @@
       <i class="fa-solid fa-check-circle"></i>
       <span>Producto añadido al carrito</span>
     </div>
+
+    <ConfirmModal
+      v-model="showAddConfirm"
+      message="¿Desea agregar este producto al carrito?"
+      @confirm="confirmAddToCart"
+      @cancel="showAddConfirm = false"
+    />
   </div>
 </template>
 
@@ -149,6 +163,7 @@ import { getProductById } from "../services/products.js";
 import { getProductImage } from "../services/products.js";
 import { useConfig } from "../composables/useConfig.js";
 import emptyImg from "../assets/imgs/emptys/emptyImg.png";
+import ConfirmModal from "../components/ConfirmModal.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -193,8 +208,15 @@ function formatPrice(value) {
   return new Intl.NumberFormat("es-AR").format(value || 0);
 }
 
+const showAddConfirm = ref(false);
+
 function addToCart() {
   if (!product.value) return;
+  showAddConfirm.value = true;
+}
+
+function confirmAddToCart() {
+  showAddConfirm.value = false;
 
   const cartItem = {
     id: product.value.id,
@@ -293,21 +315,21 @@ function triggerToast() {
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--gray-400);
   margin-bottom: 1.25rem;
   padding: 0;
   transition: color 0.2s ease;
 }
 
 .back-btn:hover {
-  color: #e8a94a;
+  color: var(--orange);
 }
 
 /* ===========================
    PRODUCT CARD
    =========================== */
 .product-card {
-  background: linear-gradient(160deg, #3b2a1d, #5a3d2a);
+  background: var(--white);
   border-radius: 20px;
   padding: 2rem;
   display: grid;
@@ -316,9 +338,7 @@ function triggerToast() {
   gap: 2.5rem;
   align-items: stretch;
   flex: 1;
-  box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 /* ===========================
@@ -328,12 +348,12 @@ function triggerToast() {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  background: #f5f0eb;
+  background: var(--gray-50);
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--gray-200);
 }
 
 .product-image {
@@ -352,8 +372,8 @@ function triggerToast() {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: linear-gradient(135deg, #c46a2b, #a85722);
-  color: #fff;
+  background: var(--orange);
+  color: var(--white);
   padding: 5px 12px;
   font-size: 0.7rem;
   font-weight: 700;
@@ -369,7 +389,7 @@ function triggerToast() {
   justify-content: center;
   width: 100%;
   height: 100%;
-  color: #c4b8a8;
+  color: var(--gray-400);
   font-size: 3rem;
 }
 
@@ -387,26 +407,36 @@ function triggerToast() {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  align-items: flex-start;
 }
 
 /* ===========================
    INFO
    =========================== */
 
+.top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .category {
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #e8a94a;
+  color: var(--orange);
+  padding-top: 6px;
 }
 
 .title {
   font-size: 1.6rem;
   font-weight: 700;
   margin: 0;
-  color: #f0ebe6;
+  color: var(--navy);
   line-height: 1.3;
+  text-align: left;
 }
 
 .price-row {
@@ -418,7 +448,7 @@ function triggerToast() {
 .price {
   font-size: 2rem;
   font-weight: 700;
-  color: #e8a94a;
+  color: #b91c1c;
   margin: 0;
 }
 
@@ -433,45 +463,71 @@ function triggerToast() {
 }
 
 .badge.in {
-  background: rgba(76, 175, 125, 0.12);
-  color: #4caf7d;
-  border: 1px solid rgba(76, 175, 125, 0.2);
+  background: #16a34a;
+  color: var(--white);
+  border: none;
 }
 
 .badge.out {
-  background: rgba(224, 112, 112, 0.12);
-  color: #e07070;
-  border: 1px solid rgba(224, 112, 112, 0.2);
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.2);
 }
 
 .description {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--gray-600);
   line-height: 1.7;
   margin: 0;
+  text-align: left;
 }
 
 /* ===========================
-   FEATURES
+   SPECS BOX
    =========================== */
-.features {
+.specs-box {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+
+.specs-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 0.6rem 0;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
 }
 
-.feat {
+.specs-title i {
+  color: var(--orange);
   font-size: 0.75rem;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.55);
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.feat i {
-  color: #e8a94a;
-  font-size: 0.65rem;
+.specs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.specs-list li {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.specs-list li i {
+  color: var(--orange);
+  font-size: 0.7rem;
+  flex-shrink: 0;
 }
 
 /* ===========================
@@ -482,16 +538,16 @@ function triggerToast() {
   align-items: center;
   gap: 8px;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--gray-400);
 }
 
 .stock-info i {
-  color: #e8a94a;
+  color: var(--orange);
   font-size: 0.75rem;
 }
 
 .stock-info strong {
-  color: #f0ebe6;
+  color: var(--navy);
   font-weight: 700;
 }
 
@@ -500,7 +556,7 @@ function triggerToast() {
    =========================== */
 .divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--gray-200);
   margin: 0.5rem 0;
 }
 
@@ -522,8 +578,8 @@ function triggerToast() {
 .qty {
   display: inline-flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
   border-radius: 12px;
   overflow: hidden;
   width: fit-content;
@@ -536,7 +592,7 @@ function triggerToast() {
   background: none;
   border: none;
   cursor: pointer;
-  color: #e8a94a;
+  color: var(--orange);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -545,7 +601,7 @@ function triggerToast() {
 }
 
 .qty-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--gray-100);
 }
 
 .qty-btn:disabled {
@@ -558,9 +614,9 @@ function triggerToast() {
   text-align: center;
   font-size: 1rem;
   font-weight: 700;
-  color: #f0ebe6;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--navy);
+  border-left: 1px solid var(--gray-200);
+  border-right: 1px solid var(--gray-200);
   line-height: 40px;
 }
 
@@ -595,25 +651,22 @@ function triggerToast() {
 }
 
 .btn-cart {
-  background: linear-gradient(135deg, #c46a2b, #a85722);
-  color: #fff;
-  box-shadow: 0 2px 10px rgba(196, 106, 43, 0.3);
+  background: var(--navy);
+  color: var(--white);
 }
 
 .btn-cart:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(196, 106, 43, 0.4);
+  background: var(--orange);
 }
 
 .btn-whatsapp {
   background: #25d366;
   color: #fff;
-  box-shadow: 0 2px 10px rgba(37, 211, 102, 0.25);
 }
 
 .btn-whatsapp:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
   background: #20bd5a;
 }
 
@@ -633,11 +686,11 @@ function triggerToast() {
   align-items: center;
   gap: 6px;
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--gray-400);
 }
 
 .trust-item i {
-  color: #e8a94a;
+  color: var(--orange);
   font-size: 0.75rem;
 }
 
@@ -647,7 +700,7 @@ function triggerToast() {
 .center {
   text-align: center;
   padding: 5rem 1rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--gray-400);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -655,14 +708,14 @@ function triggerToast() {
 }
 
 .error {
-  color: #e07070;
+  color: #dc3545;
 }
 
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #e8a94a;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--orange);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -680,9 +733,9 @@ function triggerToast() {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  background: #1a3d2a;
-  color: #4caf7d;
-  border: 1px solid #2d6645;
+  background: var(--navy);
+  color: var(--white);
+  border: 1px solid var(--navy-light);
   border-radius: 12px;
   padding: 14px 20px;
   display: flex;
@@ -690,7 +743,7 @@ function triggerToast() {
   gap: 10px;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   animation: fadeInUp 0.3s ease;
   z-index: 999;
 }
@@ -705,28 +758,6 @@ function triggerToast() {
     transform: translateY(0);
   }
 }
-
-/* ===========================
-   RESPONSIVE LARGE TABLET
-   =========================== */
-/* @media (max-width: 1024px) {
-  .product-card {
-    grid-template-columns: 45% 1fr;
-    gap: 2rem;
-  }
-
-  .media {
-    aspect-ratio: 4 / 3;
-  }
-
-  .title {
-    font-size: 1.45rem;
-  }
-
-  .price {
-    font-size: 1.8rem;
-  }
-} */
 
 /* ===========================
    RESPONSIVE TABLET — stacked
@@ -826,13 +857,8 @@ function triggerToast() {
     font-size: 0.85rem;
   }
 
-  .features {
-    gap: 5px;
-  }
-
-  .feat {
-    font-size: 0.7rem;
-    padding: 3px 8px;
+  .specs-list li {
+    font-size: 0.75rem;
   }
 
   .stock-info {
@@ -875,44 +901,4 @@ function triggerToast() {
     padding: 12px 16px;
   }
 }
-
-/* ===========================
-   RESPONSIVE SMALL MOBILE
-   =========================== */
-/* @media (max-width: 380px) {
-  .pd-page {
-    padding: 0.75rem 0.5rem;
-  }
-
-  .product-card {
-    border-radius: 14px;
-  }
-
-  .media {
-    max-height: 220px;
-  }
-
-  .content {
-    padding: 1rem;
-  }
-
-  .title {
-    font-size: 1.1rem;
-  }
-
-  .price {
-    font-size: 1.35rem;
-  }
-
-  .qty-btn {
-    width: 36px;
-    height: 36px;
-  }
-
-  .qty-display {
-    width: 40px;
-    line-height: 36px;
-    font-size: 0.9rem;
-  }
-} */
 </style>

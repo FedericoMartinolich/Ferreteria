@@ -38,12 +38,12 @@
 
 <style scoped>
 .features-section {
-  background: linear-gradient(135deg, #f5ebe0, #e8d5c4);
+  background: linear-gradient(135deg, var(--gray-100), var(--gray-50));
   padding: 2.5rem 2rem;
   max-width: 1100px;
   margin: 0 auto;
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
 .features-grid {
@@ -53,24 +53,24 @@
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(4px);
+  background: var(--white);
   text-align: center;
-  padding: 1.5rem 1rem;
-  border-radius: 12px;
+  padding: 1.8rem 1.2rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .icon-wrapper {
   width: 60px;
   height: 60px;
   margin: 0 auto 1rem;
-  background: linear-gradient(135deg, #c46a2b, #a85722);
+  background: var(--navy);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -79,22 +79,22 @@
 
 .feature-card i {
   font-size: 1.4rem;
-  color: #fff;
+  color: var(--white);
 }
 
 .feature-title {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: #3b2a1d;
+  color: var(--navy);
   letter-spacing: 0.03em;
   margin-bottom: 0.5rem;
 }
 
 .feature-text {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   line-height: 1.6;
-  color: #5a4a3d;
+  color: var(--gray-600);
   margin: 0;
 }
 
@@ -133,11 +133,11 @@
   }
 
   .feature-title {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 
   .feature-text {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
   }
 }
 </style>

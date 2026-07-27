@@ -63,12 +63,12 @@ p {
 }
 
 .about-card {
-  background: #f4efe8;
+  background: var(--white);
   max-width: 1100px;
   width: 100%;
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 20px 45px rgba(0,0,0,.45);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
@@ -88,15 +88,15 @@ p {
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.1));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.1));
 }
 
 .location-badge {
   position: absolute;
   bottom: 1.5rem;
   left: 1.5rem;
-  background: rgba(196, 122, 58, 0.9);
-  color: #fff;
+  background: var(--orange);
+  color: var(--white);
   font-size: .78rem;
   font-weight: 600;
   letter-spacing: .5px;
@@ -114,7 +114,7 @@ p {
 
 .eyebrow {
   font-size: .75rem;
-  color: #c47a3a;
+  color: var(--orange);
   letter-spacing: 2px;
   text-transform: uppercase;
   font-weight: 600;
@@ -123,7 +123,7 @@ p {
 
 .about-content h1 {
   font-size: 2.6rem;
-  color: #4b2e1f;
+  color: var(--navy);
   margin-bottom: .5rem;
   letter-spacing: .5px;
   line-height: 1.2;
@@ -133,20 +133,20 @@ p {
 .divider {
   width: 48px;
   height: 4px;
-  background: linear-gradient(135deg, #c47a3a, #a8642e);
+  background: var(--orange);
   margin-bottom: 1.6rem;
   border-radius: 2px;
 }
 
 .about-content p {
   font-size: 1rem;
-  color: #3a2a1a;
+  color: var(--gray-600);
   line-height: 1.8;
   margin-bottom: 1rem;
 }
 
 .about-content strong {
-  color: #2a1a0f;
+  color: var(--navy);
 }
 
 /* PILLARS */
@@ -158,7 +158,7 @@ p {
 }
 
 .pillar {
-  background: rgba(0,0,0,.05);
+  background: var(--gray-100);
   border-radius: 10px;
   padding: 12px 8px;
   display: flex;
@@ -166,7 +166,7 @@ p {
   align-items: center;
   gap: 6px;
   font-size: .8rem;
-  color: #4b2e1f;
+  color: var(--navy);
   font-weight: 600;
   text-align: center;
   line-height: 1.3;

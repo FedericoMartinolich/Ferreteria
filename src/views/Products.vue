@@ -159,10 +159,10 @@ onMounted(() => {
 
 .catalog {
   max-width: 1100px;
-  margin: 0 auto 2rem;
+  margin: 0 auto 0;
   padding: 2.2rem 1.6rem;
-  background: rgba(243, 237, 228, 0.95);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  background: var(--white);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
 }
 
@@ -174,13 +174,13 @@ onMounted(() => {
   text-align: center;
   margin-bottom: 2rem;
   font-size: 2rem;
-  color: #3b2a1d;
+  color: var(--navy);
   letter-spacing: 0.5px;
 }
 
 .title i {
   margin-right: 0.5rem;
-  color: #c46a2b;
+  color: var(--orange);
 }
 
 /* ===============================
@@ -198,20 +198,20 @@ onMounted(() => {
   padding: 12px 16px 12px 44px;
   font-size: 15px;
   border-radius: 10px;
-  border: 2px solid #d4c4b0;
-  background: #ffffff;
-  color: #3b2a1d;
+  border: 2px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-800);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .search-input::placeholder {
-  color: #9c8573;
+  color: var(--gray-400);
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #c46a2b;
-  box-shadow: 0 0 0 3px rgba(196, 106, 43, 0.2);
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(232, 106, 16, 0.15);
 }
 
 .search-icon {
@@ -219,7 +219,7 @@ onMounted(() => {
   top: 50%;
   left: 16px;
   transform: translateY(-50%);
-  color: #9c8573;
+  color: var(--gray-400);
   font-size: 15px;
   pointer-events: none;
 }
@@ -255,7 +255,7 @@ onMounted(() => {
   gap: 1.2rem;
   margin: 2.5rem 0 1rem;
   font-size: 14px;
-  color: #5a4a3d;
+  color: var(--gray-600);
 }
 
 .pagination span {
@@ -270,21 +270,22 @@ onMounted(() => {
   height: 40px;
   border-radius: 50%;
   border: none;
-  background: linear-gradient(135deg, #c46a2b, #a85722);
-  color: #ffffff;
+  background: var(--navy);
+  color: var(--white);
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(196, 106, 43, 0.3);
+  box-shadow: 0 2px 8px rgba(13, 27, 42, 0.2);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .pagination button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(196, 106, 43, 0.4);
+  box-shadow: 0 4px 12px rgba(13, 27, 42, 0.3);
 }
 
 .pagination button:disabled {
-  background: #c4b8a8;
+  background: var(--gray-200);
+  color: var(--gray-400);
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -296,8 +297,8 @@ onMounted(() => {
 @media (max-width: 768px) {
   .catalog {
     padding: 1.5rem 1rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .title {
@@ -305,20 +306,55 @@ onMounted(() => {
     margin-bottom: 1.5rem;
   }
 
+  .search-input {
+    font-size: 14px;
+    padding: 10px 14px 10px 40px;
+  }
+
+  .search-icon {
+    left: 14px;
+    font-size: 14px;
+  }
+
   .container {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 0.8rem;
   }
+
+  .pagination button {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 480px) {
+  .catalog {
+    padding: 1rem 0.75rem;
+  }
+
   .container {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
   }
 
+  .search-input {
+    font-size: 13px;
+    padding: 9px 12px 9px 36px;
+    border-radius: 8px;
+  }
+
+  .search-icon {
+    left: 12px;
+    font-size: 13px;
+  }
+
   .pagination {
     gap: 1rem;
+  }
+
+  .pagination span {
+    font-size: 12px;
   }
 }
 
@@ -335,7 +371,7 @@ onMounted(() => {
   width: 100%;
   height: 44px;
   border-radius: 10px;
-  background: linear-gradient(90deg, #e8ddd2 25%, #f0e8de 50%, #e8ddd2 75%);
+  background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -343,15 +379,15 @@ onMounted(() => {
 .skeleton-card {
   border-radius: 12px;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 0;
 }
 
 .skeleton-img {
   width: 100%;
   aspect-ratio: 1;
-  background: linear-gradient(90deg, #e8ddd2 25%, #f0e8de 50%, #e8ddd2 75%);
+  background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -360,7 +396,7 @@ onMounted(() => {
   height: 14px;
   margin: 12px 14px 0;
   border-radius: 6px;
-  background: linear-gradient(90deg, #e8ddd2 25%, #f0e8de 50%, #e8ddd2 75%);
+  background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -393,9 +429,9 @@ onMounted(() => {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  background: #1a3d2a;
-  color: #4caf7d;
-  border: 1px solid #2d6645;
+  background: var(--navy);
+  color: var(--white);
+  border: 1px solid var(--navy-light);
   border-radius: 10px;
   padding: 12px 18px;
   display: flex;

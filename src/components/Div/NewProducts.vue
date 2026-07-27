@@ -122,7 +122,7 @@ const prevSlide = () => {
   max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
-  background: linear-gradient(135deg, #3b2a1d 0%, #5a3d2a 60%, #7a5540 100%);
+  background: var(--navy);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
   overflow: hidden;
@@ -130,12 +130,11 @@ const prevSlide = () => {
 
 .section-title {
   text-align: center;
-  color: #fff;
+  color: var(--white);
   font-size: 1.6rem;
   font-weight: 700;
   text-transform: uppercase;
   margin: 0 0 1.5rem 0;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   letter-spacing: 0.03em;
 }
 
@@ -153,7 +152,7 @@ const prevSlide = () => {
   flex: 1;
   overflow: hidden;
   border-radius: 10px;
-  background: #fff;
+  background: var(--white);
 }
 
 .carousel-track {
@@ -180,21 +179,20 @@ const prevSlide = () => {
    CARD
    ========================= */
 .product-card {
-  background: #fafafa;
-  border: 1px solid #eee;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 280px;
+  border-radius: 10px;
 }
 
 .product-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  border-color: #c46a2b;
 }
 
 /* =========================
@@ -205,7 +203,7 @@ const prevSlide = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f5f5f5;
+  background: var(--white);
   padding: 12px;
 }
 
@@ -229,7 +227,7 @@ const prevSlide = () => {
 .title {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #3b2a1d;
+  color: var(--navy);
   margin: 0 0 6px 0;
   line-height: 1.3;
   display: -webkit-box;
@@ -242,7 +240,7 @@ const prevSlide = () => {
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 0.8rem;
-  color: #2f6b3c;
+  color: #b91c1c;
 }
 
 /* =========================
@@ -253,18 +251,19 @@ const prevSlide = () => {
   text-align: center;
   padding: 8px;
   border-radius: 6px;
-  background: linear-gradient(135deg, #c46a2b, #a85722);
-  color: #fff;
+  background: var(--orange);
+  color: var(--white);
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 600;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(196, 106, 43, 0.25);
+  box-shadow: 0 2px 6px rgba(232, 106, 16, 0.25);
 }
 
 .btn-add:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(196, 106, 43, 0.35);
+  box-shadow: 0 4px 10px rgba(232, 106, 16, 0.35);
+  background: var(--orange-hover);
 }
 
 /* =========================
@@ -272,7 +271,7 @@ const prevSlide = () => {
    ========================= */
 .carousel-btn {
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--white);
   border: none;
   width: 38px;
   height: 38px;
@@ -282,13 +281,13 @@ const prevSlide = () => {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  color: #3b2a1d;
+  color: var(--navy);
   transition: background 0.2s ease, transform 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .carousel-btn:hover {
-  background: #fff;
+  background: var(--gray-100);
   transform: scale(1.1);
 }
 
@@ -305,14 +304,14 @@ const prevSlide = () => {
 .carousel-dots span {
   width: 10px;
   height: 10px;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .carousel-dots span.active {
-  background: #fff;
+  background: var(--white);
   transform: scale(1.2);
 }
 

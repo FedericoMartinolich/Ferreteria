@@ -70,7 +70,7 @@ const props = defineProps({
 .tilt {
   height: 200px;
   overflow: hidden;
-  background: #f5f5f5;
+  background: var(--gray-50);
 }
 
 .tilt img {
@@ -86,18 +86,17 @@ const props = defineProps({
 
 .card {
   width: 100%;
-  background: #fff;
-  border: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
   position: relative;
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  border-color: #c46a2b;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* BADGE */
@@ -105,8 +104,8 @@ const props = defineProps({
   position: absolute;
   top: 10px;
   right: 10px;
-  background: linear-gradient(135deg, #c46a2b, #a85722);
-  color: #fff;
+  background: var(--orange);
+  color: var(--white);
   padding: 4px 10px;
   font-size: 11px;
   border-radius: 999px;
@@ -122,7 +121,7 @@ const props = defineProps({
 .cat {
   font-size: 10px;
   text-transform: uppercase;
-  color: #999;
+  color: var(--gray-400);
   letter-spacing: 0.5px;
   margin-bottom: 4px;
 }
@@ -130,7 +129,7 @@ const props = defineProps({
 .title {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #3b2a1d;
+  color: var(--navy);
   margin: 0 0 6px 0;
   line-height: 1.3;
   display: -webkit-box;
@@ -141,7 +140,7 @@ const props = defineProps({
 
 .desc {
   font-size: 12px;
-  color: #777;
+  color: var(--gray-600);
   margin-bottom: 8px;
   line-height: 1.4;
   display: -webkit-box;
@@ -159,8 +158,8 @@ const props = defineProps({
 }
 .feat {
   font-size: 9px;
-  background: #f5f0eb;
-  color: #6b5a4d;
+  background: var(--gray-100);
+  color: var(--gray-600);
   padding: 3px 7px;
   border-radius: 4px;
 }
@@ -172,7 +171,9 @@ const props = defineProps({
   align-items: center;
   margin-top: auto;
   padding-top: 10px;
-  border-top: 1px solid #f0ebe6;
+  border-top: 1px solid var(--gray-200);
+  gap: 8px;
+  min-width: 0;
 }
 
 .price {
@@ -190,13 +191,13 @@ const props = defineProps({
 .price .new {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #2f6b3c;
+  color: #b91c1c;
 }
 
 /* BUTTON */
 .btn {
-  background: linear-gradient(135deg, #c46a2b, #a85722);
-  color: white;
+  background: var(--navy);
+  color: var(--white);
   border: none;
   width: 34px;
   height: 34px;
@@ -207,11 +208,38 @@ const props = defineProps({
   justify-content: center;
   font-size: 14px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(196, 106, 43, 0.25);
+  box-shadow: 0 2px 6px rgba(13, 27, 42, 0.2);
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(196, 106, 43, 0.35);
+  box-shadow: 0 4px 10px rgba(13, 27, 42, 0.3);
+  background: var(--orange);
+}
+
+@media (max-width: 480px) {
+  .info {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 0.85rem;
+  }
+
+  .price .new {
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .bottom {
+    padding-top: 8px;
+  }
 }
 </style>
