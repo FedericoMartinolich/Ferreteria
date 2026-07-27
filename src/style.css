@@ -80,17 +80,12 @@ button {
   background-color: var(--navy);
   color: var(--white);
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: var(--orange);
+  transition: background-color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 
 button:focus,
 button:focus-visible {
-  outline: 2px solid var(--orange);
-  outline-offset: 2px;
+  outline: none;
 }
 
 #app {

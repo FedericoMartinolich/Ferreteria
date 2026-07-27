@@ -109,7 +109,7 @@ const loading = ref(true);
 
 /* responsive */
 const updateItemsPerSlide = () => {
-  if (window.innerWidth < 640) itemsPerSlide.value = 1;
+  if (window.innerWidth < 640) itemsPerSlide.value = 2;
   else if (window.innerWidth < 1024) itemsPerSlide.value = 2;
   else itemsPerSlide.value = 4;
 };
@@ -390,7 +390,7 @@ const prevSlide = () => {
 }
 
 /* Mobile */
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
   .special-offers-section {
     padding: 1.5rem 1rem;
     border-radius: 12px;
@@ -411,18 +411,13 @@ const prevSlide = () => {
   }
 
   .offer-card {
-    flex-direction: row;
     padding: 1rem;
-    gap: 1rem;
-    align-items: stretch;
+    gap: 0.8rem;
   }
 
   .product-item {
-    flex: 0 0 100%;
-    max-width: 100%;
-    flex-direction: row;
-    gap: 1rem;
-    padding: 1rem;
+    padding: 0.8rem;
+    gap: 0.6rem;
   }
 
   .product-image-wrapper {
@@ -432,38 +427,75 @@ const prevSlide = () => {
   }
 
   .offer-content {
-    text-align: left;
+    min-width: 0;
+  }
+
+  .offer-content h2 {
+    font-size: 0.8rem;
+  }
+
+  .offer-content p {
+    font-size: 0.7rem;
+    -webkit-line-clamp: 1;
+  }
+
+  .discount-price {
+    font-size: 1.1rem;
+  }
+
+  .original-price {
+    font-size: 0.75rem;
   }
 
   .btn-buy {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
+    font-size: 0.75rem;
   }
 
   .carousel-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
   }
 
   .carousel-dots {
     margin-top: 0.8rem;
   }
-} */
+}
 
 @media (max-width: 420px) {
-  .product-image-wrapper {
-    max-width: 80px;
-    min-width: 80px;
-    height: 80px;
-  }
-
-  .discount-price {
-    font-size: 1.2rem;
+  .offer-card {
+    gap: 0.5rem;
+    padding: 0.6rem;
   }
 
   .product-item {
-    padding: 0.8rem;
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .product-image-wrapper {
+    max-width: 70px;
+    min-width: 70px;
+    height: 70px;
+  }
+
+  .discount-price {
+    font-size: 0.95rem;
+  }
+
+  .offer-content h2 {
+    font-size: 0.7rem;
+  }
+
+  .offer-content p {
+    display: none;
+  }
+
+  .btn-buy {
+    font-size: 0.7rem;
+    padding: 6px;
   }
 }
 

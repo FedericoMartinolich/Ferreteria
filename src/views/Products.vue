@@ -202,6 +202,7 @@ onMounted(() => {
   background: var(--white);
   color: var(--gray-800);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
 }
 
 .search-input::placeholder {

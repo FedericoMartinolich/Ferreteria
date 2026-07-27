@@ -658,6 +658,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   border-radius: 14px;
   padding: 1rem 1.25rem;
   min-width: 180px;
+  box-sizing: border-box;
 }
 
 .total-line {
@@ -705,6 +706,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   text-decoration: none;
   transition: all 0.2s ease;
   white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .btn.primary {
