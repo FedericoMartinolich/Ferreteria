@@ -38,8 +38,8 @@ onMounted(async () => {
 
 <style scoped>
 .full-width {
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
+    width: calc(100% + 2rem);
+    margin-left: -1rem;
+    display: block;
 }
 </style>
