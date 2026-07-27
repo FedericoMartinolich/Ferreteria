@@ -141,6 +141,8 @@ onMounted(async () => {
   background: var(--navy);
   color: var(--white);
   padding: 70px 20px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 /* =========================
