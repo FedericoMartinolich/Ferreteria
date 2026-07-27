@@ -1,77 +1,102 @@
 <template>
   <div class="special-offers-section">
-    <h1 class="section-title">{{ data.title }}</h1>
-
-    <div class="carousel-container">
-      <button class="carousel-btn prev" @click="prevSlide">❮</button>
-
-      <div class="carousel-wrapper">
-        <div
-          class="carousel-slide"
-          v-for="(slide, index) in slides"
-          :key="index"
-          v-show="currentIndex === index"
-        >
+    <template v-if="loading">
+      <h1 class="section-title">&nbsp;</h1>
+      <div class="carousel-container">
+        <button class="carousel-btn prev" disabled>❮</button>
+        <div class="carousel-wrapper">
           <div class="offer-card">
-            <div
-              v-for="product in slide"
-              :key="product.id"
-              class="product-item"
-            >
-              <div class="product-image-wrapper">
-                <img
-                  v-if="product.image_key"
-                  :src="getProductImage(product)"
-                  :alt="product.product"
-                  loading="lazy"
-                  class="product-image"
-                />
-                <img v-else :src="emptyImg" alt="" class="product-image" />
-                <span v-if="product.discount !== 0" class="discount-badge">
-                  -{{ Number(product.discount).toFixed(0) }}%
-                </span>
-              </div>
-
-              <div class="offer-content">
-                <h2>{{ product.product }}</h2>
-                <p v-if="product.description">{{ product.description }}</p>
-
-                <div class="price-section">
-                  <span v-if="product.originalPrice" class="original-price">
-                    ${{ product.originalPrice }}
-                  </span>
-                  <span class="discount-price">
-                    ${{ product.price }}
-                  </span>
-                </div>
-              </div>
-
-              <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }" class="product-link">
-                <button class="btn-buy">Agregar al carrito</button>
-              </router-link>
+            <div v-for="n in 4" :key="n" class="skeleton-item">
+              <div class="skeleton-img"></div>
+              <div class="skeleton-text skeleton-text-title"></div>
+              <div class="skeleton-text skeleton-text-sub"></div>
+              <div class="skeleton-text skeleton-text-price"></div>
+              <div class="skeleton-text skeleton-text-btn"></div>
             </div>
           </div>
         </div>
+        <button class="carousel-btn next" disabled>❯</button>
+      </div>
+      <div class="carousel-dots">
+        <span class="active"></span>
+      </div>
+    </template>
+
+    <template v-else>
+      <h1 class="section-title">{{ data.title }}</h1>
+
+      <div class="carousel-container">
+        <button class="carousel-btn prev" @click="prevSlide">❮</button>
+
+        <div class="carousel-wrapper">
+          <div
+            class="carousel-slide"
+            v-for="(slide, index) in slides"
+            :key="index"
+            v-show="currentIndex === index"
+          >
+            <div class="offer-card">
+              <div
+                v-for="product in slide"
+                :key="product.id"
+                class="product-item"
+              >
+                <div class="product-image-wrapper">
+                  <img
+                    v-if="product.image_key"
+                    :src="getProductImage(product)"
+                    :alt="product.product"
+                    loading="lazy"
+                    class="product-image"
+                  />
+                  <img v-else :src="emptyImg" alt="" class="product-image" />
+                  <span v-if="product.discount !== 0" class="discount-badge">
+                    -{{ Number(product.discount).toFixed(0) }}%
+                  </span>
+                </div>
+
+                <div class="offer-content">
+                  <h2>{{ product.product }}</h2>
+                  <p v-if="product.description">{{ product.description }}</p>
+
+                  <div class="price-section">
+                    <span v-if="product.originalPrice" class="original-price">
+                      ${{ product.originalPrice }}
+                    </span>
+                    <span class="discount-price"> ${{ product.price }} </span>
+                  </div>
+                </div>
+
+                <router-link
+                  :to="{ name: 'ProductDetail', params: { id: product.id } }"
+                  class="product-link"
+                >
+                  <button class="btn-buy">Agregar al carrito</button>
+                </router-link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-btn next" @click="nextSlide">❯</button>
       </div>
 
-      <button class="carousel-btn next" @click="nextSlide">❯</button>
-    </div>
-
-    <div class="carousel-dots">
-      <span
-        v-for="(_, index) in slides"
-        :key="index"
-        :class="{ active: currentIndex === index }"
-        @click="currentIndex = index"
-      ></span>
-    </div>
+      <div class="carousel-dots">
+        <span
+          v-for="(_, index) in slides"
+          :key="index"
+          :class="{ active: currentIndex === index }"
+          @click="currentIndex = index"
+        ></span>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { getProductById, getProductImage } from "../../services/products";
-import emptyImg from "../../assets/imgs/emptys/emptyImg.png"
+import emptyImg from "../../assets/imgs/emptys/emptyImg.png";
 
 const props = defineProps({
   data: Object,
@@ -80,6 +105,7 @@ const props = defineProps({
 const productData = ref([]);
 const currentIndex = ref(0);
 const itemsPerSlide = ref(4);
+const loading = ref(true);
 
 /* responsive */
 const updateItemsPerSlide = () => {
@@ -96,6 +122,7 @@ onMounted(async () => {
     const product = await getProductById(id);
     if (product) productData.value.push(product);
   }
+  loading.value = false;
 });
 
 /* agrupar productos en slides */
@@ -108,14 +135,12 @@ const slides = computed(() => {
 });
 
 const nextSlide = () => {
-  currentIndex.value =
-    (currentIndex.value + 1) % slides.value.length;
+  currentIndex.value = (currentIndex.value + 1) % slides.value.length;
 };
 
 const prevSlide = () => {
   currentIndex.value =
-    (currentIndex.value - 1 + slides.value.length) %
-    slides.value.length;
+    (currentIndex.value - 1 + slides.value.length) % slides.value.length;
 };
 </script>
 
@@ -125,7 +150,12 @@ const prevSlide = () => {
   max-width: 1100px;
   margin: 2.5rem auto;
   padding: 2.5rem 1.5rem;
-  background: linear-gradient(135deg, var(--orange) 0%, #d45d0a 60%, #a84808 100%);
+  background: linear-gradient(
+    135deg,
+    var(--orange) 0%,
+    #d45d0a 60%,
+    #a84808 100%
+  );
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
@@ -184,7 +214,9 @@ const prevSlide = () => {
   border: 1px solid var(--gray-200);
   border-radius: 14px;
   padding: 1.2rem 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .product-item:hover {
@@ -277,7 +309,9 @@ const prevSlide = () => {
   cursor: pointer;
   font-weight: 600;
   font-size: 0.9rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-buy:hover {
@@ -299,7 +333,9 @@ const prevSlide = () => {
   font-size: 18px;
   line-height: 1;
   color: var(--orange);
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -321,7 +357,9 @@ const prevSlide = () => {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.35);
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
 }
 
 .carousel-dots span.active {
@@ -330,8 +368,12 @@ const prevSlide = () => {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Tablet */
@@ -348,7 +390,7 @@ const prevSlide = () => {
 }
 
 /* Mobile */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .special-offers-section {
     padding: 1.5rem 1rem;
     border-radius: 12px;
@@ -407,7 +449,7 @@ const prevSlide = () => {
   .carousel-dots {
     margin-top: 0.8rem;
   }
-}
+} */
 
 @media (max-width: 420px) {
   .product-image-wrapper {
@@ -422,6 +464,75 @@ const prevSlide = () => {
 
   .product-item {
     padding: 0.8rem;
+  }
+}
+
+/* =========================
+   SKELETON LOADING
+   ========================= */
+.skeleton-item {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 320px;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 1.2rem 1rem;
+}
+
+.skeleton-img {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    var(--gray-200) 25%,
+    var(--gray-100) 50%,
+    var(--gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-text {
+  margin: 12px 10px 0;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--gray-200) 25%,
+    var(--gray-100) 50%,
+    var(--gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-text-title {
+  width: 75%;
+  height: 16px;
+}
+
+.skeleton-text-sub {
+  width: 90%;
+  height: 12px;
+}
+
+.skeleton-text-price {
+  width: 40%;
+  height: 20px;
+}
+
+.skeleton-text-btn {
+  width: 60%;
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }
 </style>

@@ -1,66 +1,84 @@
 <template>
   <section class="new-products-section">
-    <h2 class="section-title">{{ newProducts.title }}</h2>
-
-    <div class="carousel-container">
-      <button class="carousel-btn prev" @click="prevSlide">❮</button>
-
-      <div class="carousel-wrapper">
-        <div
-          class="carousel-track"
-          :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
-        >
-          <div
-            class="carousel-slide"
-            v-for="(slide, index) in slides"
-            :key="index"
-          >
-            <div class="products-grid">
-              
-              <div
-                v-for="product in slide"
-                :key="product.id"
-                class="product-card"
-              >
-                <div class="image-container">
-                  <img
-                    v-if="product.image_key"
-                    :src="getProductImage(product)"
-                    :alt="product.product"
-                    loading="lazy"
-                  />
-                  <img v-else :src="emptyImg" alt="" />
-                </div>
-
-                <div class="card-content">
-                  <h3 class="title">{{ product.product }}</h3>
-                  <p class="price">${{ product.price }}</p>
-
-                  <router-link
-                    :to="`/ProductDetail/${product.id}`"
-                    class="btn-add"
-                  >
-                    Ver producto
-                  </router-link>
-                </div>
-              </div>
-
+    <template v-if="loading">
+      <h2 class="section-title">&nbsp;</h2>
+      <div class="carousel-container">
+        <button class="carousel-btn prev" disabled>❮</button>
+        <div class="carousel-wrapper">
+          <div class="products-grid">
+            <div v-for="n in 4" :key="n" class="skeleton-card">
+              <div class="skeleton-img"></div>
+              <div class="skeleton-text skeleton-text-title"></div>
+              <div class="skeleton-text skeleton-text-price"></div>
+              <div class="skeleton-text skeleton-text-btn"></div>
             </div>
           </div>
         </div>
+        <button class="carousel-btn next" disabled>❯</button>
+      </div>
+    </template>
+
+    <template v-else>
+      <h2 class="section-title">{{ newProducts.title }}</h2>
+
+      <div class="carousel-container">
+        <button class="carousel-btn prev" @click="prevSlide">❮</button>
+
+        <div class="carousel-wrapper">
+          <div
+            class="carousel-track"
+            :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
+          >
+            <div
+              class="carousel-slide"
+              v-for="(slide, index) in slides"
+              :key="index"
+            >
+              <div class="products-grid">
+                <div
+                  v-for="product in slide"
+                  :key="product.id"
+                  class="product-card"
+                >
+                  <div class="image-container">
+                    <img
+                      v-if="product.image_key"
+                      :src="getProductImage(product)"
+                      :alt="product.product"
+                      loading="lazy"
+                    />
+                    <img v-else :src="emptyImg" alt="" />
+                  </div>
+
+                  <div class="card-content">
+                    <h3 class="title">{{ product.product }}</h3>
+                    <p class="price">${{ product.price }}</p>
+
+                    <router-link
+                      :to="`/ProductDetail/${product.id}`"
+                      class="btn-add"
+                    >
+                      Ver producto
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-btn next" @click="nextSlide">❯</button>
       </div>
 
-      <button class="carousel-btn next" @click="nextSlide">❯</button>
-    </div>
-
-    <div class="carousel-dots">
-      <span
-        v-for="(_, index) in slides"
-        :key="index"
-        :class="{ active: currentSlide === index }"
-        @click="currentSlide = index"
-      ></span>
-    </div>
+      <div class="carousel-dots">
+        <span
+          v-for="(_, index) in slides"
+          :key="index"
+          :class="{ active: currentSlide === index }"
+          @click="currentSlide = index"
+        ></span>
+      </div>
+    </template>
   </section>
 </template>
 
@@ -77,13 +95,14 @@ const newProducts = props.data;
 const productData = ref([]);
 const currentSlide = ref(0);
 const itemsPerSlide = ref(4);
+const loading = ref(true);
 
 /* responsive */
 const updateItemsPerSlide = () => {
   if (window.innerWidth < 640) itemsPerSlide.value = 1;
   else if (window.innerWidth < 1175) itemsPerSlide.value = 2;
   else if (window.innerWidth < 1460) itemsPerSlide.value = 3;
-  else itemsPerSlide.value = 4; 
+  else itemsPerSlide.value = 4;
 };
 
 onMounted(async () => {
@@ -94,6 +113,7 @@ onMounted(async () => {
     const product = await getProductById(id);
     if (product) productData.value.push(product);
   }
+  loading.value = false;
 });
 
 /* agrupar productos en slides */
@@ -106,8 +126,7 @@ const slides = computed(() => {
 });
 
 const nextSlide = () => {
-  currentSlide.value =
-    (currentSlide.value + 1) % slides.value.length;
+  currentSlide.value = (currentSlide.value + 1) % slides.value.length;
 };
 
 const prevSlide = () => {
@@ -182,7 +201,9 @@ const prevSlide = () => {
   background: var(--gray-50);
   border: 1px solid var(--gray-200);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -256,7 +277,9 @@ const prevSlide = () => {
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 600;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   box-shadow: 0 2px 6px rgba(232, 106, 16, 0.25);
 }
 
@@ -282,7 +305,9 @@ const prevSlide = () => {
   justify-content: center;
   font-size: 16px;
   color: var(--navy);
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -307,7 +332,9 @@ const prevSlide = () => {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
 }
 
 .carousel-dots span.active {
@@ -318,7 +345,7 @@ const prevSlide = () => {
 /* =========================
    RESPONSIVE
    ========================= */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .new-products-section {
     padding: 1.5rem 1rem;
   }
@@ -338,7 +365,7 @@ const prevSlide = () => {
     height: 32px;
     font-size: 14px;
   }
-}
+} */
 
 @media (max-width: 480px) {
   .products-grid {
@@ -357,5 +384,66 @@ const prevSlide = () => {
 .product-card:only-child {
   max-width: 300px;
   width: 300px;
+}
+
+/* =========================
+   SKELETON LOADING
+   ========================= */
+.skeleton-card {
+  background: var(--gray-100);
+  border-radius: 10px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.skeleton-img {
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(
+    90deg,
+    var(--gray-200) 25%,
+    var(--gray-100) 50%,
+    var(--gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-text {
+  margin: 12px 14px 0;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--gray-200) 25%,
+    var(--gray-100) 50%,
+    var(--gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-text-title {
+  width: 70%;
+  height: 16px;
+}
+
+.skeleton-text-price {
+  width: 40%;
+  height: 18px;
+}
+
+.skeleton-text-btn {
+  width: 55%;
+  height: 14px;
+  margin-bottom: 14px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 </style>
