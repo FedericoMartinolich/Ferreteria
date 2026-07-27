@@ -170,6 +170,9 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import emptyCart from '../assets/imgs/emptys/emptyCart.png'
 import { getProductImage } from '../services/products'
+import { useConfig } from '../composables/useConfig.js'
+
+const { load: loadConfig, whatsapp, email: configEmail } = useConfig()
 
 const CART_KEY = 'cart'
 const router = useRouter()
@@ -197,7 +200,8 @@ const isFormValid = computed(() => {
 })
 
 // Load cart from localStorage (or seed with an example for dev)
-onMounted(() => {
+onMounted(async () => {
+    await loadConfig()
     try {
         const raw = localStorage.getItem(CART_KEY)
         if (raw) {
@@ -284,8 +288,7 @@ ${productos}
 
 Total: ${formatCurrency(totalPrice.value)}
 `
-  const phoneNumber = '5493446670475' // reemplaza con tu número
-  const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+  const url = `https://wa.me/${whatsapp.value}?text=${encodeURIComponent(message)}`
   window.open(url, '_blank')
 }
 
@@ -310,7 +313,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 
   const gmailUrl =
     `https://mail.google.com/mail/?view=cm&fs=1` +
-    `&to=elmoroferreteria@gmail.com` +
+    `&to=${configEmail.value}` +
     `&su=${encodeURIComponent(subject)}` +
     `&body=${encodeURIComponent(body)}`
 

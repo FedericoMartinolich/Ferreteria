@@ -42,7 +42,7 @@
         <nav :class="{ open: mobileOpen }" class="nav">
           <ul>
             <li v-for="link in links" :key="link.href">
-              <RouterLink :to="link.href">
+              <RouterLink :to="link.href" :class="{ active: isActive(link.href) }">
                 {{ link.label }}
               </RouterLink>
             </li>
@@ -67,8 +67,11 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { getProducts } from "../services/products.js";
 import Searcher from "./Searcher.vue";
+
+const route = useRoute();
 
 const props = defineProps({
     title: { type: String, default: 'Ferretería' },
@@ -94,6 +97,11 @@ onMounted(async () => {
 
 const products = ref([]);
 const search = ref('');
+
+function isActive(href) {
+  if (href === '/') return route.path === '/';
+  return route.path.startsWith(href);
+}
 
 const filteredProducts = computed(() => {
     const q = search.value.trim().toLowerCase();
@@ -226,6 +234,11 @@ input {
   background: rgba(255,255,255,.18);
 }
 
+.nav a.active {
+  color: rgba(255,255,255,.5);
+  pointer-events: none;
+}
+
 /* ==========================
    MOBILE
 ========================== */
@@ -266,7 +279,6 @@ input {
     
     .nav a {
         padding: .75rem;
-        border-bottom: 1px solid rgba(255,255,255,.2);
     }
 
     .search-area {

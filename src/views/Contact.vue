@@ -27,37 +27,37 @@
                 <span><i class="fa fa-map-marker fa-2x"></i> Gualeguaychú, Entre Ríos, Argentina</span>
               </li>
 
-              <li class="list-item">
-                <a href="https://wa.me/543446670475" target="_blank">
+              <li class="list-item" v-if="whatsappUrl">
+                <a :href="whatsappUrl" target="_blank">
                   <i class="fa fa-brands fa-whatsapp fa-2x"></i>
-                  (54) 3446 67-0475
+                  {{ whatsappDisplay }}
                 </a>
               </li>
 
-              <li class="list-item">
+              <li class="list-item" v-if="diasAtencion">
                 <span>
                   <i class="fa fa-calendar fa-2x"></i>
-                  Lunes a Sábados
+                  {{ diasAtencion }}
                 </span>
               </li>
 
-              <li class="list-item">
+              <li class="list-item" v-if="horasAtencion">
                 <span>
                   <i class="fa fa-clock fa-2x"></i>
-                  9hs - 13hs y 16:30hs - 21hs
+                  {{ horasAtencion }}
                 </span>
               </li>
             </ul>
 
             <hr />
             <ul class="social-media-list">
-            <li>
-              <a href="mailto:elmoroferreteria@gmail.com" target="_blank" class="contact-icon"
+            <li v-if="mailtoUrl">
+              <a :href="mailtoUrl" target="_blank" class="contact-icon"
                 ><i class="fa fa-envelope fa-2x"></i>
               </a>
             </li>
-            <li>
-              <a href="https://www.instagram.com/ferreteria.elmoro/" target="_blank" class="contact-icon"
+            <li v-if="instagram">
+              <a :href="instagram" target="_blank" class="contact-icon"
                 ><i class="fa fa-brands fa-instagram fa-2x"></i
               ></a>
             </li>
@@ -65,7 +65,7 @@
           <hr />
 
             <div class="copyright">
-              © El Moro - Ferretería
+              © {{ nombre || 'El Moro' }} - Ferretería
             </div>
           </div>
         </div>
@@ -80,12 +80,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import emailjs from "emailjs-com";
 import L from "leaflet";
+import { useConfig } from '../composables/useConfig.js'
+
+const { load: loadConfig, whatsapp, whatsappUrl, email: configEmail, mailtoUrl, instagram, nombre, coordenadas, diasAtencion, horasAtencion } = useConfig()
 
 const form = ref(null);
 const msg = ref("");
+
+const whatsappDisplay = computed(() => {
+  const raw = whatsapp.value || '';
+  const clean = raw.replace(/^549?/, '');
+  return `(${raw.slice(0, 2)}) ${raw.slice(2, 6)} ${raw.slice(6)}`;
+});
 
 const sendEmail = () => {
   msg.value = "Enviando...";
@@ -105,15 +114,19 @@ const sendEmail = () => {
   });
 };
 
-onMounted(() => {
+onMounted(async () => {
+  await loadConfig();
+
+  const coords = coordenadas.value || { lat: -33.001651, lng: -58.518268 };
+
   const map = L.map("map", { attributionControl: false })
-    .setView([-33.001651, -58.518268], 15);
+    .setView([coords.lat, coords.lng], 15);
 
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-  L.marker([-33.001651, -58.518268])
+  L.marker([coords.lat, coords.lng])
     .addTo(map)
-    .bindPopup("El Moro - Gualeguaychú")
+    .bindPopup(`${nombre.value || 'El Moro'} - Gualeguaychú`)
     .openPopup();
 });
 </script>

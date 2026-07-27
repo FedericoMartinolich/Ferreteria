@@ -12,12 +12,18 @@
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 import { ref, onMounted } from "vue";
+import { useConfig } from "./composables/useConfig.js";
+
+const { load: loadConfig, nombre } = useConfig();
 
 const logo = ref("");
+const title = ref("EL MORO");
 
 onMounted(async () => {
-  const month = new Date().getMonth();
+  await loadConfig();
+  if (nombre.value) title.value = nombre.value;
 
+  const month = new Date().getMonth();
   if (month === 11) {
     const module = await import("/perfil-navidad.png");
     logo.value = module.default;
@@ -26,8 +32,6 @@ onMounted(async () => {
     logo.value = module.default;
   }
 });
-
-const title = 'EL MORO'
 </script>
 
 <style scoped>

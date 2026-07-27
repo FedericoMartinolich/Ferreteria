@@ -2,20 +2,20 @@
     <footer class="app-footer" role="contentinfo">
         <div class="footer-inner">
             <div class="brand">
-                <h1 class="brand-title">Ferretería - EL MORO</h1>
-                <p class="brand-sub">Calidad, servicio y experiencia</p>
+                <h1 class="brand-title">Ferretería - {{ nombre || 'EL MORO' }}</h1>
+                <p class="brand-sub">{{ eslogan || 'Calidad, servicio y experiencia' }}</p>
             </div>
             <div class="footer-info">
                 <div class="social" aria-hidden="false" aria-label="Redes sociales">
-                    <a href="https://wa.me/543446670475" class="icon" aria-label="Whatsapp">
+                    <a v-if="whatsappUrl" :href="whatsappUrl" class="icon" aria-label="Whatsapp">
                         <i class="fa-brands fa-whatsapp"></i> <p>WhatsApp </p>
                     </a>
-                    <a href="https://www.instagram.com/ferreteria.elmoro/" class="icon" aria-label="Instagram">
+                    <a v-if="instagram" :href="instagram" class="icon" aria-label="Instagram">
                         <i class="fa-brands fa-instagram"></i> <p>Instagram </p>
                     </a>
                 </div>
                 <div class="copyright">
-                    <small>&copy; {{ year }} Ferretería - EL MORO. Todos los derechos reservados.</small>
+                    <small>&copy; {{ year }} Ferretería - {{ nombre || 'EL MORO' }}. Todos los derechos reservados.</small>
                 </div>
             </div>
         </div>
@@ -23,8 +23,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useConfig } from '../composables/useConfig.js'
+
+const { load: loadConfig, nombre, eslogan, whatsappUrl, instagram } = useConfig()
 const year = ref(new Date().getFullYear())
+
+onMounted(() => loadConfig())
 </script>
 
 <style scoped>

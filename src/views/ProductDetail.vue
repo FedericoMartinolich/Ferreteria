@@ -147,10 +147,12 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getProductById } from "../services/products.js";
 import { getProductImage } from "../services/products.js";
+import { useConfig } from "../composables/useConfig.js";
 import emptyImg from "../assets/imgs/emptys/emptyImg.png";
 
 const route = useRoute();
 const router = useRouter();
+const { load: loadConfig, whatsapp } = useConfig();
 
 const productId = route.params.id;
 
@@ -238,12 +240,12 @@ function addToCart() {
 function whatsApp() {
   if (!product.value) return;
   const message = `Hola, estoy interesado en el producto: ${product.value.product} (Cantidad: ${qty.value}).`;
-  const phoneNumber = "543446670475"; // Replace with your business number
-  const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  const url = `https://wa.me/${whatsapp.value}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank");
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await loadConfig();
   if (productId) fetchProduct(productId);
 });
 

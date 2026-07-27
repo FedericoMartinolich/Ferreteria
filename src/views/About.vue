@@ -3,47 +3,28 @@
     <div class="about-card">
 
       <div class="image-wrapper">
-        <img src="../assets/imgs/local.jpg" alt="Local de Ferretería El Moro" />
+        <img src="../assets/imgs/local.jpg" :alt="`Local de ${nombre || 'Ferretería El Moro'}`" />
         <div class="image-overlay"></div>
         <span class="location-badge">Desde Gualeguaychú</span>
       </div>
 
       <div class="about-content">
-        <p class="eyebrow">Nuestra historia</p>
-        <h1 class="title">¿Quiénes somos?</h1>
+        <p class="eyebrow">{{ tituloDecorativo || 'Nuestra historia' }}</p>
+        <h1 class="title">{{ tituloPrincipal || '¿Quiénes somos?' }}</h1>
         <div class="divider"></div>
 
-        <p>
-          <strong>Ferretería El Moro</strong> es una empresa familiar dedicada a la
-          venta de herramientas manuales y eléctricas, artículos para el mantenimiento
-          de piletas y jardines, pinturas, sanitarios, hornos, asadores, planchetas,
-          discos paelleros y anexos.
+        <p v-if="textos[0]">
+          <strong>{{ nombre || 'Ferretería El Moro' }}</strong> {{ textos[0] }}
         </p>
 
-        <p>
-          Nacimos del esfuerzo y la vocación de servicio, y crecimos gracias a la
-          confianza de cada cliente que eligió volver. Nuestro compromiso es ofrecer
-          productos de calidad, asesoramiento personalizado y un trato cercano, porque
-          creemos que cada proyecto merece la mejor atención.
-        </p>
+        <p v-if="textos[1]">{{ textos[1] }}</p>
 
-        <p>
-          No solo vendemos herramientas, sino que construimos relaciones duraderas con
-          nuestros clientes.
-        </p>
+        <p v-if="textos[2]">{{ textos[2] }}</p>
 
-        <div class="pillars">
-          <div class="pillar">
-            <span class="pillar-icon">🤝</span>
-            <span>Buen trato siempre</span>
-          </div>
-          <div class="pillar">
-            <span class="pillar-icon">🏠</span>
-            <span>Ambiente familiar</span>
-          </div>
-          <div class="pillar">
-            <span class="pillar-icon">🔧</span>
-            <span>Amplio stock</span>
+        <div class="pillars" v-if="hasCaracteristicas">
+          <div class="pillar" v-for="(car, i) in caracteristicasFiltradas" :key="i">
+            <span class="pillar-icon">{{ pillarIcons[i] || '🔧' }}</span>
+            <span>{{ car }}</span>
           </div>
         </div>
       </div>
@@ -53,6 +34,20 @@
 </template>
 
 <script setup>
+import { computed, onMounted } from 'vue'
+import { useConfig } from '../composables/useConfig.js'
+
+const { load: loadConfig, nombre, tituloDecorativo, tituloPrincipal, textos, caracteristicas } = useConfig()
+
+const pillarIcons = ['🤝', '🏠', '🔧']
+
+const caracteristicasFiltradas = computed(() =>
+  caracteristicas.value.filter(c => c)
+)
+
+const hasCaracteristicas = computed(() => caracteristicasFiltradas.value.length > 0)
+
+onMounted(() => loadConfig())
 </script>
 
 <style scoped>
