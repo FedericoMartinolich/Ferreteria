@@ -192,6 +192,7 @@ const prevSlide = () => {
   padding: 1.5rem;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   justify-content: center;
+  justify-items: center;
 }
 
 /* =========================
@@ -208,6 +209,7 @@ const prevSlide = () => {
   flex-direction: column;
   width: 100%;
   max-width: 280px;
+  box-sizing: border-box;
   border-radius: 10px;
 }
 

@@ -1,7 +1,8 @@
 import Papa from "papaparse";
 
-const URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSs5bfyJBAq7emwrDrLQXOKo05WstZWhbLw-z6-SVshrB4Te_rAlNmX21G9K9LcNBjgwitUSkEniVEG/pub?output=csv";
+const BASE = import.meta.env.VITE_SHEET_BASE_URL;
+const GID = import.meta.env.VITE_CONFIG_GID;
+const URL = GID ? `${BASE}&gid=${GID}` : BASE;
 
 let cached = null;
 

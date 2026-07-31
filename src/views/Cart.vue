@@ -237,7 +237,7 @@ const totalItems = computed(() => cart.value.reduce((s, i) => s + (Number(i.qty)
 const totalPrice = computed(() => cart.value.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.qty) || 0), 0))
 
 function formatCurrency(value) {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'ARS' }).format(value || 0)
+    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value || 0)
 }
 
 function increase(item) {
@@ -664,11 +664,14 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 
 .total-line {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
   font-size: 0.9rem;
   color: var(--gray-600);
+}
+
+.total-line strong {
+  margin-left: auto;
+  padding-left: 0.5rem;
 }
 
 .total-line strong {
@@ -999,6 +1002,10 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   .dialog-actions {
     grid-template-columns: 1fr;
     padding: 0 1.25rem 1.25rem;
+  }
+
+  .total-final strong {
+    font-size: 1rem;
   }
 }
 </style>

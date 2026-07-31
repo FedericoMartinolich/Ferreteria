@@ -1,5 +1,6 @@
-const URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIpBQq-bOHuBjvQDnIKcu0dKs9R6eqWqNsBCyVdheJcdU7rQkVNUHV_4BKNo7kGYIlJw-XVZLDadW_/pub?output=csv";
+const BASE = import.meta.env.VITE_SHEET_BASE_URL;
+const GID = import.meta.env.VITE_EVENTS_GID;
+const URL = GID ? `${BASE}&gid=${GID}` : BASE;
 
 async function fetchEvents() {
   const res = await fetch(URL);

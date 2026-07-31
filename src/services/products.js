@@ -1,6 +1,6 @@
-const url = `
-https://docs.google.com/spreadsheets/d/e/2PACX-1vTj8ske2PVx3Xrzxpw0rgQBlDxY_MTtAOjh4KU5waKgcizdypRMiyYRFt12p8AM6g2RG_xcxKpQ9M2o/pub?output=csv
-`;
+const BASE = import.meta.env.VITE_SHEET_BASE_URL;
+const GID = import.meta.env.VITE_PRODUCTS_GID;
+const url = GID ? `${BASE}&gid=${GID}` : BASE;
 
 import Papa from "papaparse";
 
