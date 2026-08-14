@@ -23,8 +23,8 @@
           <!-- Datos -->
           <div class="direct-contact-container">
             <ul class="contact-list">
-              <li class="list-item">
-                <span><i class="fa fa-map-marker fa-2x"></i> Gualeguaychú, Entre Ríos, Argentina</span>
+              <li class="list-item" v-if="direccion">
+                <span><i class="fa fa-map-marker fa-2x"></i> {{ direccion }}</span>
               </li>
 
               <li class="list-item" v-if="whatsappUrl">
@@ -65,14 +65,14 @@
           <hr />
 
             <div class="copyright">
-              © {{ nombre || 'El Moro' }} - Ferretería
+              © {{ brandName }}
             </div>
           </div>
         </div>
       </div>
 
       <!-- MAPA -->
-      <div class="map-wrapper">
+      <div v-if="showMap" class="map-wrapper">
         <div id="map"></div>
       </div>
     </section>
@@ -80,15 +80,26 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, nextTick } from "vue";
 import emailjs from "emailjs-com";
 import L from "leaflet";
 import { useConfig } from '../composables/useConfig.js'
+import {
+  EMAILJS_SERVICE_ID,
+  EMAILJS_TEMPLATE_ID,
+  EMAILJS_PUBLIC_KEY
+} from '../config/emailjs.js'
 
-const { load: loadConfig, whatsapp, whatsappUrl, email: configEmail, mailtoUrl, instagram, nombre, coordenadas, diasAtencion, horasAtencion } = useConfig()
+const { load: loadConfig, whatsapp, whatsappUrl, email: configEmail, mailtoUrl, instagram, nombre, tipoNegocio, coordenadas, direccion, diasAtencion, horasAtencion } = useConfig()
 
 const form = ref(null);
 const msg = ref("");
+const showMap = ref(false);
+
+const brandName = computed(() => {
+  const parts = [tipoNegocio.value, nombre.value].filter(Boolean)
+  return parts.join(' - ') || 'Catálogo Comercial'
+})
 
 const whatsappDisplay = computed(() => {
   const raw = whatsapp.value || '';
@@ -97,13 +108,18 @@ const whatsappDisplay = computed(() => {
 });
 
 const sendEmail = () => {
+  if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+    msg.value = "El formulario no está configurado.";
+    return;
+  }
+
   msg.value = "Enviando...";
 
   emailjs.sendForm(
-    "service_0mexqa8",
-    "template_1f1ml7k",
+    EMAILJS_SERVICE_ID,
+    EMAILJS_TEMPLATE_ID,
     form.value,
-    "epWXTcHwVSD3VGOWW"
+    EMAILJS_PUBLIC_KEY
   )
   .then(() => {
     msg.value = "Mensaje enviado correctamente ✔";
@@ -117,7 +133,11 @@ const sendEmail = () => {
 onMounted(async () => {
   await loadConfig();
 
-  const coords = coordenadas.value || { lat: -33.001651, lng: -58.518268 };
+  const coords = coordenadas.value;
+  if (!coords) return;
+
+  showMap.value = true;
+  await nextTick();
 
   const map = L.map("map", { attributionControl: false })
     .setView([coords.lat, coords.lng], 15);
@@ -126,7 +146,7 @@ onMounted(async () => {
 
   L.marker([coords.lat, coords.lng])
     .addTo(map)
-    .bindPopup(`${nombre.value || 'El Moro'} - Gualeguaychú`)
+    .bindPopup(brandName.value)
     .openPopup();
 });
 </script>
@@ -164,11 +184,11 @@ onMounted(async () => {
 
 .contact-card {
   background: var(--navy-light);
-  border-radius: 18px;
+  border-radius: var(--radius-5xl);
   padding: 42px;
   max-width: 1000px;
   margin: 0 auto;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 .contact-wrapper {
@@ -194,7 +214,7 @@ onMounted(async () => {
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: var(--white);
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   font-size: 14px;
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
@@ -220,7 +240,7 @@ onMounted(async () => {
   margin-top: 8px;
   background: var(--yellow);
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   padding: 14px;
   color: var(--navy);
   font-weight: 700;
@@ -230,9 +250,9 @@ onMounted(async () => {
 }
 
 .send-button:hover {
-  background: #fcd34d;
+  background: var(--yellow-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(251, 191, 36, 0.35);
+  box-shadow: var(--shadow-yellow-md);
 }
 
 .form-msg {
@@ -277,7 +297,7 @@ onMounted(async () => {
 }
 
 .list-item a:hover {
-  color: #fcd34d;
+  color: var(--yellow-light);
 }
 
 /* =========================
@@ -333,10 +353,10 @@ onMounted(async () => {
   margin-top: 55px;
   max-width: 1100px;
   margin-inline: auto;
-  border-radius: 18px;
+  border-radius: var(--radius-5xl);
   overflow: hidden;
   border: 3px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 #map {

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" width="1200" height="400">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1b2a"/>
+      <stop offset="1" stop-color="#e86a10"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#g)"/>
+  <rect x="36" y="36" width="168" height="168" rx="34" fill="#ffffff" opacity="0.15"/>
+  <path d="M72 160 V70 L120 38 L168 70 V160 H140 V106 H100 V160 Z" fill="#ffffff" opacity="0.92"/>
+  <rect x="78" y="70" width="84" height="20" rx="10" fill="#fbbf24" opacity="0.95"/>
+  <text x="250" y="190" font-family="Arial, Helvetica, sans-serif" font-size="66" font-weight="bold" fill="#ffffff">Tu catálogo web</text>
+  <text x="252" y="250" font-family="Arial, Helvetica, sans-serif" font-size="30" fill="#fbbf24">Productos, promociones e información de tu comercio</text>
+</svg>

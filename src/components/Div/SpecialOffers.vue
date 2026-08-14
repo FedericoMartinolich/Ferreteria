@@ -153,11 +153,11 @@ const prevSlide = () => {
   background: linear-gradient(
     135deg,
     var(--orange) 0%,
-    #d45d0a 60%,
-    #a84808 100%
+    var(--orange-hover) 60%,
+    var(--orange-dark) 100%
   );
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-radius: var(--radius-4xl);
+  box-shadow: var(--shadow-sm);
   box-sizing: border-box;
 }
 
@@ -178,13 +178,13 @@ const prevSlide = () => {
 .carousel-wrapper {
   flex: 1;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   background: var(--white);
   min-height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .carousel-slide {
@@ -212,7 +212,7 @@ const prevSlide = () => {
   max-width: 320px;
   background: var(--gray-50);
   border: 1px solid var(--gray-200);
-  border-radius: 14px;
+  border-radius: var(--radius-3xl);
   padding: 1.2rem 1rem;
   transition:
     transform 0.3s ease,
@@ -221,7 +221,7 @@ const prevSlide = () => {
 
 .product-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .product-image-wrapper {
@@ -230,9 +230,9 @@ const prevSlide = () => {
   max-width: 180px;
   height: 180px;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   background: var(--white);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-xs);
 }
 
 .product-image {
@@ -250,7 +250,7 @@ const prevSlide = () => {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #dc3545;
+  background: var(--danger);
   color: var(--white);
   padding: 4px 10px;
   border-radius: 999px;
@@ -289,7 +289,7 @@ const prevSlide = () => {
 
 .original-price {
   text-decoration: line-through;
-  color: #bbb;
+  color: var(--price-old);
   margin-right: 6px;
   font-size: 0.85rem;
 }
@@ -297,7 +297,7 @@ const prevSlide = () => {
 .discount-price {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #b91c1c;
+  color: var(--price);
 }
 
 .btn-buy {
@@ -305,7 +305,7 @@ const prevSlide = () => {
   color: var(--white);
   border: none;
   padding: 10px 24px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   font-weight: 600;
   font-size: 0.9rem;
@@ -316,7 +316,7 @@ const prevSlide = () => {
 
 .btn-buy:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(13, 27, 42, 0.3);
+  box-shadow: var(--shadow-navy-md);
 }
 
 .carousel-btn {
@@ -336,7 +336,7 @@ const prevSlide = () => {
   transition:
     background 0.2s ease,
     transform 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-xs);
 }
 
 .carousel-btn:hover {
@@ -393,7 +393,7 @@ const prevSlide = () => {
 @media (max-width: 768px) {
   .special-offers-section {
     padding: 1.5rem 1rem;
-    border-radius: 12px;
+    border-radius: var(--radius-2xl);
   }
 
   .section-title {
@@ -407,7 +407,7 @@ const prevSlide = () => {
 
   .carousel-wrapper {
     min-height: auto;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
   }
 
   .offer-card {
@@ -507,14 +507,14 @@ const prevSlide = () => {
   min-width: 0;
   max-width: 320px;
   background: var(--white);
-  border-radius: 14px;
+  border-radius: var(--radius-3xl);
   padding: 1.2rem 1rem;
 }
 
 .skeleton-img {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   background: linear-gradient(
     90deg,
     var(--gray-200) 25%,
@@ -527,7 +527,7 @@ const prevSlide = () => {
 
 .skeleton-text {
   margin: 12px 10px 0;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   background: linear-gradient(
     90deg,
     var(--gray-200) 25%,

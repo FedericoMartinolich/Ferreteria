@@ -74,7 +74,7 @@ import Searcher from "./Searcher.vue";
 const route = useRoute();
 
 const props = defineProps({
-    title: { type: String, default: 'Ferretería' },
+    title: { type: String, default: 'Catálogo' },
     logo: { type: String, default: '' },
     links: {
         type: Array,
@@ -175,7 +175,7 @@ input {
   width: 100%;
   padding: 13px 16px 13px 44px;
   font-size: 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   border: 2px solid var(--navy-light);
   background: var(--gray-100);
   color: var(--gray-800);
@@ -201,7 +201,7 @@ input::placeholder {
   position: absolute;
   top: -6px;
   right: -8px;
-  background: #dc3545;
+  background: var(--danger);
   color: var(--white);
   font-size: .75rem;
   padding: 2px 6px;

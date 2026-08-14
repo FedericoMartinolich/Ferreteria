@@ -13,8 +13,8 @@
 
       <!-- CENTER -->
       <div class="brand">
-        <h1 class="brand-title">Ferretería - {{ nombre || 'EL MORO' }}</h1>
-        <p class="brand-sub">{{ eslogan || 'Calidad, servicio y experiencia' }}</p>
+        <h1 class="brand-title">{{ brandName }}</h1>
+        <p class="brand-sub">{{ eslogan }}</p>
       </div>
 
       <!-- RIGHT -->
@@ -28,17 +28,22 @@
     </div>
 
     <div class="footer-bottom">
-      <small>&copy; {{ year }} Ferretería - {{ nombre || 'EL MORO' }}. Todos los derechos reservados.</small>
+      <small>&copy; {{ year }} {{ brandName }}. Todos los derechos reservados.</small>
     </div>
   </footer>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useConfig } from '../composables/useConfig.js'
 
-const { load: loadConfig, nombre, eslogan, whatsappUrl, instagram } = useConfig()
+const { load: loadConfig, nombre, eslogan, tipoNegocio, whatsappUrl, instagram } = useConfig()
 const year = ref(new Date().getFullYear())
+
+const brandName = computed(() => {
+  const parts = [tipoNegocio.value, nombre.value].filter(Boolean)
+  return parts.join(' - ') || 'Catálogo Comercial'
+})
 
 onMounted(() => loadConfig())
 </script>
@@ -118,7 +123,7 @@ onMounted(() => loadConfig())
   text-decoration: none;
   font-size: 0.85rem;
   padding: 0.3rem 0.6rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   transition: color 0.2s;
 }
 

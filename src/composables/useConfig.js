@@ -29,6 +29,8 @@ export function useConfig() {
   const nombre = computed(() => c.value.nombre || "");
   const eslogan = computed(() => c.value.eslogan || "");
   const logo = computed(() => c.value.logo || "");
+  const banner = computed(() => c.value.banner_url || "");
+  const local = computed(() => c.value.local_url || "");
   const tipoNegocio = computed(() => c.value.tipo_de_negocio || "");
   const diasAtencion = computed(() => c.value.dias_de_atencion || "");
   const horasAtencion = computed(() => c.value.horas_de_atencion || "");
@@ -51,6 +53,24 @@ export function useConfig() {
     c.value.caracteristica3 || "",
   ]);
   const numeroFijo = computed(() => c.value.numero_fijo || "");
+  const ciudad = computed(() => c.value.ciudad || "");
+  const provincia = computed(() => c.value.provincia || "");
+  const pais = computed(() => c.value.pais || "");
+  const codigoPostal = computed(() => c.value.codigo_postal || "");
+
+  const COUNTRY_NAMES = {
+    AR: "Argentina",
+    UY: "Uruguay",
+    CL: "Chile",
+    PY: "Paraguay",
+    BR: "Brasil",
+  };
+
+  const direccion = computed(() => {
+    const parts = [ciudad.value, provincia.value].filter(Boolean);
+    if (pais.value) parts.push(COUNTRY_NAMES[pais.value] || pais.value);
+    return parts.join(", ");
+  });
 
   return {
     load,
@@ -64,6 +84,8 @@ export function useConfig() {
     nombre,
     eslogan,
     logo,
+    banner,
+    local,
     tipoNegocio,
     diasAtencion,
     horasAtencion,
@@ -73,5 +95,10 @@ export function useConfig() {
     textos,
     caracteristicas,
     numeroFijo,
+    ciudad,
+    provincia,
+    pais,
+    codigoPostal,
+    direccion,
   };
 }

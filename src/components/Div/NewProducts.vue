@@ -142,7 +142,7 @@ const prevSlide = () => {
   margin: 0 auto;
   padding: 2rem 1.5rem;
   background: var(--navy);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-sm);
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -170,7 +170,7 @@ const prevSlide = () => {
 .carousel-wrapper {
   flex: 1;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   background: var(--white);
 }
 
@@ -210,12 +210,12 @@ const prevSlide = () => {
   width: 100%;
   max-width: 280px;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
 }
 
 .product-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 /* =========================
@@ -263,7 +263,7 @@ const prevSlide = () => {
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 0.8rem;
-  color: #b91c1c;
+  color: var(--price);
 }
 
 /* =========================
@@ -273,7 +273,7 @@ const prevSlide = () => {
   margin-top: auto;
   text-align: center;
   padding: 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   background: var(--orange);
   color: var(--white);
   text-decoration: none;
@@ -282,12 +282,12 @@ const prevSlide = () => {
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(232, 106, 16, 0.25);
+  box-shadow: var(--shadow-orange-xs);
 }
 
 .btn-add:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(232, 106, 16, 0.35);
+  box-shadow: var(--shadow-orange-md);
   background: var(--orange-hover);
 }
 
@@ -310,7 +310,7 @@ const prevSlide = () => {
   transition:
     background 0.2s ease,
     transform 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-xs);
 }
 
 .carousel-btn:hover {
@@ -455,7 +455,7 @@ const prevSlide = () => {
    ========================= */
 .skeleton-card {
   background: var(--gray-100);
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   padding: 0;
   overflow: hidden;
 }
@@ -475,7 +475,7 @@ const prevSlide = () => {
 
 .skeleton-text {
   margin: 12px 14px 0;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   background: linear-gradient(
     90deg,
     var(--gray-200) 25%,

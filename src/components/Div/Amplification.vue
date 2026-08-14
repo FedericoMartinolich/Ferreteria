@@ -42,8 +42,8 @@
   padding: 2.5rem 2rem;
   max-width: 1100px;
   margin: 0 auto;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-4xl);
+  box-shadow: var(--shadow-sm);
 }
 
 .features-grid {
@@ -56,14 +56,14 @@
   background: var(--white);
   text-align: center;
   padding: 1.8rem 1.2rem;
-  border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-xs);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .icon-wrapper {

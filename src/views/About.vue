@@ -3,9 +3,9 @@
     <div class="about-card">
 
       <div class="image-wrapper">
-        <img src="../assets/imgs/local.jpg" :alt="`Local de ${nombre || 'Ferretería El Moro'}`" />
+        <img :src="localSrc" alt="Local del comercio" />
         <div class="image-overlay"></div>
-        <span class="location-badge">Desde Gualeguaychú</span>
+        <span v-if="ciudad" class="location-badge">{{ ciudad }}</span>
       </div>
 
       <div class="about-content">
@@ -14,7 +14,7 @@
         <div class="divider"></div>
 
         <p v-if="textos[0]">
-          <strong>{{ nombre || 'Ferretería El Moro' }}</strong> {{ textos[0] }}
+          <strong>{{ nombre }}</strong> {{ textos[0] }}
         </p>
 
         <p v-if="textos[1]">{{ textos[1] }}</p>
@@ -23,7 +23,7 @@
 
         <div class="pillars" v-if="hasCaracteristicas">
           <div class="pillar" v-for="(car, i) in caracteristicasFiltradas" :key="i">
-            <span class="pillar-icon">{{ pillarIcons[i] || '🔧' }}</span>
+            <span class="pillar-icon">{{ pillarIcons[i] || '⭐' }}</span>
             <span>{{ car }}</span>
           </div>
         </div>
@@ -37,9 +37,11 @@
 import { computed, onMounted } from 'vue'
 import { useConfig } from '../composables/useConfig.js'
 
-const { load: loadConfig, nombre, tituloDecorativo, tituloPrincipal, textos, caracteristicas } = useConfig()
+const { load: loadConfig, nombre, tituloDecorativo, tituloPrincipal, textos, caracteristicas, ciudad, local } = useConfig()
 
-const pillarIcons = ['🤝', '🏠', '🔧']
+const pillarIcons = ['🤝', '🏪', '⭐']
+
+const localSrc = computed(() => local.value || '../assets/imgs/local.svg')
 
 const caracteristicasFiltradas = computed(() =>
   caracteristicas.value.filter(c => c)
@@ -66,9 +68,9 @@ p {
   background: var(--white);
   max-width: 1100px;
   width: 100%;
-  border-radius: 18px;
+  border-radius: var(--radius-5xl);
   overflow: hidden;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-lg);
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
@@ -101,7 +103,7 @@ p {
   font-weight: 600;
   letter-spacing: .5px;
   padding: 5px 14px;
-  border-radius: 20px;
+  border-radius: var(--radius-6xl);
 }
 
 /* CONTENT */
@@ -135,7 +137,7 @@ p {
   height: 4px;
   background: var(--orange);
   margin-bottom: 1.6rem;
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
 }
 
 .about-content p {
@@ -159,7 +161,7 @@ p {
 
 .pillar {
   background: var(--gray-100);
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   padding: 12px 8px;
   display: flex;
   flex-direction: column;

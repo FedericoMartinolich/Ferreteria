@@ -1,0 +1,30 @@
+email,info@tucomercio.com
+whatsapp,5491123456789
+numero_fijo,3455 42-0000
+instagram,https://www.instagram.com/tucomercio
+nombre,Tienda Demo
+logo,https://res.cloudinary.com/tu-cloud/image/upload/w_300,q_auto/logo-comercio
+banner_url,https://res.cloudinary.com/tu-cloud/image/upload/w_1600,q_auto/banner-comercio
+local_url,https://res.cloudinary.com/tu-cloud/image/upload/w_800,q_auto/local-comercio
+eslogan,Catálogo simple y moderno
+tipo_de_negocio,Ferretería
+dias_de_atencion,Lunes a Sábado
+horas_de_atencion,9 a 13 y 16 a 21
+coordenadas,-33.001651,-58.518268
+titulo_decorativo,Nuestra historia
+titulo_principal,¿Quiénes somos?
+texto1,Somos un comercio local comprometido con la calidad y la atención al cliente.
+texto2,Trabajamos para ofrecerte los mejores productos con una experiencia de compra simple y segura.
+texto3,
+caracteristica1,Buen trato
+caracteristica2,Atención personalizada
+caracteristica3,Amplio stock
+ciudad,Ciudad Ejemplo
+provincia,Provincia Ejemplo
+pais,AR
+codigo_postal,1234
+payment_providers,local
+payment_external_api_url,https://tu-dominio.vercel.app
+shipping_providers,local
+shipping_external_api_url,https://tu-dominio.vercel.app
+shipping_express,

@@ -3,6 +3,7 @@ const GID = import.meta.env.VITE_PRODUCTS_GID;
 const url = GID ? `${BASE}&gid=${GID}` : BASE;
 
 import Papa from "papaparse";
+import emptyImg from "../assets/imgs/emptys/emptyImg.png";
 
 export async function getProducts() {
   const res = await fetch(url);
@@ -39,7 +40,7 @@ export async function getProductById(id) {
 
 export function getProductImage(product) {
   if (!product.image_key) {
-    return '/img/placeholder.png'
+    return emptyImg
   }
 
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME

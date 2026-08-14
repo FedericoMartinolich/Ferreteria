@@ -107,12 +107,12 @@ const handleClickOutside = (e) => {
   width: 100%;
   background: var(--white);
   border: 1px solid var(--gray-200);
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   max-height: 300px;
   overflow-y: auto;
   z-index: 1000;
   padding: 0.5rem 0;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-md);
 }
 
 .result-item {
@@ -138,7 +138,7 @@ const handleClickOutside = (e) => {
 .result-thumb {
   width: 38px;
   height: 38px;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   object-fit: cover;
 }
 

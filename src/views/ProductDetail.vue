@@ -157,12 +157,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getProductById } from "../services/products.js";
 import { getProductImage } from "../services/products.js";
 import { useConfig } from "../composables/useConfig.js";
-import emptyImg from "../assets/imgs/emptys/emptyImg.png";
 import ConfirmModal from "../components/ConfirmModal.vue";
 
 const route = useRoute();
@@ -176,8 +175,6 @@ const loading = ref(false);
 const error = ref(null);
 const qty = ref(1);
 
-const placeholderImage = "/assets/product-placeholder.png";
-
 async function fetchProduct(id) {
   loading.value = true;
   error.value = null;
@@ -186,10 +183,10 @@ async function fetchProduct(id) {
     if (p) {
       product.value = p;
     } else {
-      error.value = "Product not found.";
+      error.value = "Producto no encontrado.";
     }
   } catch (e) {
-    error.value = "Error loading product.";
+    error.value = "Error al cargar el producto.";
   } finally {
     loading.value = false;
   }
@@ -282,13 +279,6 @@ watch(
 );
 
 const showToast = ref(false);
-
-function triggerToast() {
-  showToast.value = true;
-  setTimeout(() => {
-    showToast.value = false;
-  }, 2500);
-}
 </script>
 
 <style scoped>
@@ -331,7 +321,7 @@ function triggerToast() {
    =========================== */
 .product-card {
   background: var(--white);
-  border-radius: 20px;
+  border-radius: var(--radius-6xl);
   padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -339,7 +329,7 @@ function triggerToast() {
   gap: 2.5rem;
   align-items: stretch;
   flex: 1;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ===========================
@@ -347,7 +337,7 @@ function triggerToast() {
    =========================== */
 .media {
   position: relative;
-  border-radius: 16px;
+  border-radius: var(--radius-4xl);
   overflow: hidden;
   background: var(--gray-50);
   height: 100%;
@@ -449,7 +439,7 @@ function triggerToast() {
 .price {
   font-size: 2rem;
   font-weight: 700;
-  color: #b91c1c;
+  color: var(--price);
   margin: 0;
 }
 
@@ -464,14 +454,14 @@ function triggerToast() {
 }
 
 .badge.in {
-  background: #16a34a;
+  background: var(--success);
   color: var(--white);
   border: none;
 }
 
 .badge.out {
   background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
+  color: var(--danger);
   border: 1px solid rgba(220, 53, 69, 0.2);
 }
 
@@ -489,7 +479,7 @@ function triggerToast() {
 .specs-box {
   background: var(--gray-50);
   border: 1px solid var(--gray-200);
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   padding: 1rem 1.25rem;
 }
 
@@ -581,7 +571,7 @@ function triggerToast() {
   align-items: center;
   background: var(--gray-50);
   border: 1px solid var(--gray-200);
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   overflow: hidden;
   width: fit-content;
 }
@@ -638,7 +628,7 @@ function triggerToast() {
   gap: 8px;
   padding: 14px 20px;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -662,13 +652,13 @@ function triggerToast() {
 }
 
 .btn-whatsapp {
-  background: #25d366;
-  color: #fff;
+  background: var(--whatsapp);
+  color: var(--white);
 }
 
 .btn-whatsapp:hover:not(:disabled) {
   transform: translateY(-2px);
-  background: #20bd5a;
+  background: var(--whatsapp-hover);
 }
 
 /* ===========================
@@ -709,7 +699,7 @@ function triggerToast() {
 }
 
 .error {
-  color: #dc3545;
+  color: var(--danger);
 }
 
 .spinner {
@@ -737,14 +727,14 @@ function triggerToast() {
   background: var(--navy);
   color: var(--white);
   border: 1px solid var(--navy-light);
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   padding: 14px 20px;
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-xl);
   animation: fadeInUp 0.3s ease;
   z-index: 999;
 }
@@ -779,7 +769,7 @@ function triggerToast() {
 
   .media {
     margin: -1.5rem -1.5rem 1.5rem -1.5rem;
-    border-radius: 20px 20px 0 0;
+    border-radius: var(--radius-6xl) var(--radius-6xl) 0 0;
     aspect-ratio: 2 / 1;
     height: auto;
   }
@@ -821,7 +811,7 @@ function triggerToast() {
 
   .product-card {
     padding: 0;
-    border-radius: 16px;
+    border-radius: var(--radius-4xl);
     overflow: hidden;
     flex: none;
   }

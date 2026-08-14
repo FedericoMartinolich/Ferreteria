@@ -1,0 +1,7 @@
+id,product,price,originalPrice,description,image_key,category,badge,stock,sku
+1,Producto demo A,1200,1500,Producto de ejemplo con descripción breve.,,Categoría 1,,50,DEM-001
+2,Producto demo B,850,1000,Otro producto de muestra para probar el catálogo.,,Categoría 1,Oferta,25,DEM-002
+3,Producto demo C,3400,3700,Producto destacado para demostrar el diseño.,,Categoría 2,,12,DEM-003
+4,Producto demo D,700,,Producto sin descuento y sin stock en tienda.,,Categoría 2,,0,DEM-004
+5,Producto demo E,980,,Artículo genérico para completar la demostración.,,Categoría 3,,40,DEM-005
+6,Producto demo F,1500,,Último producto de ejemplo de la plantilla.,,Categoría 3,Nuevo,18,DEM-006

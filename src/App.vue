@@ -15,11 +15,11 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useConfig } from "./composables/useConfig.js";
 
-const { load: loadConfig, nombre } = useConfig();
+const { load: loadConfig, nombre, logo: configLogo } = useConfig();
 const route = useRoute();
 
 const logo = ref("");
-const title = ref("EL MORO");
+const title = ref("Catálogo");
 const cart = ref([]);
 
 function readCart() {
@@ -42,13 +42,19 @@ onMounted(async () => {
   readCart();
   await loadConfig();
   if (nombre.value) title.value = nombre.value;
+  document.title = nombre.value || "Catálogo Comercial";
+
+  if (configLogo.value) {
+    logo.value = configLogo.value;
+    return;
+  }
 
   const month = new Date().getMonth();
   if (month === 11) {
-    const module = await import("/perfil-navidad.png");
+    const module = await import("/logo-navidad.svg");
     logo.value = module.default;
   } else {
-    const module = await import("/perfil.png");
+    const module = await import("/logo.svg");
     logo.value = module.default;
   }
 });

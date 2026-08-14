@@ -4,8 +4,8 @@
   <section class="catalog">
     <template v-if="loading">
       <h1 class="title">
-        <i class="fas fa-tools"></i>
-        Catálogo de Ferretería
+        <i class="fas fa-boxes-stacked"></i>
+        {{ catalogTitle }}
       </h1>
       <div class="search-wrapper skeleton-search">
         <div class="skeleton-line"></div>
@@ -22,8 +22,8 @@
 
     <template v-else>
       <h1 class="title">
-        <i class="fas fa-tools"></i>
-        Catálogo de Ferretería
+        <i class="fas fa-boxes-stacked"></i>
+        {{ catalogTitle }}
       </h1>
 
       <div class="search-wrapper">
@@ -72,13 +72,21 @@ import { ref, computed, onMounted, watch } from "vue";
 
 import { getProducts } from "../services/products.js";
 import { getNewProductsEvent } from "../services/events.js";
+import { useConfig } from "../composables/useConfig.js";
 
 import ProductCard from "../components/ProductCard.vue";
 import NewProducts from "../components/Div/NewProducts.vue";
 
+const { load: loadConfig, tipoNegocio } = useConfig();
+
 const products = ref([]);
 const newProductsEvent = ref(null);
 const loading = ref(true);
+
+const catalogTitle = computed(() => {
+  const rubro = tipoNegocio.value.trim();
+  return rubro ? `Catálogo de ${rubro}` : 'Catálogo';
+});
 
 const search = ref("");
 const currentPage = ref(1);
@@ -88,7 +96,8 @@ onMounted(async () => {
   try {
     const [productsData, newProductsData] = await Promise.all([
       getProducts(),
-      getNewProductsEvent()
+      getNewProductsEvent(),
+      loadConfig()
     ]);
 
     products.value = productsData;
@@ -162,7 +171,7 @@ onMounted(() => {
   margin: 0 auto 0;
   padding: 2.2rem 1.6rem;
   background: var(--white);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
   box-sizing: border-box;
 }
 
@@ -197,7 +206,7 @@ onMounted(() => {
   width: 100%;
   padding: 12px 16px 12px 44px;
   font-size: 15px;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   border: 2px solid var(--gray-200);
   background: var(--white);
   color: var(--gray-800);
@@ -275,13 +284,13 @@ onMounted(() => {
   color: var(--white);
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(13, 27, 42, 0.2);
+  box-shadow: var(--shadow-navy-xs);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .pagination button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(13, 27, 42, 0.3);
+  box-shadow: var(--shadow-navy-md);
 }
 
 .pagination button:disabled {
@@ -342,7 +351,7 @@ onMounted(() => {
   .search-input {
     font-size: 13px;
     padding: 9px 12px 9px 36px;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
   }
 
   .search-icon {
@@ -371,17 +380,17 @@ onMounted(() => {
 .skeleton-line {
   width: 100%;
   height: 44px;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
 .skeleton-card {
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   overflow: hidden;
   background: var(--white);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-xs);
   padding: 0;
 }
 
@@ -396,7 +405,7 @@ onMounted(() => {
 .skeleton-text {
   height: 14px;
   margin: 12px 14px 0;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
@@ -433,13 +442,13 @@ onMounted(() => {
   background: var(--navy);
   color: var(--white);
   border: 1px solid var(--navy-light);
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   padding: 12px 18px;
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-xl);
   animation: fadeInUp 0.3s ease;
   z-index: 999;
 }

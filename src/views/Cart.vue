@@ -108,7 +108,42 @@
         </button>
       </div>
 
-      <form @submit.prevent>
+      <div v-if="successOrder" class="order-success">
+        <div class="success-icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3>Pedido confirmado</h3>
+        <p class="order-id">Nro. {{ lastOrder.id }}</p>
+
+        <ul class="order-summary-list">
+          <li>
+            <span>Medio de pago</span>
+            <strong>{{ paymentMethodLabel(lastOrder) }}</strong>
+          </li>
+          <li>
+            <span>Estado de pago</span>
+            <strong class="ok">{{ statusLabel(lastOrder.payment.status) }}</strong>
+          </li>
+          <li>
+            <span>Envío</span>
+            <strong>{{ shippingOptionLabel(lastOrder) }}</strong>
+          </li>
+          <li v-if="lastOrder.shipping.tracking">
+            <span>Seguimiento</span>
+            <strong>{{ lastOrder.shipping.tracking }}</strong>
+          </li>
+          <li>
+            <span>Total</span>
+            <strong>{{ formatCurrency(lastOrder.totals.total) }}</strong>
+          </li>
+        </ul>
+
+        <button type="button" class="btn primary btn-success-close" @click="resetCheckout">
+          <i class="fa-solid fa-check"></i> Listo
+        </button>
+      </div>
+
+      <form v-else @submit.prevent>
         <div class="form-grid">
           <div class="form-group">
             <label>Nombre</label>
@@ -131,10 +166,79 @@
           </div>
 
           <div class="form-group">
+            <label>Código postal <small>(para calcular el envío)</small></label>
+            <input v-model="form.postal_code" type="text" inputmode="numeric" placeholder="Ej. 2820" @input="onPostalChange" />
+          </div>
+
+          <div class="form-group" v-if="showAddress">
             <label>Dirección</label>
             <input v-model="form.address" placeholder="Calle 123, Ciudad" />
           </div>
+
+          <div class="form-group full" v-if="isPickup">
+            <label>Retirás en</label>
+            <p class="pickup-note">{{ pickupAddress }}</p>
+          </div>
+
+          <div class="form-group full" v-if="shippingOptions.length">
+            <label>Envío</label>
+            <div class="choice-list">
+              <label
+                v-for="option in shippingOptions"
+                :key="shippingKey(option)"
+                class="choice-item"
+                :class="{ selected: selectedShipping === shippingKey(option) }"
+              >
+                <input v-model="selectedShipping" type="radio" name="shipping" :value="shippingKey(option)" />
+                <span class="choice-main">
+                  <strong>{{ option.label }}</strong>
+                  <small>{{ option.eta }}</small>
+                </span>
+                <span class="choice-cost">{{ option.cost ? formatCurrency(option.cost) : 'Gratis' }}</span>
+                <i class="fa-solid fa-check choice-check"></i>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group full" v-if="paymentMethods.length">
+            <label>Medio de pago</label>
+            <div class="choice-list">
+              <label
+                v-for="method in paymentMethods"
+                :key="paymentKey(method)"
+                class="choice-item"
+                :class="{ selected: selectedPayment === paymentKey(method) }"
+              >
+                <input v-model="selectedPayment" type="radio" name="payment" :value="paymentKey(method)" />
+                <span class="choice-main">
+                  <strong>{{ method.name }}</strong>
+                  <small>{{ method.instructions }}</small>
+                </span>
+                <i class="fa-solid fa-check choice-check"></i>
+              </label>
+            </div>
+          </div>
         </div>
+
+        <div class="dialog-totals" v-if="shippingOptions.length || paymentMethods.length">
+          <div class="total-line">
+            <span>Productos</span>
+            <strong>{{ formatCurrency(totalPrice) }}</strong>
+          </div>
+          <div class="total-line" v-if="shippingOptions.length">
+            <span>Envío ({{ selectedShippingOption?.label }})</span>
+            <strong>{{ formatCurrency(shippingCost) }}</strong>
+          </div>
+          <div class="total-divider"></div>
+          <div class="total-line total-final">
+            <span>Total</span>
+            <strong>{{ formatCurrency(grandTotal) }}</strong>
+          </div>
+        </div>
+
+        <p v-if="processingError" class="dialog-error">
+          <i class="fa-solid fa-circle-exclamation"></i> {{ processingError }}
+        </p>
 
         <div class="dialog-actions">
           <button type="button" class="btn outline" @click="closeDialog">
@@ -144,7 +248,7 @@
           <button
             type="button"
             class="btn whatsapp"
-            :disabled="!isFormValid"
+            :disabled="!isFormValid || orderProcessing"
             @click="cargarWhatsApp"
           >
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
@@ -152,11 +256,12 @@
 
           <button
             type="button"
-            class="btn primary"
-            :disabled="!isFormValid"
-            @click="cargarMail"
+            class="btn primary btn-confirm"
+            :disabled="!isFormValid || orderProcessing || !selectedPayment || !selectedShipping"
+            @click="confirmOrder"
           >
-            <i class="fa-solid fa-envelope"></i> Email
+            <i class="fa-solid fa-bag-shopping"></i>
+            {{ orderProcessing ? 'Procesando…' : 'Confirmar pedido' }}
           </button>
         </div>
       </form>
@@ -179,8 +284,17 @@ import emptyCart from '../assets/imgs/emptys/emptyCart.png'
 import { getProductImage } from '../services/products'
 import { useConfig } from '../composables/useConfig.js'
 import ConfirmModal from '../components/ConfirmModal.vue'
+import {
+  registerBuiltInProviders,
+  getEnabledPaymentProviders,
+  getEnabledShippingProviders,
+  createOrder,
+  getOrderById,
+  setPaymentStatus,
+  setShippingStatus,
+} from '../services/checkout/index'
 
-const { load: loadConfig, whatsapp, email: configEmail } = useConfig()
+const { load: loadConfig, config, whatsapp, email: configEmail, direccion } = useConfig()
 
 const CART_KEY = 'cart'
 const router = useRouter()
@@ -195,21 +309,34 @@ const form = ref({
     email: '',
     phone: '',
     address: '',
+    postal_code: '',
 })
 
+const paymentProviders = ref([])
+const shippingProviders = ref([])
+const paymentMethods = ref([])
+const shippingOptions = ref([])
+const selectedShipping = ref(null)
+const selectedPayment = ref(null)
+const orderProcessing = ref(false)
+const processingError = ref('')
+const lastOrder = ref(null)
+
 const isFormValid = computed(() => {
-    return (
+    const base =
         form.value.firstName.trim() !== '' &&
         form.value.lastName.trim() !== '' &&
         form.value.email.trim() !== '' &&
-        form.value.phone.trim() !== '' &&
-        form.value.address.trim() !== '' 
-    )
+        form.value.phone.trim() !== ''
+    if (!base) return false
+    if (selectedShippingOption.value?.mode === 'pickup') return true
+    return form.value.address.trim() !== '' && form.value.postal_code.trim() !== ''
 })
 
 // Load cart from localStorage (or seed with an example for dev)
 onMounted(async () => {
     await loadConfig()
+    await loadCheckoutProviders()
     try {
         const raw = localStorage.getItem(CART_KEY)
         if (raw) {
@@ -238,6 +365,201 @@ const totalPrice = computed(() => cart.value.reduce((s, i) => s + (Number(i.pric
 
 function formatCurrency(value) {
     return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(value || 0)
+}
+
+function shippingKey(option) {
+    return `${option.providerId}::${option.id}`
+}
+
+function paymentKey(method) {
+    return `${method.providerId}::${method.id}`
+}
+
+const selectedShippingOption = computed(() =>
+    shippingOptions.value.find(o => shippingKey(o) === selectedShipping.value)
+)
+
+const isPickup = computed(() => selectedShippingOption.value?.mode === 'pickup')
+const showAddress = computed(() => !isPickup.value)
+const pickupAddress = computed(
+    () => direccion.value || 'Consultá la dirección de retiro.'
+)
+
+const selectedPaymentMethod = computed(() =>
+    paymentMethods.value.find(m => paymentKey(m) === selectedPayment.value)
+)
+
+const shippingCost = computed(() => selectedShippingOption.value?.cost ?? 0)
+
+const grandTotal = computed(() => totalPrice.value + shippingCost.value)
+
+const successOrder = computed(() => lastOrder.value !== null && !orderProcessing.value)
+
+async function loadCheckoutProviders() {
+    registerBuiltInProviders()
+    paymentProviders.value = getEnabledPaymentProviders(config.value)
+    shippingProviders.value = getEnabledShippingProviders(config.value)
+
+    await Promise.all([loadPaymentMethods(), loadShippingOptions()])
+
+    if (paymentMethods.value.length) {
+        selectedPayment.value = paymentKey(paymentMethods.value[0])
+    }
+    if (shippingOptions.value.length) {
+        selectedShipping.value = shippingKey(shippingOptions.value[0])
+    }
+}
+
+async function loadPaymentMethods() {
+    const methods = []
+    for (const provider of paymentProviders.value) {
+        if (typeof provider.isEnabled === 'function' && !provider.isEnabled(config.value)) continue
+        const list = await provider.getPaymentMethods(config.value)
+        list.forEach(m => methods.push({ ...m, providerId: provider.id }))
+    }
+    paymentMethods.value = methods
+}
+
+async function loadShippingOptions() {
+    const options = []
+    const postal = form.value.postal_code?.trim() || ''
+    for (const provider of shippingProviders.value) {
+        if (typeof provider.isEnabled === 'function' && !provider.isEnabled(config.value)) continue
+        if (provider.id === 'external' && !postal) continue
+        const list = await provider.getOptions({
+            items: cart.value,
+            subtotal: totalPrice.value,
+            destination: form.value.address,
+            postal_code: postal,
+            config: config.value,
+        })
+        list.forEach(o => options.push({ ...o, providerId: provider.id }))
+    }
+    shippingOptions.value = options
+
+    const current = selectedShipping.value
+    if (options.length && !options.some(o => shippingKey(o) === current)) {
+        selectedShipping.value = shippingKey(options[0])
+    }
+}
+
+let postalTimer = null
+function onPostalChange() {
+    clearTimeout(postalTimer)
+    postalTimer = setTimeout(async () => {
+        await loadShippingOptions()
+    }, 500)
+}
+
+async function confirmOrder() {
+    const option = selectedShippingOption.value
+    const method = selectedPaymentMethod.value
+    if (!option || !method) return
+
+    orderProcessing.value = true
+    processingError.value = ''
+    lastOrder.value = null
+
+    try {
+        const order = createOrder({
+            items: cart.value,
+            customer: {
+                firstName: form.value.firstName,
+                lastName: form.value.lastName,
+                email: form.value.email,
+                phone: form.value.phone,
+                address: form.value.address,
+                postal_code: form.value.postal_code,
+            },
+            totals: {
+                products: totalPrice.value,
+                shipping: shippingCost.value,
+                total: grandTotal.value,
+            },
+            payment: { providerId: method.providerId, methodId: method.id },
+            shipping: { providerId: option.providerId, optionId: option.id },
+        })
+
+        const payProvider = paymentProviders.value.find(p => p.id === method.providerId)
+        if (!payProvider) throw new Error('No hay un proveedor de pago seleccionado')
+
+        const paymentRef = await payProvider.createPayment({ order, method, config: config.value })
+
+        if (payProvider.id === 'external') {
+            const link = paymentRef?.link || paymentRef?.init_point
+            if (!link) {
+                throw new Error(paymentRef?.message || 'No se obtuvo un link de pago.')
+            }
+            window.location.assign(link)
+            return
+        }
+
+        await simulateConfirmation(order.id, payProvider, paymentRef, method, option)
+
+        lastOrder.value = getOrderById(order.id)
+        cart.value = []
+    } catch (error) {
+        processingError.value = error?.message || 'No se pudo procesar el pedido.'
+    } finally {
+        orderProcessing.value = false
+    }
+}
+
+async function simulateConfirmation(orderId, payProvider, paymentRef, method, option) {
+    await new Promise(resolve => setTimeout(resolve, 1200))
+
+    const confirmed = await payProvider.confirmPayment({
+        order: getOrderById(orderId),
+        method,
+        paymentRef,
+        config: config.value,
+    })
+    if (confirmed?.status) {
+        setPaymentStatus(orderId, confirmed.status, confirmed.detail)
+    }
+
+    const shipProvider = shippingProviders.value.find(p => p.id === option.providerId)
+    if (shipProvider) {
+        const shipment = await shipProvider.createShipment({
+            order: getOrderById(orderId),
+            option,
+            config: config.value,
+        })
+        setShippingStatus(orderId, shipment?.status || 'pending', { tracking: shipment?.tracking })
+    }
+}
+
+function paymentMethodLabel(order) {
+    const method = paymentMethods.value.find(m =>
+        m.providerId === order.payment.providerId && m.id === order.payment.methodId
+    )
+    return method?.name || 'Pago'
+}
+
+function shippingOptionLabel(order) {
+    const option = shippingOptions.value.find(o =>
+        o.providerId === order.shipping.providerId && o.id === order.shipping.optionId
+    )
+    return option?.label || order.shipping.optionId || 'Envío'
+}
+
+function statusLabel(status) {
+    const labels = {
+        paid: 'Pagado',
+        approved: 'Aprobado',
+        pending: 'Pendiente',
+        created: 'Creado',
+        ready: 'Listo',
+        shipped: 'Enviado',
+        delivered: 'Entregado',
+    }
+    return labels[status] || status
+}
+
+function resetCheckout() {
+    lastOrder.value = null
+    processingError.value = ''
+    checkoutDialog.value?.close()
 }
 
 function increase(item) {
@@ -298,11 +620,15 @@ function cargarWhatsApp() {
 `Pedido de ${form.value.firstName} ${form.value.lastName}
 Email: ${form.value.email}
 Teléfono: ${form.value.phone}
-Dirección: ${form.value.address}
+${isPickup.value
+    ? `Retiro en el local: ${pickupAddress.value}`
+    : `Dirección: ${form.value.address} (CP ${form.value.postal_code})`}
 Productos:
 ${productos}
 
-Total: ${formatCurrency(totalPrice.value)}
+Envío: ${selectedShippingOption.value?.label || ''} (${formatCurrency(shippingCost.value)})
+Medio de pago: ${selectedPaymentMethod.value?.name || ''}
+Total: ${formatCurrency(grandTotal.value)}
 `
   const url = `https://wa.me/${whatsapp.value}?text=${encodeURIComponent(message)}`
   window.open(url, '_blank')
@@ -320,12 +646,16 @@ function cargarMail() {
 `Pedido de ${form.value.firstName} ${form.value.lastName}
 Email: ${form.value.email}
 Teléfono: ${form.value.phone}
-Dirección: ${form.value.address}
+${isPickup.value
+    ? `Retiro en el local: ${pickupAddress.value}`
+    : `Dirección: ${form.value.address} (CP ${form.value.postal_code})`}
 
 Productos:
 ${productos}
 
-Total: ${formatCurrency(totalPrice.value)}`.trim()
+Envío: ${selectedShippingOption.value?.label || ''} (${formatCurrency(shippingCost.value)})
+Medio de pago: ${selectedPaymentMethod.value?.name || ''}
+Total: ${formatCurrency(grandTotal.value)}`.trim()
 
   const gmailUrl =
     `https://mail.google.com/mail/?view=cm&fs=1` +
@@ -380,10 +710,10 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
    =========================== */
 .empty {
   background: var(--white);
-  border-radius: 18px;
+  border-radius: var(--radius-5xl);
   padding: 4rem 2rem;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 .empty-icon {
@@ -416,9 +746,9 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
    =========================== */
 .cart-content {
   background: var(--white);
-  border-radius: 18px;
+  border-radius: var(--radius-5xl);
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ===========================
@@ -467,7 +797,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 
 .item-row:hover {
   background: var(--gray-50);
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
 }
 
 @keyframes fadeSlideIn {
@@ -494,7 +824,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 .thumb-box {
   width: 64px;
   height: 64px;
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   overflow: hidden;
   background: var(--gray-100);
   flex-shrink: 0;
@@ -569,7 +899,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   height: 32px;
   padding: 0;
   border: 1px solid var(--gray-200);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   background: var(--gray-50);
   color: var(--navy);
   cursor: pointer;
@@ -610,7 +940,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   width: 36px;
   height: 36px;
   padding: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -620,7 +950,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 
 .remove-btn:hover {
   background: rgba(220, 50, 50, 0.08);
-  color: #dc3545;
+  color: var(--danger);
 }
 
 /* ===========================
@@ -656,7 +986,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 .totals {
   background: var(--gray-50);
   border: 1px solid var(--gray-200);
-  border-radius: 14px;
+  border-radius: var(--radius-3xl);
   padding: 1rem 1.25rem;
   min-width: 180px;
   box-sizing: border-box;
@@ -702,7 +1032,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   align-items: center;
   gap: 0.5rem;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   padding: 0.7rem 1.1rem;
   font-weight: 600;
   font-size: 0.85rem;
@@ -737,7 +1067,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 
 .btn.outline.danger {
   border-color: rgba(255, 100, 100, 0.3);
-  color: #dc3545;
+  color: var(--danger);
 }
 
 .btn.outline.danger:hover {
@@ -746,12 +1076,12 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 }
 
 .btn.whatsapp {
-  background: #25D366;
+  background: var(--whatsapp);
   color: var(--white);
 }
 
 .btn.whatsapp:hover {
-  background: #20bd5a;
+  background: var(--whatsapp-hover);
   transform: translateY(-2px);
 }
 
@@ -774,7 +1104,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
    =========================== */
 .checkout-dialog {
   border: none;
-  border-radius: 20px;
+  border-radius: var(--radius-6xl);
   overflow: hidden;
   background: transparent;
   padding: 0;
@@ -790,8 +1120,8 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   color: var(--gray-800);
   padding: 0;
   width: min(92vw, 520px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-  border-radius: 20px;
+  box-shadow: var(--shadow-xl);
+  border-radius: var(--radius-6xl);
 }
 
 .dialog-header {
@@ -818,7 +1148,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   width: 36px;
   height: 36px;
   padding: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   border: 1px solid var(--gray-200);
   background: var(--gray-50);
   color: var(--gray-600);
@@ -852,6 +1182,15 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   grid-column: 1 / -1;
 }
 
+.pickup-note {
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
 .form-group label {
   font-size: 0.8rem;
   font-weight: 600;
@@ -862,7 +1201,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
 
 .form-group input {
   padding: 0.75rem 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   border: 1px solid var(--gray-200);
   background: var(--gray-50);
   color: var(--navy);
@@ -891,6 +1230,173 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
   justify-content: center;
 }
 
+.dialog-totals {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-3xl);
+  margin: 0 1.5rem;
+  padding: 0.9rem 1.25rem;
+}
+
+.dialog-totals .total-line {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+}
+
+.dialog-totals .total-final strong {
+  color: var(--orange);
+}
+
+.dialog-error {
+  margin: 0.75rem 1.5rem 0;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-xl);
+  background: rgba(220, 50, 50, 0.08);
+  color: var(--danger);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.choice-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  background: var(--gray-50);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.choice-item:hover {
+  border-color: var(--gray-300);
+}
+
+.choice-item.selected {
+  border-color: var(--orange);
+  background: rgba(232, 106, 16, 0.06);
+}
+
+.choice-item input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.choice-main strong {
+  font-size: 0.88rem;
+  color: var(--navy);
+}
+
+.choice-main small {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.choice-cost {
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+.choice-check {
+  color: var(--orange);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.2s ease;
+}
+
+.choice-item.selected .choice-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.btn-success-close {
+  width: 100%;
+  justify-content: center;
+}
+
+.order-success {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.success-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--success);
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-success h3 {
+  margin: 0 0 0.25rem;
+  color: var(--navy);
+  font-size: 1.25rem;
+}
+
+.order-id {
+  margin: 0 0 1.25rem;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+.order-summary-list {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-3xl);
+  text-align: left;
+}
+
+.order-summary-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  font-size: 0.85rem;
+  color: var(--gray-600);
+}
+
+.order-summary-list li + li {
+  border-top: 1px solid var(--gray-200);
+}
+
+.order-summary-list li strong {
+  color: var(--navy);
+}
+
+.order-summary-list li strong.ok {
+  color: var(--success);
+}
+
 /* ===========================
    RESPONSIVE TABLET
    =========================== */
@@ -904,7 +1410,7 @@ Total: ${formatCurrency(totalPrice.value)}`.trim()
     gap: 0.75rem;
     padding: 1rem;
     background: var(--gray-50);
-    border-radius: 14px;
+    border-radius: var(--radius-3xl);
     margin-bottom: 0.5rem;
     border-bottom: none;
   }

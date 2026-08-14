@@ -1,0 +1,4 @@
+event_key,active,title,product_ids,order
+new,1,Nuevos Productos,3|4|5,1
+offers,1,Ofertas Especiales,1|2|3,2
+christmas,0,Ofertas de Navidad,1|2|3|4|5,3

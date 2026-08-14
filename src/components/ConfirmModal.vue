@@ -38,12 +38,12 @@ const emit = defineEmits(['update:modelValue', 'confirm', 'cancel']);
 
 .modal-card {
   background: var(--white);
-  border-radius: 16px;
+  border-radius: var(--radius-4xl);
   padding: 2rem 1.5rem;
   max-width: 380px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-xl);
   animation: modalIn 0.2s ease;
 }
 
@@ -70,7 +70,7 @@ const emit = defineEmits(['update:modelValue', 'confirm', 'cancel']);
   flex: 1;
   padding: 10px 16px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -94,7 +94,7 @@ const emit = defineEmits(['update:modelValue', 'confirm', 'cancel']);
 
 .modal-btn.confirm:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(13, 27, 42, 0.3);
+  box-shadow: var(--shadow-navy-md);
 }
 
 @keyframes modalIn {

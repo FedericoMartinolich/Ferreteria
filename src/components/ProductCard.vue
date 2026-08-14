@@ -88,7 +88,7 @@ const props = defineProps({
   width: 100%;
   background: var(--white);
   border: 1px solid var(--gray-200);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-xs);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
   position: relative;
@@ -96,7 +96,7 @@ const props = defineProps({
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 /* BADGE */
@@ -161,7 +161,7 @@ const props = defineProps({
   background: var(--gray-100);
   color: var(--gray-600);
   padding: 3px 7px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 /* BOTTOM */
@@ -185,13 +185,13 @@ const props = defineProps({
 .price .old {
   text-decoration: line-through;
   font-size: 11px;
-  color: #bbb;
+  color: var(--price-old);
 }
 
 .price .new {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #b91c1c;
+  color: var(--price);
 }
 
 /* BUTTON */
@@ -201,19 +201,19 @@ const props = defineProps({
   border: none;
   width: 34px;
   height: 34px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(13, 27, 42, 0.2);
+  box-shadow: var(--shadow-navy-xs);
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(13, 27, 42, 0.3);
+  box-shadow: var(--shadow-navy-md);
   background: var(--orange);
 }
 
@@ -234,7 +234,7 @@ const props = defineProps({
     width: 30px;
     height: 30px;
     font-size: 12px;
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     flex-shrink: 0;
   }
 
